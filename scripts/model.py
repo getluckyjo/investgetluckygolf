@@ -39,9 +39,9 @@ YEARS = list(range(2027, 2033))
 NOTE_ZAR = 1_000_000          # convertible note, closes November 2026
 NOTE_DISCOUNT = 0.20          # converts at a 20% discount to the round price...
 NOTE_CAP_PRE_ZAR = 36_000_000 # ...or at a R36m pre-money cap, whichever is better for the note
-ROUND_ZAR = 14_000_000        # Q1 2027
-ROUND_PRE_ZAR = 56_000_000    # the founder's price: R56m pre, R70m post, 20% for R14m
-OPENING_CASH_2027 = 500_000   # cash on 1 Jan 2027 after the note funds the Icons launch
+ROUND_ZAR = 10_000_000        # Q1 2027: the plan needs about R4m; the rest carries any one risk
+ROUND_PRE_ZAR = 56_000_000    # the founder's price: R56m pre, R66m post, about 15% for R10m
+OPENING_CASH_2027 = 500_000   # cash on 1 Jan 2027, after the note funds November and December
 
 # ============================================================================
 # THE INSURED SWING (the Santam submission, unchanged)
@@ -488,31 +488,29 @@ def run(case):
 
 
 def use_of_funds(p):
-    """The R14.0m round, into Get Lucky only: the bays are funded in the bay company.
-    The first three lines are Get Lucky's 2027 spend from the model; the reserve is
-    what is left, and it is what carries the hard case."""
+    """What the round pays for: Get Lucky's 2027 budget, split by what it builds.
+    Revenue pays for most of it and the round for the rest; what the plan never
+    touches is the cushion. The round goes into Get Lucky only: the bays are
+    funded in the bay company."""
     r = p["rows"][2027]
     golfzon = r["gzDirect"] + 0.35 * r["central"]          # the integration team: 35% of 2027 central
     team = 0.65 * r["central"] + r["ocDirect"]
     brand = r["brand"]
     items = [
-        {"key": "golfzon", "label": "Golfzon integration and global launch", "ZAR": round(golfzon, -4),
-         "note": "Engineering, the signed shot record, the ace data the insurer prices on, market launches"},
         {"key": "team", "label": "Team and operations", "ZAR": round(team, -4),
          "note": "Bay operations for the bay company, claims, finance, the on-course and golf-day desk"},
         {"key": "brand", "label": "Brand and launch with Ernie", "ZAR": round(brand, -4),
-         "note": "Launch content with Ernie, leagues and the audience from Icons"},
+         "note": "Launch content with Ernie, leagues and partner activations"},
+        {"key": "golfzon", "label": "Golfzon integration and global launch", "ZAR": round(golfzon, -4),
+         "note": "Engineering, the signed shot record, the ace data the insurer prices on, market launches"},
     ]
-    items.append({"key": "reserve", "label": "Working capital and reserve",
-                  "ZAR": ROUND_ZAR - sum(i["ZAR"] for i in items),
-                  "note": "Golfzon deposits, cover, and the cushion that carries the hard case"})
+    budget = sum(i["ZAR"] for i in items)
     for i in items:
-        i["pct"] = round(i["ZAR"] / ROUND_ZAR * 100)
+        i["pct"] = round(i["ZAR"] / budget * 100)
     items[-1]["pct"] = 100 - sum(i["pct"] for i in items[:-1])
-    return {"_note": ("The R14.0m round goes into Get Lucky only; the bays are funded in the bay company. "
-                      "Golfzon, team and brand are Get Lucky's 2027 spend from the model (the Golfzon "
-                      "integration team is 35% of 2027 central cost); the reserve is the rest."),
-            "items": items}
+    return {"_note": ("Get Lucky's 2027 budget by what it builds (the Golfzon integration team is 35% of 2027 "
+                      "central cost). Revenue pays for most of it; the round covers the rest and the cushion."),
+            "budget2027ZAR": budget, "revenue2027ZAR": round(r["revenue"], -4), "items": items}
 
 
 def main():
@@ -608,8 +606,8 @@ def main():
         },
         "deal": {
             "_note": ("Two steps, both into Get Lucky. A R1.0m convertible note in November 2026, converting at a "
-                      "R36m cap or a 20% discount to the round, whichever is better for the note; then R14.0m for "
-                      "20% at R56m pre in Q1 2027 to roll out the plan. Both prices are the founder's (26 Oct 2026)."),
+                      "R36m cap or a 20% discount to the round, whichever is better for the note; then R10.0m for "
+                      "about 15% at R56m pre in Q1 2027 to roll out the plan. Both prices are the founder's (26 Oct 2026)."),
             "note": {"amountZAR": NOTE_ZAR, "discountPct": round(NOTE_DISCOUNT * 100), "closes": "November 2026",
                      "capPreMoneyZAR": NOTE_CAP_PRE_ZAR, "conversionPreMoneyZAR": round(note_conv_pre),
                      "capApplies": NOTE_CAP_PRE_ZAR < ROUND_PRE_ZAR * (1 - NOTE_DISCOUNT),
@@ -759,7 +757,7 @@ def main():
                           "quiet70EbitdaZAR2031": round(sum(r[2031]["ebitda"] for r in quiet.values()))},
         },
         "cash": {
-            "_note": ("Get Lucky's cash. No bay capex and no bay debt: those sit in the bay company. The R14.0m "
+            "_note": ("Get Lucky's cash. No bay capex and no bay debt: those sit in the bay company. The R10.0m "
                       "round carries the team, the Golfzon build and the launch until the engines pay for "
                       "themselves. No further equity round is assumed."),
             "openingZAR": OPENING_CASH_2027,

@@ -32,6 +32,7 @@ mv = val["milestonesZAR"]
 app, gzf, ernie = facts["app"], facts["golfzon"], facts["ernie"]
 uof = d["useOfFunds"]["items"]
 uof_by = {u["key"]: u for u in uof}
+uof_budget, uof_revenue = d["useOfFunds"]["budget2027ZAR"], d["useOfFunds"]["revenue2027ZAR"]
 
 # ------------------------------------------------------------------ formats
 neg = lambda v: "−" if v < 0 else ""
@@ -64,6 +65,7 @@ split = prod["simSplitPct"]
 unit = bc["unit"]
 dc = bc["debtCover"]
 q70 = sens["bayUse70"]
+EQ = f"{rd['amountZAR'] / rd['postMoneyZAR'] * 100:.1f}".rstrip("0").rstrip(".") + "%"   # 15.2%, 20%
 first_payout = next(y for y in Y if f["bayDistributionsZAR"][I[y]] > 0)
 
 
@@ -210,7 +212,7 @@ def raiseband():
     </div>
     <div class="step">
       <span class="k">Step two · {esc(rd['timing'])}</span>
-      <div class="n tab">{rm(rd['amountZAR'])} <small>for {rd['equityPct']:.0f}%</small></div>
+      <div class="n tab">{rm(rd['amountZAR'])} <small>for {EQ}</small></div>
       <p>{r0(rd['preMoneyZAR'])} pre-money, {r0(rd['postMoneyZAR'])} post. {rm(rd['minimumTicketZAR'])} minimum. The bays are funded separately.</p>
     </div>
     <div class="act">
@@ -589,7 +591,7 @@ def numbers_section():
 def risk_section():
     qa = [
         ("globe", "Will Golfzon's bays carry this, and what if Korea says no?",
-         f"Phase one runs on features Golfzon's bays already have, and the integration is built. Most rounds are in Korea, where paid-entry prizes still need clearing; the plan assumes 2027. On the rest of the network alone the round marks at {x(sens['outsideKorea']['roundMultiple'])}. Without Korea and without Virgin Active it's {x(sens['koreaOutNoVirginActive']['roundMultiple'])}, and cash would run to {sens['koreaOutNoVirginActive']['cashLastsTo']}; we'd cut costs long before that."),
+         f"Phase one runs on features Golfzon's bays already have, and the integration is built. Most rounds are in Korea, where paid-entry prizes still need clearing; the plan assumes 2027. On the rest of the network alone the round marks at {x(sens['outsideKorea']['roundMultiple'])}. Without Korea and without Virgin Active it's {x(sens['koreaOutNoVirginActive']['roundMultiple'])}, and cash would run to {sens['koreaOutNoVirginActive']['cashLastsTo']}; we'd know about Korea during 2027 and cut costs well before then."),
         ("shield", "Will an insurer cover a simulator ace?",
          f"Santam has agreed in principle. After commission the cover breaks even at one ace in {n(prod['simInsurerBreakEvenOneIn'])}; Golfzon measures about one in {n(prod['simAceMeasuredOneIn'])}. That's why we play the hardest setting, rotate the hole weekly and cap entries. If the premium lands at 30%, not 24%, it comes out of our share and the round marks at {x(terms['simPremium30']['roundMultiple'])}. Indwe both sponsors us and places the cover, so a second carrier joins the panel before the simulator tiers scale."),
         ("bank", "Who pays for the bays?",
@@ -654,21 +656,21 @@ def deal_section():
           <dt>At the round's price</dt><dd>R1m converts as R{nt['equivalentAtRoundZAR'] / 1e6:.2f}m<small>{nt['stakePct']}% of the company</small></dd>
           <dt>Marked at December 2029</dt><dd>{x(nt['multiple2029'])}<small>{x(nt['hardCaseMultiple2029'])} in the hard case</small></dd>
         </dl>
-        <p class="uses">At {r0(rd['preMoneyZAR'])} pre the cap is the better price, so the note converts as if we were worth {r0(nt['conversionPreMoneyZAR'])}. It converts inside the pre-money, so the round still buys exactly {rd['equityPct']:.0f}%. Term sheet on request.</p>
+        <p class="uses">At {r0(rd['preMoneyZAR'])} pre the cap is the better price, so the note converts as if we were worth {r0(nt['conversionPreMoneyZAR'])}. It converts inside the pre-money, so the round still buys its full {EQ}. Term sheet on request.</p>
       </div>
       <div class="termcard reveal">
         <span class="k">Step two · {esc(rd['timing'])}</span>
         <h3>The round</h3>
         <dl class="tab">
-          <dt>Raising</dt><dd>{rm(rd['amountZAR'])} for {rd['equityPct']:.0f}%<small>≈ {usd(rd['amountZAR'])}</small></dd>
+          <dt>Raising</dt><dd>{rm(rd['amountZAR'])} for {EQ}<small>≈ {usd(rd['amountZAR'])}</small></dd>
           <dt>Pre / post</dt><dd>{r0(rd['preMoneyZAR'])} / {r0(rd['postMoneyZAR'])}<small>≈ {usd(rd['preMoneyZAR'])} / {usd(rd['postMoneyZAR'])}</small></dd>
           <dt>Minimum ticket</dt><dd>{rm(rd['minimumTicketZAR'])}</dd>
           <dt>Marked at December 2029</dt><dd>{x(rd['multiple2029'])}<small>{x(rd['hardCaseMultiple2029'])} in the hard case · {x(rd['multiple2032'])} by 2032</small></dd>
         </dl>
-        <p class="uses"><strong>What it pays for: our 2027</strong></p>
+        <p class="uses"><strong>What it pays for: our {rm(uof_budget)} budget for 2027</strong></p>
         <div class="usebar tab" role="img" aria-label="Use of funds: {esc(', '.join(f"{u['label']} {u['pct']}%" for u in order))}">{bar}</div>
         <ul class="uselist tab">{ulist}</ul>
-        <p class="uses">No bay equity. Revenue covers part of 2027, so at our lowest point we've used {rm(cash['peakNetSpendZAR'])} and still hold {rm(cash['lowestQuarterZAR'])}. That cushion carries the hard case to {cash['hardCaseCashLastsTo']}.</p>
+        <p class="uses">Revenue pays for {rm(uof_revenue)} of it; the round covers the rest. At our lowest point, {cash['lowestQuarter']}, we've used {rm(cash['peakNetSpendZAR'])} and still hold {rm(cash['lowestQuarterZAR'])}: enough to ride out any one thing going wrong without cutting a cost. None of it goes into the bays.</p>
       </div>
     </div>
 
@@ -714,7 +716,7 @@ def deal_section():
 def faq_section():
     qa = [
         ("What exactly am I buying?",
-         f"Now: a convertible note in Get Lucky Golf Club (Pty) Ltd, {rm(nt['amountZAR'])} in total, converting into the {esc(rd['timing'])} round at a {r0(nt['capPreMoneyZAR'])} cap or a {nt['discountPct']}% discount, whichever is better for you. Then: ordinary shares, {rm(rd['amountZAR'])} for {rd['equityPct']:.0f}% at {r0(rd['preMoneyZAR'])} pre-money, from {rm(rd['minimumTicketZAR'])}. Both are in Get Lucky, not the bay company."),
+         f"Now: a convertible note in Get Lucky Golf Club (Pty) Ltd, {rm(nt['amountZAR'])} in total, converting into the {esc(rd['timing'])} round at a {r0(nt['capPreMoneyZAR'])} cap or a {nt['discountPct']}% discount, whichever is better for you. Then: ordinary shares, {rm(rd['amountZAR'])} for {EQ} at {r0(rd['preMoneyZAR'])} pre-money, from {rm(rd['minimumTicketZAR'])}. Both are in Get Lucky, not the bay company."),
         ("Why two companies?",
          f"A bay is an asset that debt can finance; the platform is a growth business that equity should. Split them and your money builds Golfzon and the team, Get Lucky carries no bay debt, and the bays are funded by investors who want an asset-backed investment that pays out. We still earn {st['feePct']}% of everything the bays take, and half their profit once the bay investors are paid back."),
         ("Can I invest in the bay company too?",
@@ -807,7 +809,8 @@ BANNED = [
     (r"\$43,000|\$40,000|\$35,000|\$32,000|\$30,000|\$25,000|\$99[ -]a[ -]month|Tier 1 pricing|Tier 2 pricing|FOB Busan|1\.3× (the )?hardware",
      "Golfzon's confidential chain pricing"),
     (r"5% non-diluting|5% of (the company's )?net profit|5% of Get Lucky|5% of any sale|founding 5%|holds 5%", "Ernie's percentage"),
-    (r"R126m|R140m post|R14\.0m for 10%|R53\.3m|R8\.0m for 15%|R4\.0m for 10%", "a superseded round"),
+    (r"R126m|R140m post|R14\.0m for 10%|R53\.3m|R8\.0m for 15%|R4\.0m for 10%|R70m post|R14\.0m for 20%|R14\.0m in Q1|R14m in Q1|R70m",
+     "a superseded round"),
     (r"(?i)\bregistry\b|\bgames\b|game of chance|icons cup|back an icon|\bbet(s|ting)?\b|bet on yourself|\bjackpot\b|golf gods",
      "retired features and language: games, the registry, betting"),
     (r"(?i)whatsapp|\bunlimited\b|\bpivot\b|old plan|previous plan", "retired framings"),
