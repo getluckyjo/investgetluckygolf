@@ -105,8 +105,8 @@ def more(summary, body, cls="more"):
 
 # ------------------------------------------------------------------ the revenue chart
 def revenue_chart():
-    series = [("Golfzon network", rev["golfzon"], "#d6fb4b"), ("Bay fee", rev["bayFee"], "#8fbf7a"),
-              ("The app, on course", rev["onCourse"], "#c9a94e"), ("Sponsorship", rev["sponsorship"], "rgba(245,238,222,.5)")]
+    series = [("On simulators (Golfzon)", rev["golfzon"], "#d6fb4b"), ("In the gym (our fee)", rev["bayFee"], "#8fbf7a"),
+              ("On course (the app)", rev["onCourse"], "#c9a94e"), ("Sponsorship", rev["sponsorship"], "rgba(245,238,222,.5)")]
     W, H, L, R, T, B = 720, 320, 56, 48, 22, 36
     top = max(rev["total"])
     step = 50e6
@@ -117,7 +117,7 @@ def revenue_chart():
     y_ = lambda v: T + ph - v / ymax * ph
     m_ = lambda pct: T + ph - (pct + 50) / 150 * ph          # right axis: -50% to 100%
     out = [f'<svg class="chart" viewBox="0 0 {W} {H}" role="img" aria-labelledby="chart-t chart-d">',
-           '<title id="chart-t">Get Lucky\'s forecast revenue by engine, and EBITDA margin, 2027 to 2032</title>',
+           '<title id="chart-t">Get Lucky\'s forecast revenue by channel, and EBITDA margin, 2027 to 2032</title>',
            '<desc id="chart-d">' + esc("; ".join(
                f"{y}: revenue {rm(rev['total'][I[y]])}, EBITDA margin {pc(f['ebitdaMarginPct'][I[y]])}" for y in Y)) + '</desc>']
     v = 0
@@ -165,7 +165,7 @@ def nav():
   <div class="pill">
     <a class="logo" href="#top" aria-label="Get Lucky Golf, back to top"><img src="assets/logos/logo-corner.svg" alt="Get Lucky" width="52" height="40"></a>
     <div class="links">
-      <a href="#app">The app</a><a href="#golfzon">Golfzon</a><a href="#gyms">The gyms</a><a href="#ernie">Ernie</a><a href="#team">Team</a><a href="#numbers">Numbers</a><a href="#deal">The raise</a>
+      <a href="#app">On course</a><a href="#golfzon">Simulators</a><a href="#gyms">Gyms</a><a href="#ernie">Ernie</a><a href="#team">Team</a><a href="#numbers">Numbers</a><a href="#deal">The raise</a>
     </div>
     <a class="btn btn-lime" href="#deal">The terms</a>
   </div>
@@ -180,7 +180,7 @@ def hero():
     <div class="copy">
       <span class="chip live"><span class="live-dot"></span>Investor briefing · October 2026</span>
       <h1 class="display-xl">Golf's biggest shot <span class="lime">goes global.</span></h1>
-      <p class="lede"><strong>We sell one insured swing at a life-changing prize.</strong> We built the app and proved it on South African courses. In 2027 it goes onto Golfzon's {n(gz['locations'])} simulator locations and into golf bays in Planet Fitness and Virgin Active, with Ernie Els on board.</p>
+      <p class="lede"><strong>One insured swing at a life-changing prize, in three places.</strong> On course with our app, live in South Africa. On Golfzon's {n(gz['locations'])} simulator locations worldwide. And in our gym bays with Planet Fitness and Virgin Active, to own the local simulator market. Ernie Els is on board.</p>
       <div class="btns">
         <a class="btn btn-lime" href="#raise">See the raise</a>
         <a class="btn btn-outline" href="{app['url']}" target="_blank" rel="noopener">Try the app</a>
@@ -190,9 +190,9 @@ def hero():
   </div>
   <div class="wrap">
     <div class="stats tab">
-      <div class="stat"><div class="n">{n(gz['locations'])}</div><div class="l">Golfzon locations, the world's biggest simulator network</div></div>
-      <div class="stat"><div class="n">{bc['totalBays']}</div><div class="l">Gym bays: {pt['planetFitness']['bays']} signed with Planet Fitness, {pt['virginActive']['bays']} in talks with Virgin Active</div></div>
-      <div class="stat"><div class="n">{app['courses']}</div><div class="l">South African courses live in the app</div></div>
+      <div class="stat"><div class="n">{app['courses']}</div><div class="l">On course: South African courses live in the app</div></div>
+      <div class="stat"><div class="n">{n(gz['locations'])}</div><div class="l">On simulators: Golfzon locations worldwide</div></div>
+      <div class="stat"><div class="n">{bc['totalBays']}</div><div class="l">In the gym: bays, {pt['planetFitness']['bays']} signed with Planet Fitness, {pt['virginActive']['bays']} in talks with Virgin Active</div></div>
       <div class="stat"><div class="n"><span class="lime">{r0(ladder[-1]['prize'])}</span></div><div class="l">Top prize, insured by Santam</div></div>
     </div>
   </div>
@@ -221,24 +221,32 @@ def raiseband():
 </section>"""
 
 
-def moves():
+def concept():
+    def facts_(*pairs):
+        return '<dl class="tile-facts tab">' + "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in pairs) + "</dl>"
+    other = rev["total"][k29] - rev["onCourse"][k29] - rev["golfzon"][k29] - rev["bayFee"][k29]
     return f"""
-<section class="section paper" aria-labelledby="moves-h">
+<section class="section paper" aria-labelledby="concept-h">
   <div class="wrap">
     <div class="head">
-      <span class="kicker">The plan in four moves</span>
-      <h2 class="display-lg" id="moves-h">The swing works. <span class="green">Now we scale it.</span></h2>
+      <span class="kicker">The concept</span>
+      <h2 class="display-lg" id="concept-h">One shot. <span class="green">Three places to play.</span></h2>
+      <p class="lede"><strong>Every channel sells the same thing: one swing at a hole-in-one, for a prize Santam insures.</strong> We proved it on South African courses. Now it goes onto simulators worldwide with Golfzon, and into the gym, where we plan to own South Africa's simulator market.</p>
     </div>
-    <div class="bento">
-      <a class="tile b1 reveal" href="#app"><img src="assets/img/golf-day-scan.webp" alt="" loading="lazy" width="900" height="1350"><span class="chip live">Live</span>
-        <span class="num">01</span><h3>The app</h3><p>One app runs every swing we sell.</p></a>
-      <a class="tile b2 reveal" href="#golfzon"><img src="assets/img/golfzon-demo.webp" alt="" loading="lazy" width="1200" height="630"><span class="chip live">Integration built</span>
-        <span class="num">02</span><h3>Golfzon</h3><p>The swing on {n(gz['locations'])} locations, verified by the bay itself.</p></a>
-      <a class="tile b3 reveal" href="#gyms"><img src="assets/img/planet-golf-mobile.webp" alt="" loading="lazy" width="1672" height="941" style="object-position:30% 50%"><span class="chip live">Planet Fitness signed</span>
-        <span class="num">03</span><h3>The gyms</h3><p>Golf bays in the gym, booked like padel.</p></a>
-      <a class="tile b4 reveal" href="#ernie"><img src="assets/img/ernie-open.webp" alt="" loading="lazy" width="1800" height="1200" style="object-position:40% 40%"><span class="chip">Founding Ambassador</span>
-        <span class="num">04</span><h3>Ernie Els</h3><p>A shareholder, not a hired face.</p></a>
+    <div class="channels">
+      <a class="tile reveal" href="#app"><img src="assets/img/golf-day-scan.webp" alt="" loading="lazy" width="900" height="1350"><span class="chip live">Live</span>
+        <span class="num">01 · The app · South Africa</span><h3>On course</h3><p>Pick a par 3 on any of {app['courses']} courses and film the swing. Hole it and Santam pays.</p>
+        {facts_(("Paid swings, year one", n(tr['paidSwings'])), ("Our revenue, 2029", rm(rev['onCourse'][k29])))}</a>
+      <a class="tile reveal" href="#golfzon"><img src="assets/img/golfzon-demo.webp" alt="" loading="lazy" width="1200" height="630"><span class="chip live">Integration built</span>
+        <span class="num">02 · Golfzon · Worldwide</span><h3>On simulators</h3><p>The same swing on the world's biggest simulator network. The bay measures the shot and signs it.</p>
+        {facts_(("Golfzon locations", n(gz['locations'])), ("Our revenue, 2029", rm(rev['golfzon'][k29])))}</a>
+      <a class="tile reveal" href="#gyms"><img src="assets/img/planet-golf-mobile.webp" alt="" loading="lazy" width="1672" height="941" style="object-position:30% 50%"><span class="chip live">Planet Fitness signed</span>
+        <span class="num">03 · Planet Fitness, Virgin Active</span><h3>In the gym</h3><p>Golf bays in the gym, booked like padel. The aim: own the local simulator market.</p>
+        {facts_((f"Bays: {pt['planetFitness']['bays']} signed, {pt['virginActive']['bays']} in talks", bc['totalBays']), ("Our fee, 2029", rm(rev['bayFee'][k29])))}</a>
+      <a class="tile wide reveal" href="#ernie"><img src="assets/img/ernie-open.webp" alt="" loading="lazy" width="1800" height="1200" style="object-position:40% 40%"><span class="chip">Founding Ambassador</span>
+        <span class="num">Across all three</span><h3>Ernie Els</h3><p>The face of the swing in every channel, and a shareholder, not a hired face.</p></a>
     </div>
+    <p class="note" style="margin-top:12px">Revenue from our plan. Add {rm(other)} of sponsorship and 2029 comes to {rm(rev['total'][k29])}. In the gym we also earn half the bays' profit once the bay investors are repaid.</p>
   </div>
 </section>"""
 
@@ -261,8 +269,8 @@ def app_section():
 <section class="section white" id="app" aria-labelledby="app-h">
   <div class="wrap">
     <div class="head">
-      <span class="kicker">01 · The app</span>
-      <h2 class="display-lg" id="app-h">We built it. <span class="green">It's live.</span></h2>
+      <span class="kicker">01 · On course · South Africa</span>
+      <h2 class="display-lg" id="app-h">On course. <span class="green">Live today.</span></h2>
       <p class="lede"><strong>Pick a par 3, pick a stake, film the swing.</strong> Hole it and Santam pays, never another golfer. Live on {app['courses']} South African courses, and it installs from the browser.</p>
     </div>
     <ol class="track icons">{track}</ol>
@@ -320,8 +328,8 @@ def golfzon_section():
   <div class="bgimg" aria-hidden="true"><img src="assets/img/golfzon-course.webp" alt="" loading="lazy" width="1377" height="687"></div>
   <div class="wrap">
     <div class="head">
-      <span class="kicker">02 · Golfzon</span>
-      <h2 class="display-lg" id="gz-h">{n(gz['locations'])} locations. <span class="lime">Now with something to play for.</span></h2>
+      <span class="kicker">02 · On simulators · Worldwide</span>
+      <h2 class="display-lg" id="gz-h">On simulators. <span class="lime">{n(gz['locations'])} Golfzon locations.</span></h2>
       <p class="lede"><strong>Golfzon is the world's biggest simulator network</strong> and the official simulator of the U.S. Open. Its bays already measure every shot. We built the integration that turns one of those shots into an insured swing at up to ${sim_ladder[-1]['prize']:,}. It's live below: take a swing.</p>
     </div>
     <figure class="reveal">
@@ -385,9 +393,9 @@ def gyms_section():
   <div class="wrap">
     <div class="split wide-left" style="align-items:end;margin-bottom:32px">
       <div class="head" style="margin:0">
-        <span class="kicker">03 · The gyms</span>
-        <h2 class="display-lg" id="gyms-h">Golf bays in the gym. <span class="green">Booked like padel.</span></h2>
-        <p class="lede"><strong>Planet Fitness has signed for {pt['planetFitness']['bays']} bays, first installs in {esc(pt['planetFitness']['firstInstalls'])}.</strong> Virgin Active is in talks for {pt['virginActive']['bays']} more. The gym gives us the space and the members and takes {bc['assumptions']['gymSharePct']}% of every rand. It puts in no capital.</p>
+        <span class="kicker">03 · In the gym · South Africa</span>
+        <h2 class="display-lg" id="gyms-h">In the gym. <span class="green">Owning the local market.</span></h2>
+        <p class="lede"><strong>Golf bays in South Africa's leading gym chains, booked like padel.</strong> Planet Fitness has signed for {pt['planetFitness']['bays']} bays, first installs in {esc(pt['planetFitness']['firstInstalls'])}; Virgin Active is in talks for {pt['virginActive']['bays']} more. The gym gives us the space and the members and takes {bc['assumptions']['gymSharePct']}% of every rand. It puts in no capital.</p>
       </div>
       <figure class="photo reveal" style="aspect-ratio:16/9"><img src="assets/img/planet-golf-mobile.webp" alt="Concept render: a Planet Golf simulator bay, powered by Golfzon, in a mobile unit outside a Planet Fitness club at dusk" loading="lazy" width="1672" height="941"><figcaption>Concept: Planet Golf at a Planet Fitness club</figcaption></figure>
     </div>
@@ -485,10 +493,10 @@ def numbers_section():
         return (f'<tr class="{cls}"><td>{label}{t}</td>' + "".join(
             f'<td class="n{" hide-sm" if y == 2028 else ""}">{vals(I[y])}</td>' for y in (2027, 2028, 2029, 2032)) + "</tr>")
     pl = "".join([
-        pl_row("Golfzon network", lambda k: mm(rev["golfzon"][k]), "sub"),
-        pl_row("The app, on course", lambda k: mm(rev["onCourse"][k]), "sub"),
+        pl_row("On simulators: Golfzon", lambda k: mm(rev["golfzon"][k]), "sub"),
+        pl_row("On course: the app", lambda k: mm(rev["onCourse"][k]), "sub"),
         pl_row("Sponsorship", lambda k: mm(rev["sponsorship"][k]), "sub"),
-        pl_row("Bay fee", lambda k: mm(rev["bayFee"][k]), "sub", f"{st['feePct']}% of the bay company's revenue"),
+        pl_row("In the gym: our fee", lambda k: mm(rev["bayFee"][k]), "sub", f"{st['feePct']}% of the bay company's revenue"),
         pl_row("Revenue", lambda k: mm(rev["total"][k]), "total"),
         pl_row("EBITDA", lambda k: mm(f["ebitdaZAR"][k])),
         pl_row("EBITDA margin", lambda k: pc(f["ebitdaMarginPct"][k]), "sub"),
@@ -550,10 +558,10 @@ def numbers_section():
     <div class="head">
       <span class="kicker">06 · The numbers</span>
       <h2 class="display-lg" id="num-h">{rm(rev['total'][0])} to {rm(rev['total'][-1])}. <span class="green">Our revenue, forecast.</span></h2>
-      <p class="lede"><strong>This is Get Lucky's own revenue:</strong> our share of every swing, sponsorship and a {st['feePct']}% fee for running the bays. We've planned on about half of what we're aiming for, and it still works.</p>
+      <p class="lede"><strong>This is Get Lucky's own revenue:</strong> our share of every swing on course and on Golfzon, sponsorship, and a {st['feePct']}% fee for running the gym bays. We've planned on about half of what we're aiming for, and it still works.</p>
     </div>
     <div class="chartcard reveal">
-      <h3>Revenue by engine, and EBITDA margin</h3>
+      <h3>Revenue by channel, and EBITDA margin</h3>
       <div class="legend" aria-hidden="true">{legend}</div>
       {chart}
     </div>
@@ -758,10 +766,10 @@ def footer():
 
 
 def page():
-    desc = (f"Get Lucky Golf sells one insured swing at a hole-in-one. The app is live; in 2027 it goes onto Golfzon's "
-            f"{n(gz['locations'])} locations and into gym bays in Planet Fitness (signed) and Virgin Active (in talks), with "
-            f"Ernie Els as Founding Ambassador. A {rm(nt['amountZAR'])} convertible note now, {rm(rd['amountZAR'])} in {rd['timing']}.")
-    body = "".join([nav(), hero(), '<main id="main">', raiseband(), moves(), app_section(), golfzon_section(), gyms_section(),
+    desc = (f"Get Lucky Golf sells one insured swing at a hole-in-one, in three places: on course with our app, live in South Africa; "
+            f"on Golfzon's {n(gz['locations'])} simulator locations worldwide; and in our own gym bays in Planet Fitness (signed) "
+            f"and Virgin Active (in talks). Ernie Els is Founding Ambassador. A {rm(nt['amountZAR'])} convertible note now, {rm(rd['amountZAR'])} in {rd['timing']}.")
+    body = "".join([nav(), hero(), '<main id="main">', raiseband(), concept(), app_section(), golfzon_section(), gyms_section(),
                     ernie_section(), team_section(), numbers_section(), risk_section(), deal_section(), faq_section(),
                     cta_section(), "</main>", footer()])
     return f"""<!DOCTYPE html>
