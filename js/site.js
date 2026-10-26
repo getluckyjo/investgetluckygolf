@@ -75,3 +75,28 @@
   range.addEventListener("input", render);
   render();
 })();
+
+/* The Golfzon demo shows its three panes from 1,180px wide. On a wide page,
+   render it at 1,280 x 800 and scale it to the frame; on narrow screens let
+   it lay out natively (it switches to tabs on a phone). */
+(function () {
+  "use strict";
+  var box = document.getElementById("demo");
+  if (!box) return;
+  var frame = box.querySelector("iframe");
+  var W = Number(box.dataset.w), H = Number(box.dataset.h);
+  function fit() {
+    var w = box.clientWidth;
+    if (w >= 900) {
+      var s = w / W;
+      frame.style.width = W + "px"; frame.style.height = H + "px";
+      frame.style.transform = "scale(" + s + ")";
+      box.style.height = Math.round(H * s) + "px";
+    } else {
+      frame.style.width = "100%"; frame.style.height = "100%"; frame.style.transform = "none";
+      box.style.height = "880px";
+    }
+  }
+  fit();
+  window.addEventListener("resize", fit);
+})();

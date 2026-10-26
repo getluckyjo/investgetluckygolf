@@ -281,8 +281,10 @@ def golfzon_section():
       <p class="lede"><strong>Golfzon is the world's largest simulator network</strong>, with more than {gz['roundsPerYear'] / 1e6:.0f} million rounds a year, and the official simulator of the U.S. Open. Its bays already measure every shot. We built the integration that turns one of those shots into an insured swing at up to ${sim_ladder[-1]['prize']:,}.</p>
     </div>
     <figure class="reveal">
-      <div class="frame"><img src="assets/img/golfzon-demo.webp" alt="The Get Lucky and Golfzon demo: a Golfzon bay shows a hole-in-one, the signed messages between Golfzon and Get Lucky, and the golfer's phone showing a $100,000 claim" width="1200" height="630" loading="lazy"></div>
-      <figcaption class="frame-cap note">The working integration we built for Golfzon: the bay, the signed messages between the two systems, and the golfer's phone. <a class="link-arrow" href="{gzf['demoUrl']}" target="_blank" rel="noopener">Open the live demo</a></figcaption>
+      <div class="frame demo-embed" id="demo" data-w="1280" data-h="800">
+        <iframe src="{gzf['demoUrl']}" title="Live demo: the Get Lucky challenge on a Golfzon bay" loading="lazy" allow="fullscreen" referrerpolicy="no-referrer"></iframe>
+      </div>
+      <figcaption class="frame-cap note">This is the live demo we built for Golfzon, running: the bay, every signed message between the two systems, and the golfer's phone. Watch the one-minute tour or take a swing yourself. Golfzon's side is simulated with a demo key. <a class="link-arrow" href="{gzf['demoUrl']}" target="_blank" rel="noopener">Open it full screen</a></figcaption>
     </figure>
     <div class="sixstats tab">
       <div class="stat"><div class="n">{n(gz['locations'])}</div><div class="l">Golfzon locations worldwide</div></div>
@@ -379,6 +381,8 @@ def gyms_section():
       <div class="card reveal">{icon('users')}<h3 style="margin-top:14px">Leagues across the chain</h3><p>Club against club, Sandton against Umhlanga, on the same network. Coaching and a golf host in every Signature club.</p></div>
       <div class="card reveal">{icon('trophy')}<h3 style="margin-top:14px">The insured shot on every bay</h3><p>The same app and the same Santam cover, from {rand(ladder[0]['stake'])} a swing. Half of simulator players are not course golfers: the bay sells golf to people who would never join a club.</p></div>
     </div>
+
+    <figure class="photo reveal" style="aspect-ratio:2/1;margin-top:16px"><img src="assets/img/planet-golf-rooftop.webp" alt="Concept render: a Planet Golf pavilion, powered by Golfzon, on the rooftop of a Planet Fitness Signature club at dusk, beside a running track" loading="lazy" width="1672" height="941" style="object-position:50% 60%"><figcaption>Concept: a Planet Golf pavilion on a Planet Fitness Signature rooftop</figcaption></figure>
 
     <h3 class="display-md" style="margin:64px 0 18px">Three bays, one reference design</h3>
     <div class="bays">
