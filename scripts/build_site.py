@@ -239,13 +239,6 @@ def moves():
       <a class="tile b4 reveal" href="#ernie"><img src="assets/img/ernie-open.webp" alt="" loading="lazy" width="1800" height="1200" style="object-position:40% 40%"><span class="chip">Founding Ambassador</span>
         <span class="num">04</span><h3>Ernie Els</h3><p>A shareholder, not a hired face.</p></a>
     </div>
-    <figure class="founder reveal">
-      <blockquote>
-        <p>I built The Duchess with AB InBev and RMB and took it to ten million units in five countries. What it taught me: put a simple product people love into partners who already have the customers.</p>
-        <p>That's the play. Golfzon has the bays. Planet Fitness and Virgin Active have the members. Santam carries the risk. Ernie brings the moment. We built the swing and the app that runs it, and this round pays for the team and the Golfzon build, not hardware.</p>
-      </blockquote>
-      <figcaption><img src="assets/img/team-johannes.webp" alt="" width="44" height="44" loading="lazy"><span class="sig">Johannes</span><span class="who">Johannes le Roux, founder</span></figcaption>
-    </figure>
   </div>
 </section>"""
 
@@ -789,7 +782,7 @@ def page():
 <link rel="preload" href="assets/img/ernie-ace.webp" as="image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
