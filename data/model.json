@@ -78,30 +78,33 @@
       "multipleBasis": "Your stake at the round's post-money, marked at the plan's value on 31 December. An unrealised mark on a private holding, not a cash return."
     },
     "useOfFunds": {
-      "_note": "Get Lucky's 2027 budget by what it builds (the Golfzon integration team is 35% of 2027 central cost). Revenue pays for most of it; the round covers the rest and the cushion.",
-      "budget2027ZAR": 13470000.0,
+      "_note": "The round pays for what is new in 2027: the Golfzon build (the integration team is 35% of 2027 central cost) and the fixed launch budget. Revenue pays for the rest of the team and the costs that move with it. What is left is the reserve.",
       "revenue2027ZAR": 9480000.0,
+      "runningCost2027ZAR": 6960000.0,
       "items": [
-        {
-          "key": "team",
-          "label": "Team and operations",
-          "ZAR": 6300000.0,
-          "note": "Bay operations for the bay company, claims, finance, the on-course and golf-day desk",
-          "pct": 47
-        },
-        {
-          "key": "brand",
-          "label": "Brand and launch with Ernie",
-          "ZAR": 3660000.0,
-          "note": "Launch content with Ernie, leagues and partner activations",
-          "pct": 27
-        },
         {
           "key": "golfzon",
           "label": "Golfzon integration and global launch",
+          "short": "Golfzon",
           "ZAR": 3510000.0,
-          "note": "Engineering, the signed shot record, the ace data the insurer prices on, market launches",
-          "pct": 26
+          "note": "The integration team, the signed shot record, the ace data the insurer prices on, market launches",
+          "pct": 35
+        },
+        {
+          "key": "launch",
+          "label": "The launch with Ernie",
+          "short": "Launch",
+          "ZAR": 3000000,
+          "note": "Launch content with Ernie, leagues and partner activations",
+          "pct": 30
+        },
+        {
+          "key": "reserve",
+          "label": "Working capital and reserve",
+          "short": "Reserve",
+          "ZAR": 3490000.0,
+          "note": "What carries any one risk without cutting a cost",
+          "pct": 35
         }
       ]
     },

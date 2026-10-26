@@ -32,7 +32,7 @@ mv = val["milestonesZAR"]
 app, gzf, ernie = facts["app"], facts["golfzon"], facts["ernie"]
 uof = d["useOfFunds"]["items"]
 uof_by = {u["key"]: u for u in uof}
-uof_budget, uof_revenue = d["useOfFunds"]["budget2027ZAR"], d["useOfFunds"]["revenue2027ZAR"]
+uof_revenue, uof_running = d["useOfFunds"]["revenue2027ZAR"], d["useOfFunds"]["runningCost2027ZAR"]
 
 # ------------------------------------------------------------------ formats
 neg = lambda v: "−" if v < 0 else ""
@@ -616,15 +616,14 @@ def risk_section():
 
 
 def deal_section():
-    colours = {"team": "var(--green)", "brand": "var(--green-light)", "golfzon": "var(--lime)", "reserve": "var(--night)"}
+    colours = {"golfzon": "var(--lime)", "launch": "var(--green-light)", "reserve": "var(--green)"}
     text_col = {"golfzon": "var(--green)"}
-    order = sorted(uof, key=lambda u: -u["pct"])
+    order = uof
     bar = "".join(
         f'<div style="flex:{u["pct"]};background:{colours[u["key"]]};color:{text_col.get(u["key"], "var(--cream)")}" title="{esc(u["label"])}, {u["pct"]}%">'
-        + (f'{u["pct"]}%<span>{esc(u["label"].split(" ")[0])}</span>' if u["pct"] >= 10 else "") + "</div>" for u in order)
-    labels = {"team": "Team and operations, including running the bays"}
+        + (f'{u["pct"]}%<span>{esc(u["short"])}</span>' if u["pct"] >= 10 else "") + "</div>" for u in order)
     ulist = "".join(f'<li><i style="background:{colours[u["key"]]};{"outline:1px solid var(--line-strong)" if u["key"] == "golfzon" else ""}"></i>'
-                    f'<span>{esc(labels.get(u["key"], u["label"]))}</span><b>{rm(u["ZAR"])}</b></li>' for u in order)
+                    f'<span>{esc(u["label"])}</span><b>{rm(u["ZAR"])}</b></li>' for u in order)
     calc_attrs = (f'data-post="{rd["postMoneyZAR"]}" data-round="{rd["amountZAR"]}" data-min="{rd["minimumTicketZAR"]}" '
                   f'data-note="{nt["amountZAR"]}" data-note-equiv="{nt["equivalentAtRoundZAR"]}" data-v29="{rd["value2029ZAR"]}" '
                   f'data-v32="{rd["value2032ZAR"]}" data-vhard="{rd["hardCaseValue2029ZAR"]}" data-fx="{FX}"')
@@ -643,7 +642,7 @@ def deal_section():
     <div class="head">
       <span class="kicker">08 · The raise</span>
       <h2 class="display-lg" id="deal-h" style="color:var(--cream)">Two steps. <span class="lime">{r0(nt['amountZAR'])} now, {r0(rd['amountZAR'])} in {esc(rd['timing'])}.</span></h2>
-      <p class="lede">Both into Get Lucky. The note gets us through December: the sit-down with Golfzon and Ernie at Fancourt, the first build on a real bay, and the bay company set up. The round funds the team and the Golfzon roll-out.</p>
+      <p class="lede">Both into Get Lucky. The note gets us through December: the sit-down with Golfzon and Ernie at Fancourt, the first build on a real bay, and the bay company set up. The round funds the Golfzon build and the launch with Ernie; our revenue already pays the team.</p>
     </div>
     <div class="terms">
       <div class="termcard reveal">
@@ -667,10 +666,10 @@ def deal_section():
           <dt>Minimum ticket</dt><dd>{rm(rd['minimumTicketZAR'])}</dd>
           <dt>Marked at December 2029</dt><dd>{x(rd['multiple2029'])}<small>{x(rd['hardCaseMultiple2029'])} in the hard case · {x(rd['multiple2032'])} by 2032</small></dd>
         </dl>
-        <p class="uses"><strong>What it pays for: our {rm(uof_budget)} budget for 2027</strong></p>
+        <p class="uses"><strong>What the {rm(rd['amountZAR'])} pays for</strong></p>
         <div class="usebar tab" role="img" aria-label="Use of funds: {esc(', '.join(f"{u['label']} {u['pct']}%" for u in order))}">{bar}</div>
         <ul class="uselist tab">{ulist}</ul>
-        <p class="uses">Revenue pays for {rm(uof_revenue)} of it; the round covers the rest. At our lowest point, {cash['lowestQuarter']}, we've used {rm(cash['peakNetSpendZAR'])} and still hold {rm(cash['lowestQuarterZAR'])}: enough to ride out any one thing going wrong without cutting a cost. None of it goes into the bays.</p>
+        <p class="uses">Our revenue already pays for the team and the day-to-day: {rm(uof_running)} in 2027, against {rm(uof_revenue)} of revenue. So the round goes into what's new. At our lowest point, {cash['lowestQuarter']}, we still hold {rm(cash['lowestQuarterZAR'])}: enough to ride out any one thing going wrong without cutting a cost. None of it goes into the bays.</p>
       </div>
     </div>
 

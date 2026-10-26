@@ -488,29 +488,32 @@ def run(case):
 
 
 def use_of_funds(p):
-    """What the round pays for: Get Lucky's 2027 budget, split by what it builds.
-    Revenue pays for most of it and the round for the rest; what the plan never
-    touches is the cushion. The round goes into Get Lucky only: the bays are
-    funded in the bay company."""
+    """What the round pays for. In 2027 revenue already pays for the team and the
+    day-to-day (the core team, and the costs that move with revenue), so the round
+    goes into what is new: the Golfzon build and the launch with Ernie. The rest is
+    the reserve. The round goes into Get Lucky only: the bays are funded in the bay
+    company."""
     r = p["rows"][2027]
     golfzon = r["gzDirect"] + 0.35 * r["central"]          # the integration team: 35% of 2027 central
-    team = 0.65 * r["central"] + r["ocDirect"]
-    brand = r["brand"]
+    launch = r["brandFixed"]                               # the fixed launch budget, on top of brand at 8%
+    running = 0.65 * r["central"] + r["ocDirect"] + (r["brand"] - r["brandFixed"])
     items = [
-        {"key": "team", "label": "Team and operations", "ZAR": round(team, -4),
-         "note": "Bay operations for the bay company, claims, finance, the on-course and golf-day desk"},
-        {"key": "brand", "label": "Brand and launch with Ernie", "ZAR": round(brand, -4),
+        {"key": "golfzon", "label": "Golfzon integration and global launch", "short": "Golfzon",
+         "ZAR": round(golfzon, -4),
+         "note": "The integration team, the signed shot record, the ace data the insurer prices on, market launches"},
+        {"key": "launch", "label": "The launch with Ernie", "short": "Launch", "ZAR": round(launch, -4),
          "note": "Launch content with Ernie, leagues and partner activations"},
-        {"key": "golfzon", "label": "Golfzon integration and global launch", "ZAR": round(golfzon, -4),
-         "note": "Engineering, the signed shot record, the ace data the insurer prices on, market launches"},
     ]
-    budget = sum(i["ZAR"] for i in items)
+    items.append({"key": "reserve", "label": "Working capital and reserve", "short": "Reserve",
+                  "ZAR": ROUND_ZAR - sum(i["ZAR"] for i in items),
+                  "note": "What carries any one risk without cutting a cost"})
     for i in items:
-        i["pct"] = round(i["ZAR"] / budget * 100)
+        i["pct"] = round(i["ZAR"] / ROUND_ZAR * 100)
     items[-1]["pct"] = 100 - sum(i["pct"] for i in items[:-1])
-    return {"_note": ("Get Lucky's 2027 budget by what it builds (the Golfzon integration team is 35% of 2027 "
-                      "central cost). Revenue pays for most of it; the round covers the rest and the cushion."),
-            "budget2027ZAR": budget, "revenue2027ZAR": round(r["revenue"], -4), "items": items}
+    return {"_note": ("The round pays for what is new in 2027: the Golfzon build (the integration team is 35% of "
+                      "2027 central cost) and the fixed launch budget. Revenue pays for the rest of the team and "
+                      "the costs that move with it. What is left is the reserve."),
+            "revenue2027ZAR": round(r["revenue"], -4), "runningCost2027ZAR": round(running, -4), "items": items}
 
 
 def main():
