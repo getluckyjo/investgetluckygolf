@@ -1,0 +1,6 @@
+# Served: index.html, css/, js/, assets/. Never serve the model source (it
+# carries Golfzon's confidential chain pricing) or the data files.
+/scripts
+/data
+/README.md
+/CLAUDE.md

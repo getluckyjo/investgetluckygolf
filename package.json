@@ -1,0 +1,8 @@
+{
+  "name": "investgetluckygolf",
+  "private": true,
+  "description": "Get Lucky Golf investor briefing. Static; the only dependency is the helper the password gate in middleware.js uses to pass a request through.",
+  "dependencies": {
+    "@vercel/functions": "^3.9.3"
+  }
+}

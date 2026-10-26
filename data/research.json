@@ -1,0 +1,309 @@
+{
+ "_note": "Every externally-sourced claim shown on the site. Rule: a number appears publicly only if it comes from company documents or carries a named external source below. accessed = date the source was checked.",
+ "claims": [
+  {
+   "id": "global-golfers",
+   "claim": "112.2 million adults and juniors play golf worldwide (excluding USA & Mexico)",
+   "value": "112.2M",
+   "source": "The R&A — Global Golf Participation 2025",
+   "url": "https://www.randa.org/en/articles/over-100-million-golfers-in-randa-markets-as-global-participation-continues-to-grow",
+   "accessed": "2026-07-13",
+   "usedIn": [
+    "market"
+   ]
+  },
+  {
+   "id": "global-juniors",
+   "claim": "47.1 million juniors play golf globally (excl. US/Mexico), up 3.2M in one year",
+   "value": "47.1M",
+   "source": "The R&A — Global Golf Participation 2025",
+   "url": "https://www.randa.org/en/articles/over-100-million-golfers-in-randa-markets-as-global-participation-continues-to-grow",
+   "accessed": "2026-07-13",
+   "usedIn": [
+    "market"
+   ]
+  },
+  {
+   "id": "us-golfers-total",
+   "claim": "48.1 million Americans age 6+ played golf on- or off-course in 2025",
+   "value": "48.1M",
+   "source": "National Golf Foundation — Golf Participation in the U.S. 2026",
+   "url": "https://www.ngf.org/member-publication/golf-participation-in-the-u-s-2026/",
+   "accessed": "2026-07-13",
+   "usedIn": [
+    "market"
+   ]
+  },
+  {
+   "id": "us-golfers-oncourse",
+   "claim": "29.1 million Americans played on a golf course in 2025 — eighth consecutive year of growth",
+   "value": "29.1M",
+   "source": "National Golf Foundation — Graffis Report 2025 / Participation 2026",
+   "url": "https://clubandresortbusiness.com/ngfs-graffis-report-shows-golf-participation-surpassed-29m-for-eighth-consecutive-year-of-growth/",
+   "accessed": "2026-07-13",
+   "usedIn": [
+    "market"
+   ]
+  },
+  {
+   "id": "us-road-to-50m",
+   "claim": "US golf participation is on track to eclipse 50 million during 2026",
+   "value": "50M by 2026",
+   "source": "National Golf Foundation — The Road to 50 Million Golfers",
+   "url": "https://www.ngf.org/short-game/golfs-growth-era-the-road-to-50-million-golfers/",
+   "accessed": "2026-07-13",
+   "usedIn": [
+    "market"
+   ]
+  },
+  {
+   "id": "uk-record-rounds",
+   "claim": "Great Britain rounds played rose 14% in 2025 — the highest total since comparable records began in 2005",
+   "value": "+14% YoY, 20-year high",
+   "source": "Golf Today / The Golf Business (Sports Marketing Surveys data)",
+   "url": "https://golftoday.co.uk/record-golf-participation-in-great-britain-as-2025-sets-new-benchmark/",
+   "accessed": "2026-07-13",
+   "usedIn": [
+    "market"
+   ]
+  },
+  {
+   "id": "england-clubs",
+   "claim": "England alone has 1,735 golf clubs and 730,000+ club members",
+   "value": "1,735 clubs / 730k members",
+   "source": "The Golf Business (England Golf data)",
+   "url": "https://thegolfbusiness.co.uk/2025/04/how-many-golfers-and-golf-clubs-are-there-in-england/",
+   "accessed": "2026-07-13",
+   "usedIn": [
+    "market"
+   ]
+  },
+  {
+   "id": "golfzon-venues",
+   "claim": "GOLFZON operates 15,029 simulator locations worldwide: 10,802 commercial locations in Korea (74% of that market) and 331 in North America",
+   "value": "15,029 locations · 10,802 in Korea (74% share) · 331 in North America",
+   "source": "GOLFZON — 'Get Lucky with GOLFZON' partnership proposal, October 2026 (company document, in the dataroom)",
+   "url": "",
+   "accessed": "2026-10-26",
+   "usedIn": [
+    "golfzon",
+    "hero"
+   ]
+  },
+  {
+   "id": "korea-sim-rounds",
+   "claim": "~94 million rounds were logged on GolfZon simulators in South Korea in a single year — nearly twice the traditional rounds played nationwide",
+   "value": "94M rounds/yr",
+   "source": "GOLF.com — Inside South Korea's obsessive love of the game",
+   "url": "https://golf.com/news/golf-fixation-inside-south-koreas-obsessive-love-golf/",
+   "accessed": "2026-07-13",
+   "usedIn": [
+    "growth-sim",
+    "financials"
+   ]
+  },
+  {
+   "id": "korea-screen-industry",
+   "claim": "Korean screen golf is a $1.6bn industry across ~9,000 domestic venues",
+   "value": "$1.6bn / ~9,000 venues",
+   "source": "Seoulz — Korea Screen Golf Industry 2026",
+   "url": "https://www.seoulz.com/korea-screen-golf-industry-2026/",
+   "accessed": "2026-07-13",
+   "usedIn": [
+    "growth-sim"
+   ]
+  },
+  {
+   "id": "sim-market-global",
+   "claim": "The global golf simulator market reached ~$2.4bn in 2025, projected to ~$4.8bn by 2035",
+   "value": "$2.4bn → $4.8bn",
+   "source": "InsightAce Analytic / Grand View Research",
+   "url": "https://www.grandviewresearch.com/industry-analysis/golf-simulator-market-report",
+   "accessed": "2026-07-13",
+   "usedIn": [
+    "growth-sim",
+    "financials"
+   ]
+  },
+  {
+   "id": "us-offcourse-golfers",
+   "claim": "19 million Americans participated exclusively in off-course golf (simulators, ranges, golf entertainment) in 2025",
+   "value": "19M",
+   "source": "National Golf Foundation — Golf Participation in the U.S. 2026",
+   "url": "https://www.ngf.org/member-publication/golf-participation-in-the-u-s-2026/",
+   "accessed": "2026-07-13",
+   "usedIn": [
+    "growth-sim",
+    "market"
+   ]
+  },
+  {
+   "id": "ace-odds",
+   "claim": "The odds of an amateur making a hole-in-one are ~1 in 12,500; roughly one ace occurs per 3,500 rounds; only 1–2% of golfers make one in a given year",
+   "value": "1 in 12,500",
+   "source": "National Hole-in-One Registry via The Hustle",
+   "url": "https://thehustle.co/the-strange-business-of-hole-in-one-insurance",
+   "accessed": "2026-07-13",
+   "usedIn": [
+    "how-it-works"
+   ]
+  },
+  {
+   "id": "world-courses",
+   "claim": "There are 38,000+ golf courses across 206 of the world's 251 countries",
+   "value": "38,000+ courses / 206 countries",
+   "source": "The R&A — Golf Around the World (via National Golf Foundation)",
+   "url": "https://www.ngf.org/ras-golf-around-the-world-report/",
+   "accessed": "2026-07-14",
+   "usedIn": [
+    "market"
+   ]
+  },
+  {
+   "id": "europe-course-counts",
+   "claim": "Course counts in key European markets: UK 3,101, Germany 1,050, France 804",
+   "value": "UK 3,101 / DE 1,050 / FR 804",
+   "source": "The R&A — Golf Around the World",
+   "url": "https://www.ngf.org/short-game/golf-around-the-world/",
+   "accessed": "2026-07-14",
+   "usedIn": [
+    "market"
+   ]
+  },
+  {
+   "id": "ernie-bio",
+   "claim": "Ernie Els: 4 major championships (US Open 1994, 1997; The Open 2002, 2012), 70+ worldwide professional wins, former world No. 1, 788 weeks in the world top 10, World Golf Hall of Fame (2011), record 7× World Match Play champion",
+   "value": "4 majors / world No. 1",
+   "source": "Wikipedia / ernieels.com / European Tour records",
+   "url": "https://en.wikipedia.org/wiki/Ernie_Els",
+   "accessed": "2026-07-13",
+   "usedIn": [
+    "ernie"
+   ]
+  },
+  {
+   "id": "ernie-business",
+   "claim": "Ernie Els' commercial network spans the exact markets Get Lucky is expanding into: The Els Club Dubai, Els Club Teluk Datai & Desaru Coast (Malaysia), Trump International Lido (Indonesia), Ernie Els Design with an Asia-Pacific office, and Ernie Els Wines distributed in Asia travel retail",
+   "value": "UK / US / Middle East / Asia footprint",
+   "source": "ernieels.com — Course Portfolio & About Ernie Els Design",
+   "url": "https://ernieels.com/course-portfolio/",
+   "accessed": "2026-07-13",
+   "usedIn": [
+    "ernie",
+    "market"
+   ]
+  },
+  {
+   "id": "golfzon-rounds",
+   "claim": "More than 100 million rounds a year are played on GOLFZON simulators",
+   "value": "100m+ rounds a year",
+   "source": "GOLFZON America, partnership call and proposal, September–October 2026; Korea alone ~94m (GOLF.com)",
+   "url": "",
+   "accessed": "2026-10-26",
+   "usedIn": [
+    "golfzon",
+    "financials"
+   ]
+  },
+  {
+   "id": "golfzon-tour",
+   "claim": "GOLFZON Tour Season 3 (2026): 130+ facilities across 30 US states and 15 countries, $300,000 purse",
+   "value": "130+ venues · 15 countries · $300,000",
+   "source": "GOLFZON — 'Get Lucky with GOLFZON' partnership proposal, October 2026",
+   "url": "",
+   "accessed": "2026-10-26",
+   "usedIn": [
+    "golfzon"
+   ]
+  },
+  {
+   "id": "indoor-golfers",
+   "claim": "94.4 million people play indoor golf worldwide, growing about 10% a year",
+   "value": "94.4m indoor golfers · ~10% YoY",
+   "source": "GOLFZON — 'Get Lucky with GOLFZON' partnership proposal, October 2026",
+   "url": "",
+   "accessed": "2026-10-26",
+   "usedIn": [
+    "market"
+   ]
+  },
+  {
+   "id": "golfzon-usga",
+   "claim": "GOLFZON is the official simulator of the U.S. Open (USGA partnership, October 2025)",
+   "value": "Official simulator of the U.S. Open",
+   "source": "USGA / GOLFZON announcement, October 2025",
+   "url": "https://www.usga.org",
+   "accessed": "2026-10-26",
+   "usedIn": [
+    "golfzon"
+   ]
+  },
+  {
+   "id": "ngf-sim-players",
+   "claim": "8.1 million Americans played on a golf simulator in 2025, up 73% on pre-pandemic; 51% of them did not play a round on a course in the previous 12 months",
+   "value": "8.1m · 51% not on-course golfers",
+   "source": "National Golf Foundation — 'The Golf Simulator Opportunity' white paper, 2025",
+   "url": "https://www.ngf.org",
+   "accessed": "2026-10-12",
+   "usedIn": [
+    "bays",
+    "market"
+   ]
+  },
+  {
+   "id": "chiswick",
+   "claim": "The first-phase upgrade of Virgin Active's Chiswick Riverside club lifted membership 15%, revenue 23% and more than doubled EBITDA; the club added two simulator bays in September 2026, after those results",
+   "value": "+15% members · +23% revenue · EBITDA ×2+",
+   "source": "Moneyweb, 16 July 2026, reporting Brait FY26 results",
+   "url": "https://www.moneyweb.co.za",
+   "accessed": "2026-10-12",
+   "usedIn": [
+    "bays"
+   ]
+  },
+  {
+   "id": "icons-reach",
+   "claim": "Icons Cup South Africa (The Links at Fancourt, 11–13 December 2026) is broadcast live to more than 150 countries; the previous Icons event drew 38 million online views",
+   "value": "150+ countries · 38m views",
+   "source": "Icons Series — organisers' published event information and correspondence, October 2026",
+   "url": "https://www.icons-series.com/icons-cup-south-africa-2026",
+   "accessed": "2026-10-26",
+   "usedIn": [
+    "launch"
+   ]
+  },
+  {
+   "id": "virgin-active-sa",
+   "claim": "Virgin Active runs 136 clubs with 623,000 members in Southern Africa, its largest territory",
+   "value": "136 clubs · 623,000 members",
+   "source": "Brait PLC FY26 results and Virgin Active group disclosures, 2026",
+   "url": "https://www.brait.com",
+   "accessed": "2026-09-12",
+   "usedIn": [
+    "bays"
+   ]
+  },
+  {
+   "id": "planet-fitness-sa",
+   "claim": "Planet Fitness South Africa operates 51 clubs across Planet Fitness, Signature and JustGym, and opens about five new clubs a year",
+   "value": "51 clubs · ~5 new a year",
+   "source": "Planet Fitness South Africa club list, September 2026",
+   "url": "https://www.planetfitness.co.za",
+   "accessed": "2026-09-14",
+   "usedIn": [
+    "bays"
+   ]
+  },
+  {
+   "id": "sa-rounds",
+   "claim": "South Africans play about 4.2 million rounds a year in a R49 billion golf economy",
+   "value": "4.2m rounds · R49bn",
+   "source": "Investec, 2026",
+   "url": "https://www.investec.com",
+   "accessed": "2026-09-14",
+   "usedIn": [
+    "market"
+   ]
+  }
+ ]
+}

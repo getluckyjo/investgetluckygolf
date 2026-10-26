@@ -1,0 +1,26 @@
+{
+  "_note": "Facts the page states that do not come from the forecast. Each carries its source. Edit here, then run scripts/build_site.py.",
+  "app": {
+    "url": "https://www.getluckyholeinone.com",
+    "installUrl": "https://www.getluckyholeinone.com/install",
+    "courses": 101,
+    "minPar3Metres": 140,
+    "testsApprox": 800,
+    "_source": "getluckyapp: docs/course-par-3s.md (Oct 2026), __tests__ (54 files), ARCHITECTURE.md, scripts/pwa/generate-install-qr.mjs"
+  },
+  "golfDays": {
+    "october2026": ["the Bomb Squad day at Royal Johannesburg", "the NGC Amateur at Sun City"],
+    "_source": "getluckyapp docs/golf-days.md: events created in production, Oct 2026"
+  },
+  "golfzon": {
+    "demoUrl": "https://demogolfzon.vercel.app/",
+    "entryWindowMinutes": 15,
+    "_source": "simsoftware docs/golfzon-integration.md (25 Sep 2026) and the live demo; locations, rounds and phases from Golfzon's own proposal, Oct 2026"
+  },
+  "ernie": {
+    "majors": 4,
+    "wins": "70+",
+    "careerAces": 24,
+    "_source": "Public record; the latest ace a 5-iron from 193 yards in a senior major, May 2026"
+  }
+}
