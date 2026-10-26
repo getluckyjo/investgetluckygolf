@@ -21,11 +21,18 @@
   var bar = document.querySelector(".dealbar");
   var band = document.getElementById("raise");
   var deal = document.getElementById("deal");
-  if (bar && band && "IntersectionObserver" in window) {
-    var pastBand = false, inDeal = false;
-    var sync = function () { bar.classList.toggle("on", pastBand && !inDeal); };
-    new IntersectionObserver(function (es) { es.forEach(function (e) { pastBand = !e.isIntersecting && e.boundingClientRect.top < 0; sync(); }); }).observe(band);
-    if (deal) new IntersectionObserver(function (es) { es.forEach(function (e) { inDeal = e.isIntersecting; sync(); }); }).observe(deal);
+  // Measured on scroll, not observed: a jump back to the top never crosses the
+  // band, so an observer would leave the bar showing over the hero.
+  if (bar && band) {
+    var sync = function () {
+      var pastBand = band.getBoundingClientRect().bottom < 0;
+      var d = deal && deal.getBoundingClientRect();
+      var inDeal = d && d.top < window.innerHeight && d.bottom > 0;
+      bar.classList.toggle("on", pastBand && !inDeal);
+    };
+    window.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync);
+    sync();
   }
 
   // --- ticket calculator ------------------------------------------------------

@@ -203,12 +203,6 @@ figure { margin: 0; }
 .tryit { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center; }
 .tryit .qr { width: 128px; height: 128px; padding: 8px; background: var(--white); border-radius: 16px; }
 .tryit .qr img { width: 100%; height: 100%; }
-.features { display: grid; gap: 12px; }
-.features li { list-style: none; display: flex; gap: 14px; align-items: flex-start; }
-.features h3 { font-size: 16px; }
-.features p { font-size: 14.5px; color: var(--muted); margin-top: 2px; }
-.on-dark .features h3 { color: var(--cream); }
-.on-dark .features p { color: rgba(245, 238, 222, .72); }
 .proof { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 36px; padding: 26px; border-radius: 24px; background: var(--forest); color: var(--cream); }
 @media (min-width: 900px) { .proof { grid-template-columns: repeat(4, 1fr); } .proof > div + div { border-left: 1px solid rgba(245, 238, 222, .15); padding-left: 20px; } }
 .proof .n { font-family: var(--display); font-size: clamp(1.9rem, 3vw, 2.5rem); line-height: 1; color: var(--lime); }
@@ -348,11 +342,6 @@ details.more .body strong { color: var(--ink); }
 .on-dark details.more .body strong { color: var(--cream); }
 
 /* ---------- risk ---------- */
-.risks { display: grid; gap: 14px; }
-@media (min-width: 900px) { .risks { grid-template-columns: repeat(2, 1fr); } }
-.risks .card--glass { padding: 26px; }
-.risks h3 { font-size: 18px; color: var(--cream); line-height: 1.3; }
-.risks p { font-size: 15px; margin-top: 10px; }
 
 /* ---------- the raise ---------- */
 .raise { background: var(--forest); color: var(--cream); position: relative; overflow: hidden; }
@@ -481,3 +470,72 @@ footer a { color: rgba(245, 238, 222, .8); }
 /* the live Golfzon demo, embedded: scaled to fit on wide screens, native on phones */
 .demo-embed { position: relative; height: 880px; background: var(--night); }
 .demo-embed iframe { display: block; border: 0; width: 100%; height: 100%; transform-origin: 0 0; background: var(--night); }
+
+/* ---------- the founder's note ---------- */
+.founder { margin-top: 28px; max-width: 54rem; padding: clamp(22px, 4vw, 34px); border-radius: 24px; background: var(--white); border: 1px solid var(--line); border-left: 4px solid var(--lime); display: grid; gap: 18px; }
+.founder blockquote { margin: 0; display: grid; gap: 12px; }
+.founder blockquote p { font-size: 17px; line-height: 1.6; color: var(--ink); }
+.founder figcaption { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.founder figcaption img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+.founder .sig { font-family: "Caveat", cursive; font-size: 30px; font-weight: 600; line-height: 1; color: var(--green); }
+.founder .who { font-size: 13px; color: var(--muted); }
+
+/* ---------- step tracks with icons: the icon leads, the number sits in the corner ---------- */
+.track.icons li::before { display: none; }
+.track.icons .icon-disc { background: var(--lime); color: var(--green); margin-bottom: 14px; }
+.on-dark .track.icons .icon-disc { background: var(--lime); color: var(--green); }
+.track.icons .no { position: absolute; top: 20px; right: 18px; font: 800 14px/1 var(--display); color: var(--muted); opacity: .6; }
+.on-dark .track.icons .no { color: var(--cream); }
+@media (max-width: 899px) {
+  .track.icons li { grid-template-columns: 44px 1fr; }
+  .track.icons .icon-disc { margin-bottom: 0; grid-row: span 2; }
+}
+
+/* ---------- small icon cards, the app's traction stacked beside the photo ---------- */
+.iconcard { display: flex; gap: 14px; align-items: flex-start; }
+.iconcard p { margin-top: 4px; }
+.proof--stack { margin-top: 0; }
+@media (min-width: 900px) { .proof--stack { grid-template-columns: repeat(2, 1fr); } .proof--stack > div + div { border-left: 0; padding-left: 0; } }
+.phases.compact { grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+.phases.compact .phase { padding: 16px; }
+.phases.compact .phase h3 { font-size: 1.15rem; }
+
+/* ---------- the numbers: KPI row and the three cases ---------- */
+.kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 16px; }
+@media (min-width: 900px) { .kpis { grid-template-columns: repeat(4, 1fr); } }
+.kpis > div { display: flex; gap: 12px; align-items: center; padding: 16px; border-radius: var(--r); background: var(--paper); border: 1px solid var(--line); }
+.kpis b { display: block; font-family: var(--display); font-size: 1.6rem; line-height: 1; text-transform: uppercase; color: var(--green); }
+.kpis span { display: block; font-size: 13px; line-height: 1.35; color: var(--muted); margin-top: 4px; }
+.kpis .icon-disc { background: var(--white); }
+@media (max-width: 520px) { .kpis > div { flex-direction: column; align-items: flex-start; } }
+.cases { display: grid; gap: 12px; margin-top: 12px; }
+@media (min-width: 900px) { .cases { grid-template-columns: repeat(3, 1fr); } }
+.case { display: grid; gap: 6px; align-content: start; padding: 22px; border-radius: var(--r); background: var(--forest); color: var(--cream); }
+.case .k { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--lime); }
+.case b { font-family: var(--display); font-size: clamp(2.4rem, 4vw, 3.2rem); line-height: 1; color: var(--lime); }
+.case .l { font-size: 14px; line-height: 1.5; color: rgba(245, 238, 222, .76); }
+.case.hard { background: var(--white); color: var(--ink); border: 1px solid var(--line-strong); }
+.case.hard .k { color: var(--muted); }
+.case.hard b { color: var(--ink); }
+.case.hard .l { color: var(--muted); }
+.case.up { background: var(--lime); }
+.case.up .k, .case.up b { color: var(--green); }
+.case.up .l { color: var(--forest); }
+
+/* ---------- the risks: one question per row, the answer one click away ---------- */
+.qa-list { display: grid; gap: 10px; max-width: 58rem; }
+.qa-item { border-radius: 18px; background: rgba(245, 238, 222, .05); border: 1px solid rgba(245, 238, 222, .12); padding: 0 20px; }
+.qa-item summary { cursor: pointer; list-style: none; padding: 16px 0; display: flex; align-items: center; gap: 14px; font-weight: 600; font-size: 16px; color: var(--cream); }
+.qa-item summary::-webkit-details-marker { display: none; }
+.qa-item summary > span:not(.icon-disc) { flex: 1; }
+.qa-item summary::after { content: "+"; color: var(--lime); font-size: 22px; line-height: 1; }
+.qa-item[open] summary::after { content: "−"; }
+.qa-item[open] { border-color: rgba(214, 251, 75, .35); }
+.qa-item .a { padding: 0 0 18px 58px; font-size: 15px; }
+@media (max-width: 560px) { .qa-item .a { padding-left: 0; } }
+
+/* the collapsed panels read as buttons, so nobody misses the detail */
+details.more summary::after { content: "+"; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid currentColor; font-size: 15px; }
+details.more summary:hover { opacity: .8; }
+details.more[open] > summary { margin-bottom: 4px; }
+.display-xl, .display-lg, .display-md { text-wrap: balance; }
