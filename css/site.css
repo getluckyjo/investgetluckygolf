@@ -456,7 +456,7 @@ footer a { color: rgba(245, 238, 222, .8); }
 .hero .copy > .chip { justify-self: start; }
 .hero-photo { position: relative; border-radius: 28px; overflow: hidden; aspect-ratio: 4 / 5; max-height: 600px; border: 1px solid rgba(245, 238, 222, .14); box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .8); }
 .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 20%; }
-.hero-photo figcaption { position: absolute; left: 16px; bottom: 16px; }
+.hero-photo figcaption { position: absolute; left: 16px; top: 16px; }
 .hero-photo .chip { background: rgba(12, 22, 14, .72); color: var(--cream); backdrop-filter: blur(8px); }
 @media (max-width: 959px) { .hero-photo { aspect-ratio: 4 / 3; max-height: 420px; } }
 .terms { align-items: start; }
