@@ -56,6 +56,7 @@ def esc(s):
 
 
 EMAIL = "johannes@getluckygolfclub.com"
+SITE_URL = "https://investgetluckygolf.vercel.app"   # link previews need absolute URLs
 PHONE, PHONE_TEL = "+27 60 961 5091", "+27609615091"
 gz = pt["golfzon"]
 pf, va = bc["chains"]["planetFitness"], bc["chains"]["virginActive"]
@@ -803,9 +804,16 @@ def page():
 <meta name="description" content="{esc(desc)}">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0c160e">
-<meta property="og:title" content="Get Lucky Golf — Golf's biggest shot goes global">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Get Lucky Golf">
+<meta property="og:title" content="Get Lucky Golf — Investor briefing 2027">
 <meta property="og:description" content="{esc(desc)}">
-<meta property="og:image" content="assets/img/golfzon-demo.webp">
+<meta property="og:url" content="{SITE_URL}/">
+<meta property="og:image" content="{SITE_URL}/assets/og/share-2027.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="assets/logos/app-icon-192.png">
 <link rel="apple-touch-icon" href="assets/logos/app-icon-192.png">
 <link rel="preload" href="assets/fonts/PosterGothicRoundATF-Heavy.woff2" as="font" type="font/woff2" crossorigin>

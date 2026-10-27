@@ -1,7 +1,9 @@
 /* Site-wide password gate (Vercel Routing Middleware).
 
-   Every path is gated except the unlock form's POST target and the fonts and
-   logos the gate page itself shows. The password lives only in the Vercel
+   Every path is gated except the unlock form's POST target, the fonts and
+   logos the gate page itself shows, and the share card in /assets/og/. The gate
+   page carries the link-preview tags and answers 200, so WhatsApp and the like
+   show a card when the link is shared; the briefing itself stays shut. The password lives only in the Vercel
    project's SITE_PASSWORD environment variable — never in this repository.
    If SITE_PASSWORD is not set, the site stays shut: no fallback password.
 
@@ -21,9 +23,12 @@ async function cont() {
 }
 
 const COOKIE = 'gl_invest';
+const SHARE_CARD = '/assets/og/share-2027.jpg';
+const DESC = 'One insured swing at a life-changing prize: on course with our app, on Golfzon simulators worldwide, and in the gym. A private briefing for invited investors.';
 const SALT = 'get-lucky-invest-2027:';
 const MAX_AGE = 60 * 60 * 24 * 30; // 30 days
-const OPEN = (p) => p.startsWith('/_vercel/') || p.startsWith('/assets/fonts/') || p.startsWith('/assets/logos/');
+const OPEN = (p) => p.startsWith('/_vercel/') || p.startsWith('/assets/fonts/') || p.startsWith('/assets/logos/')
+  || p.startsWith('/assets/og/');
 
 async function sha256(s) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
@@ -51,7 +56,7 @@ export default async function middleware(request) {
   if (OPEN(url.pathname)) return await cont();
 
   const pw = process.env.SITE_PASSWORD;
-  if (!pw) return page('/', 'closed');
+  if (!pw) return page('/', 'closed', url.origin);
   const token = await sha256(SALT + pw);
 
   if (same(readCookie(request.headers.get('cookie'), COOKIE), token)) {
@@ -77,13 +82,13 @@ export default async function middleware(request) {
         },
       });
     }
-    return page(dest, 'retry');
+    return page(dest, 'retry', url.origin);
   }
 
-  return page(url.pathname + url.search, 'ask');
+  return page(url.pathname + url.search, 'ask', url.origin);
 }
 
-function page(dest, state) {
+function page(dest, state, origin) {
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const form = state === 'closed'
     ? '<p class="err">This site is not open yet.</p>'
@@ -98,7 +103,21 @@ function page(dest, state) {
 <html lang="en-ZA"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Get Lucky Golf — investor briefing</title>
+<title>Get Lucky Golf — Investor briefing 2027</title>
+<meta name="description" content="${DESC}">
+<link rel="icon" type="image/png" href="/assets/logos/app-icon-192.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Get Lucky Golf">
+<meta property="og:title" content="Get Lucky Golf — Investor briefing 2027">
+<meta property="og:description" content="${DESC}">
+<meta property="og:url" content="${esc(origin)}/">
+<meta property="og:image" content="${esc(origin)}${SHARE_CARD}">
+<meta property="og:image:secure_url" content="${esc(origin)}${SHARE_CARD}">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Golf's biggest shot goes global. Get Lucky Golf investor briefing, with Ernie Els.">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   @font-face { font-family: "Poster Gothic"; src: url("/assets/fonts/PosterGothicRoundATF-Heavy.woff2") format("woff2"); font-weight: 800; }
   * { box-sizing: border-box; }
@@ -130,7 +149,7 @@ function page(dest, state) {
     <p class="foot">Get Lucky Golf Club (Pty) Ltd · confidential</p>
   </main>
 </body></html>`, {
-    status: state === 'closed' ? 503 : 401,
+    status: state === 'closed' ? 503 : 200,   // 200 so link previews read the tags above
     headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex, nofollow' },
   });
 }
