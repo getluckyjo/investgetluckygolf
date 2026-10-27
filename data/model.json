@@ -109,9 +109,9 @@
         "hardCaseValueZAR": 232008841,
         "hardCaseMultiple": 3.57,
         "hardCaseAYearPct": 25,
-        "cashZAR": 189765989,
-        "withCashMultiple": 13.11,
-        "withCashAYearPct": 56,
+        "cashZAR": 199464071,
+        "withCashMultiple": 13.26,
+        "withCashAYearPct": 57,
         "_basis": "Illustrative: the round's stake sold on 31 December 2032 at the plan's value, held from the end of Q1 2027. withCash adds Get Lucky's closing cash, before any dividend tax."
       },
       "multipleBasis": "Your stake at the round's post-money, marked at the plan's value on 31 December. An unrealised mark on a private holding, not a cash return."
@@ -152,7 +152,12 @@
       "committedZAR": null,
       "closeDate": null
     },
-    "ambassador": "Ernie Els is Founding Ambassador: equity and a share of profit, no capital, no guarantees, no liability. Terms in the dataroom only - never on the public page."
+    "ambassador": {
+      "name": "Ernie Els",
+      "role": "Founding Ambassador",
+      "equityPct": 5,
+      "_terms": "Non-diluting equity, topped up inside the pre-money; no profit share, no fee, no capital, no guarantees, no liability."
+    }
   },
   "partners": {
     "golfzon": {
@@ -494,14 +499,6 @@
       35542744,
       61788566,
       78668222
-    ],
-    "ambassadorShareZAR": [
-      0,
-      163915,
-      734191,
-      1777137,
-      3089428,
-      3933411
     ],
     "kpis": {
       "golfzonAttachPct": [
@@ -998,11 +995,11 @@
     ],
     "operatingCashZAR": [
       -3997582,
-      3114391,
-      13949625,
-      30446365,
-      50233629,
-      66654511
+      3278306,
+      14683816,
+      32223502,
+      53323057,
+      70587922
     ],
     "bayDistributionsZAR": [
       0,
@@ -1014,11 +1011,11 @@
     ],
     "closingZAR": [
       5502418,
-      8616808,
-      22566433,
-      56332040,
-      115031178,
-      189765989
+      8780724,
+      23464539,
+      59007283,
+      120795849,
+      199464071
     ],
     "quarterlyClosingZAR": {
       "Q1 2027": 7300242,
@@ -1028,23 +1025,23 @@
       "Q1 2028": 5195296,
       "Q2 2028": 5639306,
       "Q3 2028": 6834449,
-      "Q4 2028": 8616808,
-      "Q1 2029": 13579004,
-      "Q2 2029": 18541199,
-      "Q3 2029": 23503395,
-      "Q4 2029": 22566433,
-      "Q1 2030": 33601879,
-      "Q2 2030": 44637325,
-      "Q3 2030": 55672771,
-      "Q4 2030": 56332040,
-      "Q1 2031": 74593361,
-      "Q2 2031": 92854682,
-      "Q3 2031": 111116003,
-      "Q4 2031": 115031178,
-      "Q1 2032": 139205124,
-      "Q2 2032": 163379069,
-      "Q3 2032": 187553015,
-      "Q4 2032": 189765989
+      "Q4 2028": 8780724,
+      "Q1 2029": 13742919,
+      "Q2 2029": 18705115,
+      "Q3 2029": 23667310,
+      "Q4 2029": 23464539,
+      "Q1 2030": 34499985,
+      "Q2 2030": 45535431,
+      "Q3 2030": 56570877,
+      "Q4 2030": 59007283,
+      "Q1 2031": 77268604,
+      "Q2 2031": 95529925,
+      "Q3 2031": 113791246,
+      "Q4 2031": 120795849,
+      "Q1 2032": 144969795,
+      "Q2 2032": 169143741,
+      "Q3 2032": 193317687,
+      "Q4 2032": 199464071
     },
     "lowestQuarter": "Q1 2028",
     "lowestQuarterZAR": 5195296,

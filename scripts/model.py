@@ -95,7 +95,9 @@ SPONSOR_PER_SWING_ZAR = 5
 # ============================================================================
 BRAND_PCT = 0.08              # of product revenue (Golfzon, on course, sponsorship), on top of the fixed launch
 TAX = 0.27
-AMBASSADOR_PROFIT_SHARE = 0.05  # the founding ambassador, of Get Lucky's net profit
+# Ernie Els, Founding Ambassador: 5% non-diluting equity, topped up inside the pre-money so the
+# note and the round still buy their full stakes. No profit share, no fee (the founder, 27 Oct 2026).
+AMBASSADOR_EQUITY_PCT = 5
 # Quarterly cash test: share of each year's revenue earned in each quarter.
 # 2027 and 2028 back-load as Golfzon and the bays ramp; later years run evenly.
 # Costs run evenly from day one.
@@ -463,10 +465,9 @@ def run(case):
         r["tax"] = max(taxable, 0) * TAX
         loss_cf = max(-taxable, 0)
         r["netProfit"] = r["ebitda"] - r["tax"] + r["bayDistributions"]
-        r["ambassadorShare"] = max(r["netProfit"], 0) * AMBASSADOR_PROFIT_SHARE
         r["raise"] = ROUND_ZAR if y == 2027 else 0.0
         r["opening"] = cash
-        r["operatingCash"] = r["ebitda"] - r["tax"] - r["ambassadorShare"]
+        r["operatingCash"] = r["ebitda"] - r["tax"]
         cash += r["operatingCash"] + r["bayDistributions"] + r["raise"]
         r["closing"] = cash
 
@@ -481,7 +482,7 @@ def run(case):
         for i in range(4):
             q += variable * w[i] - fixed / 4 + (ROUND_ZAR if (y, i) == (2027, 0) else 0.0)
             if i == 3:
-                q += r["bayDistributions"] - r["tax"] - r["ambassadorShare"]
+                q += r["bayDistributions"] - r["tax"]
             q_cash.append((f"Q{i + 1} {y}", q))
     low_label, low = min(q_cash, key=lambda t: t[1])
     short = next((n for n, (_, v) in enumerate(q_cash) if v < 0), None)
@@ -671,8 +672,9 @@ def main():
                                         "31 December. An unrealised mark on a private holding, not a cash return.")},
             "useOfFunds": use_of_funds(p),
             "allocation": {"show": False, "committedZAR": None, "closeDate": None},
-            "ambassador": ("Ernie Els is Founding Ambassador: equity and a share of profit, no capital, no "
-                           "guarantees, no liability. Terms in the dataroom only - never on the public page."),
+            "ambassador": {"name": "Ernie Els", "role": "Founding Ambassador", "equityPct": AMBASSADOR_EQUITY_PCT,
+                           "_terms": ("Non-diluting equity, topped up inside the pre-money; no profit share, no fee, "
+                                      "no capital, no guarantees, no liability.")},
         },
         "partners": {
             "golfzon": {"status": "In", "locations": GZ_LOCATIONS, "korea": GZ_KOREA,
@@ -733,7 +735,7 @@ def main():
             "costZAR": {"golfzonDirect": R("gzDirect"), "onCourseDirect": R("ocDirect"),
                         "central": R("central"), "brand": R("brand")},
             "taxZAR": R("tax"), "bayDistributionsZAR": R("bayDistributions"),
-            "netProfitZAR": R("netProfit"), "ambassadorShareZAR": R("ambassadorShare"),
+            "netProfitZAR": R("netProfit"),
             "kpis": {
                 "golfzonAttachPct": [round(PLAN["gz_attach"][y] * 100, 2) for y in YEARS],
                 "golfzonTicketUSD": [PLAN["gz_ticket"][y] for y in YEARS],

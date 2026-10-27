@@ -20,6 +20,7 @@ facts = json.loads((ROOT / "data/facts.json").read_text())
 FX = m["fx"]
 f, d, bc, st, cash, val = m["forecast"], m["deal"], m["bayCompany"], m["structure"], m["cash"], m["valuation"]
 nt, rd = d["note"], d["round"]
+amb = d["ambassador"]   # Ernie Els, Founding Ambassador
 ex = rd["exit"]   # a sale in 2032, for the round
 pt, tr, prod = m["partners"], m["traction"], m["product"]
 Y = f["years"]
@@ -453,7 +454,7 @@ def ernie_section():
     <div class="copy">
       <span class="kicker">04 · Ernie Els</span>
       <h2 class="display-lg" id="ernie-h">He doesn't endorse it. <span class="lime">He owns part of it.</span></h2>
-      <p class="lede"><strong>Ernie is our Founding Ambassador:</strong> equity and a share of profit. No fee, no capital, no liability.</p>
+      <p class="lede"><strong>Ernie is our Founding Ambassador, with {amb['equityPct']}% non-diluting equity.</strong> No fee, no capital, no liability.</p>
       <p>{ernie['careerAces']} career aces, the latest a 5-iron from 193 yards in a senior major this May. Golfzon wants an Ernie Els challenge on its bays, and his businesses open doors in Asia, the Middle East and the US.</p>
       <ul class="honours" aria-label="Ernie Els career honours">
         <li>{ernie['majors']}× Major champion</li><li>World Golf Hall of Fame</li><li>Former world No. 1</li><li>{esc(ernie['wins'])} wins</li><li>{ernie['careerAces']} career aces</li>
@@ -558,7 +559,7 @@ def numbers_section():
       <li><strong>The bays:</strong> 15 bookable hours, 360 days. Signature booked {plan['bayUtilisationPct']['Signature']}% of hours at R{unit['Signature']['yieldZAR']}, Play {plan['bayUtilisationPct']['Play']}% at R{unit['Play']['yieldZAR']}; 55% of mature use in year one, 80% in year two.</li>
       <li><strong>The app, on course:</strong> {n(f['kpis']['onCourseSwings'][0])} paid swings in 2027 ({n(tr['paidSwings'])} in our first year) rising to {n(f['kpis']['onCourseSwings'][-1])} in 2032, at R{f['kpis']['onCourseAvgZAR'][0]} to R{f['kpis']['onCourseAvgZAR'][-1]} a swing.</li>
       <li><strong>Sponsorship grows with reach:</strong> Indwe's R3m is contracted for 2027 and we assume it renews; on top, about R5 for every paid swing beyond 2027's, on course and on Golfzon. {rm(rev['sponsorship'][0])} in 2027 to {rm(rev['sponsorship'][-1])} in 2032.</li>
-      <li><strong>Get Lucky:</strong> central team {rm(plan['centralZAR'][0], 0)} in 2027 to {rm(plan['centralZAR'][-1], 0)} in 2032; brand 8% of product revenue plus a launch budget; tax at 27% after the 2027 loss. Net profit is before the Founding Ambassador's share of profit, paid from cash.</li>
+      <li><strong>Get Lucky:</strong> central team {rm(plan['centralZAR'][0], 0)} in 2027 to {rm(plan['centralZAR'][-1], 0)} in 2032; brand 8% of product revenue plus a launch budget; tax at 27% after the 2027 loss.</li>
     </ul>"""
     return f"""
 <section class="section white" id="numbers" aria-labelledby="num-h">
@@ -686,6 +687,7 @@ def deal_section():
           <dt>Raising</dt><dd>{rm(rd['amountZAR'])} for {EQ}<small>≈ {usd(rd['amountZAR'])}</small></dd>
           <dt>Pre / post</dt><dd>{r0(rd['preMoneyZAR'])} / {r0(rd['postMoneyZAR'])}<small>≈ {usd(rd['preMoneyZAR'])} / {usd(rd['postMoneyZAR'])}</small></dd>
           <dt>Minimum ticket</dt><dd>{rm(rd['minimumTicketZAR'])}</dd>
+          <dt>Ernie Els</dt><dd>{amb['equityPct']}% non-diluting<small>Founding Ambassador, inside the pre-money</small></dd>
           <dt>Marked at December 2029</dt><dd>{x(rd['multiple2029'])}<small>{x(rd['hardCaseMultiple2029'])} in the hard case</small></dd>
           <dt>A sale in {ex['year']}</dt><dd>{x(ex['multiple'])}, about {ex['aYearPct']}% a year<small>{x(ex['hardCaseMultiple'])}, about {ex['hardCaseAYearPct']}% a year, in the hard case</small></dd>
         </dl>
@@ -743,7 +745,7 @@ def faq_section():
         ("Can I invest in the bay company too?",
          f"Yes, separately. Bay investors put up {rm(inv['calledZAR'])} between 2027 and 2029 and take their capital and {st['prefPct']}% a year first; then the profit splits {st['getLuckySplitPct']}/{100 - st['getLuckySplitPct']} with us. Those terms are our proposal. Ask us for the bay company pack."),
         ("What does Ernie get?",
-         f"Equity and a share of profit as Founding Ambassador. No fee, no capital, no guarantees, no liability. His equity is already in the {r0(rd['preMoneyZAR'])} pre-money; the full terms, including how it's treated when we issue shares, are available under NDA."),
+         f"{amb['equityPct']}% non-diluting equity as Founding Ambassador. No fee, no profit share, no capital, no guarantees, no liability. His {amb['equityPct']}% sits inside the {r0(rd['preMoneyZAR'])} pre-money, top-up included, so the note and the round still buy their full stakes. The full terms are available under NDA."),
         ("What if someone wins R1m, or $100,000?",
          "The insurer pays, and it's the best marketing day of our year. 24% of every entry goes to the insurer as premium, on the same swing that creates the risk."),
     ]
@@ -836,7 +838,8 @@ def page():
 BANNED = [
     (r"\$43,000|\$40,000|\$35,000|\$32,000|\$30,000|\$25,000|\$99[ -]a[ -]month|Tier 1 pricing|Tier 2 pricing|FOB Busan|1\.3× (the )?hardware",
      "Golfzon's confidential chain pricing"),
-    (r"5% non-diluting|5% of (the company's )?net profit|5% of Get Lucky|5% of any sale|founding 5%|holds 5%", "Ernie's percentage"),
+    (r"(?i)equity and a share of profit|ambassador's share of profit|5% of (the company's )?net profit|5% of any sale",
+     "Ernie's old terms: he has 5% non-diluting equity and no profit share"),
     (r"R126m|R140m post|R14\.0m for 10%|R53\.3m|R8\.0m for 15%|R4\.0m for 10%|R70m post|R14\.0m for 20%|R14\.0m in Q1|R14m in Q1|R70m|R66m post|R10\.0m for 15|R10m in Q1|R10\.0m in Q1|R56m / R66m",
      "a superseded round"),
     (r"(?i)\bregistry\b|\bgames\b|game of chance|icons cup|back an icon|\bbet(s|ting)?\b|bet on yourself|\bjackpot\b|golf gods",
