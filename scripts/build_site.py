@@ -430,7 +430,7 @@ def gyms_section():
         <div class="card iconcard reveal">{icon('users')}<div><h3>Leagues across the chain</h3><p>Sandton against Umhlanga, on one network, with coaching in every flagship club.</p></div></div>
         <div class="card iconcard reveal">{icon('trophy')}<div><h3>The insured shot on every bay</h3><p>Half of simulator players aren't course golfers. The bay sells golf to people who'd never join a club.</p></div></div>
       </div>
-      <figure class="photo reveal" style="min-height:320px"><img src="assets/img/planet-golf-rooftop.webp" alt="Concept render: a Planet Golf pavilion, powered by Golfzon, on the rooftop of a Planet Fitness Signature club at dusk" loading="lazy" width="1672" height="941" style="object-position:50% 60%"><figcaption>Concept: a Planet Golf pavilion on a Planet Fitness Signature rooftop</figcaption></figure>
+      <figure class="photo reveal" style="min-height:320px"><img src="assets/img/virgin-golf.webp" alt="Concept render: a Virgin Golf bay, powered by Virgin Active, beside the padel courts at a Virgin Active club at dusk" loading="lazy" width="1280" height="720" style="object-position:55% 50%"><figcaption>Concept: Virgin Golf at a Virgin Active club</figcaption></figure>
     </div>
 
     <div class="grid c2" style="margin-top:16px">
