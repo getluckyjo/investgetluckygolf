@@ -46,10 +46,10 @@
       "equivalentAtRoundZAR": 1555556,
       "_conversion": "The round's pre-money includes the shares the note converts into, so the round buys exactly its stated equity and the note's dilution falls on the existing holders.",
       "stakePct": 2.36,
-      "multiple2029": 5.27,
-      "multiple2032": 17.59,
-      "hardCaseMultiple2029": 2.2,
-      "targetsMultiple2029": 10.31,
+      "multiple2029": 5.02,
+      "multiple2032": 14.88,
+      "hardCaseMultiple2029": 2.07,
+      "targetsMultiple2029": 9.41,
       "useOfFunds": [
         "The December sit-down with Golfzon and Ernie Els at Fancourt",
         "The first build of the Golfzon integration on a real bay",
@@ -65,16 +65,16 @@
       "timing": "Q1 2027",
       "minimumTicketZAR": 1000000,
       "givenAwayPct": 17.5,
-      "value2029ZAR": 223702169,
-      "value2032ZAR": 746357065,
-      "multiple2029": 3.39,
-      "multiple2032": 11.31,
-      "hardCaseValue2029ZAR": 93502523,
-      "hardCaseMultiple2029": 1.42,
-      "hardCaseMultiple2032": 3.71,
-      "targetsValue2029ZAR": 437648233,
-      "targetsMultiple2029": 6.63,
-      "targetsMultiple2032": 22.0,
+      "value2029ZAR": 213103814,
+      "value2032ZAR": 631354852,
+      "multiple2029": 3.23,
+      "multiple2032": 9.57,
+      "hardCaseValue2029ZAR": 87620003,
+      "hardCaseMultiple2029": 1.33,
+      "hardCaseMultiple2032": 3.27,
+      "targetsValue2029ZAR": 399110674,
+      "targetsMultiple2029": 6.05,
+      "targetsMultiple2032": 19.69,
       "multipleBasis": "Your stake at the round's post-money, marked at the plan's value on 31 December. An unrealised mark on a private holding, not a cash return."
     },
     "useOfFunds": {
@@ -153,14 +153,14 @@
     "planetFitness": {
       "status": "Signed",
       "firstInstalls": "Q1 2027",
-      "bays": 72,
-      "clubs": 42
+      "bays": 36,
+      "clubs": 18
     },
     "virginActive": {
       "status": "In talks",
       "modelledFrom": "Mid-2027",
-      "bays": 200,
-      "clubs": 130,
+      "bays": 100,
+      "clubs": 50,
       "members": 623000,
       "saClubs": 136
     },
@@ -366,37 +366,37 @@
       ],
       "bayFee": [
         1209188,
-        4064170,
-        9417930,
-        12029434,
-        12654386,
-        12654386
+        3569306,
+        6364482,
+        7006984,
+        7006984,
+        7006984
       ],
       "total": [
         9475188,
-        22504170,
-        49167930,
-        89119434,
-        135594386,
-        172934386
+        22009306,
+        46114482,
+        84096984,
+        129946984,
+        167286984
       ]
     },
     "_revenueBasis": "Get Lucky's own revenue. Golfzon and on course are Get Lucky's share only: 46% of a simulator swing after Golfzon and the venue (30%) and the insurer (24%); 66% of a course swing after the club (10%) and the insurer (24%). The bay fee is 6% of the bay company's revenue. The bay company's own revenue is not Get Lucky's.",
     "ebitdaZAR": [
       -3997582,
-      2472770,
-      17606830,
-      39453834,
-      65567286,
-      85802786
+      2477906,
+      17553382,
+      39431384,
+      65919884,
+      87155384
     ],
     "ebitdaMarginPct": [
       -42.2,
-      11.0,
-      35.8,
-      44.3,
-      48.4,
-      49.6
+      11.3,
+      38.1,
+      46.9,
+      50.7,
+      52.1
     ],
     "costZAR": {
       "golfzonDirect": [
@@ -417,11 +417,11 @@
       ],
       "central": [
         9000000,
-        14000000,
-        22000000,
-        30000000,
-        38000000,
-        45000000
+        13500000,
+        19000000,
+        25000000,
+        32000000,
+        38000000
       ],
       "brand": [
         3661280,
@@ -435,34 +435,34 @@
     "taxZAR": [
       0,
       0,
-      4342145,
-      10652535,
-      17703167,
-      23166752
+      4329101,
+      10646474,
+      17798369,
+      23531954
     ],
     "bayDistributionsZAR": [
       0,
       0,
       0,
-      1617448,
-      16249299,
-      15585909
+      3319242,
+      8465509,
+      8080300
     ],
     "netProfitZAR": [
       -3997582,
-      2472770,
-      13264686,
-      30418747,
-      64113417,
-      78221942
+      2477906,
+      13224282,
+      32104152,
+      56587024,
+      71703730
     ],
     "ambassadorShareZAR": [
       0,
-      123638,
-      663234,
-      1520937,
-      3205671,
-      3911097
+      123895,
+      661214,
+      1605208,
+      2829351,
+      3585187
     ],
     "kpis": {
       "golfzonAttachPct": [
@@ -491,19 +491,19 @@
       ],
       "baysLive": [
         60,
-        200,
-        272,
-        272,
-        272,
-        272
+        136,
+        136,
+        136,
+        136,
+        136
       ],
       "baysClubs": [
         30,
-        100,
-        172,
-        172,
-        172,
-        172
+        68,
+        68,
+        68,
+        68,
+        68
       ],
       "onCourseSwings": [
         36000,
@@ -523,11 +523,11 @@
       ],
       "premiumWrittenZAR": [
         2417888,
-        7793794,
-        19485126,
-        39044988,
-        62579610,
-        81539610
+        7671281,
+        18744600,
+        37858500,
+        61258500,
+        80218500
       ]
     },
     "_premiumNote": "Premium written is a volume metric, not revenue: the premium the platform originates and cedes to the insurer. Get Lucky earns none of it."
@@ -561,9 +561,9 @@
       "planetFitness": {
         "name": "Planet Fitness",
         "status": "Signed",
-        "bays": 72,
-        "clubs": 42,
-        "capexZAR": 59692100,
+        "bays": 36,
+        "clubs": 18,
+        "capexZAR": 32996600,
         "phases": [
           {
             "name": "Phase 1",
@@ -579,66 +579,54 @@
           {
             "name": "Phase 2",
             "year": 2028,
-            "bays": 40,
-            "clubs": 20,
+            "bays": 16,
+            "clubs": 8,
             "units": {
-              "Play": 40
+              "Play": 16
             },
-            "capexZAR": 30784000,
-            "note": "Two Play bays in twenty clubs"
-          },
-          {
-            "name": "Phase 3",
-            "year": 2029,
-            "bays": 12,
-            "clubs": 12,
-            "units": {
-              "Play": 6,
-              "Practice": 6
-            },
-            "capexZAR": 8225100,
-            "note": "One bay in twelve smaller clubs"
+            "capexZAR": 12313600,
+            "note": "Two Play bays in eight of the best metro clubs"
           }
         ],
         "revenueZAR": [
           8537329,
-          24038942,
-          45011823,
-          54261138,
-          55919925,
-          55919925
+          19603642,
+          29474620,
+          31637160,
+          31637160,
+          31637160
         ],
         "ebitdaZAR": [
           1358931,
-          8378527,
-          18955534,
-          24403810,
-          25506903,
-          25506903
+          7518760,
+          12856488,
+          14094577,
+          14094577,
+          14094577
         ],
         "gymShareZAR": [
           1632466,
-          4607788,
-          8666365,
-          10492228,
-          10823985,
-          10823985
+          3780728,
+          5714924,
+          6147432,
+          6147432,
+          6147432
         ],
         "debtClosingZAR": [
           18614700,
-          43429619,
-          43272507,
-          33604496,
-          22710340,
-          10434531
+          26806259,
+          21828003,
+          16218380,
+          9897316,
+          2774583
         ]
       },
       "virginActive": {
         "name": "Virgin Active",
         "status": "In talks",
-        "bays": 200,
-        "clubs": 130,
-        "capexZAR": 156325000,
+        "bays": 100,
+        "clubs": 50,
+        "capexZAR": 86099000,
         "phases": [
           {
             "name": "Phase 1",
@@ -654,171 +642,159 @@
           {
             "name": "Phase 2",
             "year": 2028,
-            "bays": 100,
-            "clubs": 50,
-            "units": {
-              "Play": 100
-            },
-            "capexZAR": 76960000,
-            "note": "Two Play bays in fifty metro clubs, ordered a quarter after Planet Fitness's phase two"
-          },
-          {
-            "name": "Phase 3",
-            "year": 2029,
             "bays": 60,
-            "clubs": 60,
+            "clubs": 30,
             "units": {
-              "Play": 20,
-              "Practice": 40
+              "Play": 60
             },
-            "capexZAR": 39442000,
-            "note": "One bay in sixty smaller clubs"
+            "capexZAR": 46176000,
+            "note": "Two Play bays in thirty of the best metro clubs, ordered a quarter after Planet Fitness's phase two"
           }
         ],
         "revenueZAR": [
           11615797,
-          43697221,
-          111953683,
-          146229425,
-          154986501,
-          154986501
+          39884791,
+          76600081,
+          85145904,
+          85145904,
+          85145904
         ],
         "ebitdaZAR": [
           257180,
-          13478777,
-          47698169,
-          68001218,
-          73824673,
-          73824673
+          14101601,
+          34555864,
+          39738836,
+          39738836,
+          39738836
         ],
         "gymShareZAR": [
           2223159,
-          8414444,
-          21510737,
-          28245885,
-          29997300,
-          29997300
+          7701958,
+          14820016,
+          16529181,
+          16529181,
+          16529181
         ],
         "debtClosingZAR": [
           35930700,
-          99615013,
-          118069458,
-          93352117,
-          65499999,
-          34115535
+          71909413,
+          59168468,
+          44811651,
+          28634032,
+          10404685
         ]
       }
     },
-    "totalBays": 272,
-    "totalClubs": 172,
-    "totalCapexZAR": 216017100,
+    "totalBays": 136,
+    "totalClubs": 68,
+    "totalCapexZAR": 119095600,
     "revenueZAR": [
       20153126,
-      67736164,
-      156965505,
-      200490563,
-      210906426,
-      210906426
+      59488433,
+      106074701,
+      116783064,
+      116783064,
+      116783064
     ],
     "feeZAR": [
       1209188,
-      4064170,
-      9417930,
-      12029434,
-      12654386,
-      12654386
+      3569306,
+      6364482,
+      7006984,
+      7006984,
+      7006984
     ],
     "ebitdaZAR": [
       1616111,
-      21857304,
-      66653703,
-      92405027,
-      99331577,
-      99331577
+      21620361,
+      47412352,
+      53833414,
+      53833414,
+      53833414
     ],
     "ebitdaMarginPct": [
       8.0,
-      32.3,
-      42.5,
+      36.3,
+      44.7,
       46.1,
-      47.1,
-      47.1
+      46.1,
+      46.1
     ],
     "depreciationZAR": [
       5067679,
-      13605429,
-      28135751,
-      30859586,
-      30859586,
-      30859586
+      11186686,
+      17013657,
+      17013657,
+      17013657,
+      17013657
     ],
     "interestZAR": [
       6545448,
-      17725971,
-      20989401,
-      17510604,
-      13149681,
-      8235683
+      12406496,
+      10892330,
+      8645092,
+      6112848,
+      3259451
     ],
     "principalZAR": [
       0,
       8470369,
-      24603056,
-      34385352,
-      38746275,
-      43660272
+      17719201,
+      19966439,
+      22498684,
+      25352080
     ],
     "taxZAR": [
       0,
       0,
-      0,
-      11364915,
-      14937024,
-      16263803
+      2034863,
+      7607160,
+      8290865,
+      9061282
     ],
     "netProfitZAR": [
       -9997015,
-      -9474096,
-      17528551,
-      32669923,
-      40385286,
-      43972504
+      -1972820,
+      17471502,
+      20567505,
+      22416044,
+      24499023
     ],
     "capexZAR": [
       60606000,
-      107744000,
-      47667100,
+      58489600,
+      0,
       0,
       0,
       0
     ],
     "debtDrawnZAR": [
       54545400,
-      96969600,
-      42900390,
+      52640640,
+      0,
       0,
       0,
       0
     ],
     "debtClosingZAR": [
       54545400,
-      143044631,
-      161341965,
-      126956614,
-      88210339,
-      44550067
+      98715671,
+      80996470,
+      61030031,
+      38531347,
+      13179268
     ],
     "investorCallsZAR": [
       13989937,
-      15113436,
-      4766710,
+      5848960,
+      0,
       0,
       0,
       0
     ],
     "topUpZAR": [
       4929337,
-      4339036,
+      0,
       0,
       0,
       0,
@@ -827,30 +803,30 @@
     "distributedZAR": [
       0,
       0,
-      21061246,
-      29144157,
-      32498597,
-      31171818
+      17509455,
+      17614723,
+      16931017,
+      16160600
     ],
     "toInvestorsZAR": [
       0,
       0,
-      21061246,
-      27526709,
-      16249299,
-      15585909
+      17509455,
+      14295481,
+      8465509,
+      8080300
     ],
     "toGetLuckyZAR": [
       0,
       0,
       0,
-      1617448,
-      16249299,
-      15585909
+      3319242,
+      8465509,
+      8080300
     ],
     "cashClosingZAR": [
       3000000,
-      3000000,
+      3743497,
       3000000,
       3000000,
       3000000,
@@ -858,52 +834,52 @@
     ],
     "hurdleClosingZAR": [
       15002536,
-      33460270,
-      22529792,
+      23525227,
+      9544556,
       0,
       0,
       0
     ],
     "dscr": [
       0.25,
-      0.83,
-      1.46,
-      1.78,
-      1.91,
-      1.91
+      1.04,
+      1.66,
+      1.88,
+      1.88,
+      1.88
     ],
     "valueZAR": {
       "total": [
         0,
-        0,
-        174926548,
-        338068524,
-        411447544,
-        455107816
+        13129631,
+        159065291,
+        211137038,
+        233635722,
+        258987802
       ],
       "investors": [
         0,
-        0,
-        98728170,
-        169034262,
-        205723772,
-        227553908
+        13129631,
+        84304924,
+        105568519,
+        116817861,
+        129493901
       ],
       "getLucky": [
         0,
         0,
-        76198378,
-        169034262,
-        205723772,
-        227553908
+        74760368,
+        105568519,
+        116817861,
+        129493901
       ]
     },
     "investors": {
-      "calledZAR": 33870082,
-      "distributedZAR": 80423162,
-      "value2032ZAR": 227553908,
-      "multiple2032": 9.09,
-      "irrPct": 70.0,
+      "calledZAR": 19838897,
+      "distributedZAR": 48350745,
+      "value2032ZAR": 129493901,
+      "multiple2032": 8.96,
+      "irrPct": 64.1,
       "capitalBackBy": 2030,
       "_basis": "Calls mid-year, distributions at year end, and the investors' share of the bay company's value at 31 December 2032 through the same waterfall."
     },
@@ -957,17 +933,17 @@
     "debtCover": {
       "_note": "Bay company EBITDA (after Get Lucky's fee) over debt service, both chains.",
       "plan": {
-        "2029": 1.46,
-        "2030": 1.78,
-        "2031": 1.91
+        "2029": 1.66,
+        "2030": 1.88,
+        "2031": 1.88
       },
       "quiet70": {
-        "2029": 0.84,
-        "2030": 1.08,
-        "2031": 1.17
+        "2029": 0.97,
+        "2030": 1.13,
+        "2031": 1.13
       },
-      "quiet70RevenueZAR2031": 152938499,
-      "quiet70EbitdaZAR2031": 60782905
+      "quiet70RevenueZAR2031": 84400145,
+      "quiet70EbitdaZAR2031": 32298772
     }
   },
   "cash": {
@@ -983,61 +959,61 @@
     ],
     "operatingCashZAR": [
       -3997582,
-      2349131,
-      12601451,
-      27280361,
-      44658448,
-      58724936
+      2354011,
+      12563067,
+      27179703,
+      45292164,
+      60038244
     ],
     "bayDistributionsZAR": [
       0,
       0,
       0,
-      1617448,
-      16249299,
-      15585909
+      3319242,
+      8465509,
+      8080300
     ],
     "closingZAR": [
       6502418,
-      8851549,
-      21453000,
-      50350810,
-      111258556,
-      185569401
+      8856428,
+      21419496,
+      51918440,
+      105676113,
+      173794657
     ],
     "quarterlyClosingZAR": {
       "Q1 2027": 8300242,
       "Q2 2027": 6900725,
       "Q3 2027": 6301451,
       "Q4 2027": 6502418,
-      "Q1 2028": 6012244,
-      "Q2 2028": 6260981,
-      "Q3 2028": 7248629,
-      "Q4 2028": 8851549,
-      "Q1 2029": 13253256,
-      "Q2 2029": 17654964,
-      "Q3 2029": 22056672,
-      "Q4 2029": 21453000,
-      "Q1 2030": 31316459,
-      "Q2 2030": 41179917,
-      "Q3 2030": 51043375,
-      "Q4 2030": 50350810,
-      "Q1 2031": 66742631,
-      "Q2 2031": 83134452,
-      "Q3 2031": 99526274,
-      "Q4 2031": 111258556,
-      "Q1 2032": 132709252,
-      "Q2 2032": 154159949,
-      "Q3 2032": 175610645,
-      "Q4 2032": 185569401
+      "Q1 2028": 6043220,
+      "Q2 2028": 6303138,
+      "Q3 2028": 7282173,
+      "Q4 2028": 8856428,
+      "Q1 2029": 13244774,
+      "Q2 2029": 17633119,
+      "Q3 2029": 22021465,
+      "Q4 2029": 21419496,
+      "Q1 2030": 31277342,
+      "Q2 2030": 41135188,
+      "Q3 2030": 50993034,
+      "Q4 2030": 51918440,
+      "Q1 2031": 68398411,
+      "Q2 2031": 84878382,
+      "Q3 2031": 101358353,
+      "Q4 2031": 105676113,
+      "Q1 2032": 127464959,
+      "Q2 2032": 149253805,
+      "Q3 2032": 171042651,
+      "Q4 2032": 173794657
     },
     "lowestQuarter": "Q1 2028",
-    "lowestQuarterZAR": 6012244,
+    "lowestQuarterZAR": 6043220,
     "q1WithoutRoundZAR": -1699758,
-    "hardCaseLowestQuarter": "Q4 2030",
-    "hardCaseLowestZAR": -4489741,
-    "hardCaseCashLastsTo": "Q4 2028",
-    "peakNetSpendZAR": 4487756,
+    "hardCaseLowestQuarter": "Q4 2029",
+    "hardCaseLowestZAR": -502410,
+    "hardCaseCashLastsTo": "Q1 2029",
+    "peakNetSpendZAR": 4456780,
     "_peakNetSpend": "How much of the opening cash and the round the plan has used at its lowest quarter-end.",
     "_hardCase": "The hard case holds every cost at plan: no hire is delayed and nothing is cut. cashLastsTo is the last quarter that ends in credit; None means it never runs short.",
     "ebitdaPositiveFrom": 2028
@@ -1053,184 +1029,184 @@
         "total": 28425563
       },
       "2028": {
-        "platform": 67512509,
+        "platform": 66027918,
         "bayShare": 0,
-        "total": 67512509
+        "total": 66027918
       },
       "2029": {
-        "platform": 147503791,
-        "bayShare": 76198378,
-        "total": 223702169
+        "platform": 138343446,
+        "bayShare": 74760368,
+        "total": 213103814
       },
       "2030": {
-        "platform": 267358301,
-        "bayShare": 169034262,
-        "total": 436392563
+        "platform": 252290952,
+        "bayShare": 105568519,
+        "total": 357859471
       },
       "2031": {
-        "platform": 406783157,
-        "bayShare": 205723772,
-        "total": 612506929
+        "platform": 389840952,
+        "bayShare": 116817861,
+        "total": 506658812
       },
       "2032": {
-        "platform": 518803157,
-        "bayShare": 227553908,
-        "total": 746357065
+        "platform": 501860952,
+        "bayShare": 129493901,
+        "total": 631354852
       }
     },
     "entryMultipleOnRevenue2027": 6.97,
-    "postAsShareOf2029Value": 0.3,
+    "postAsShareOf2029Value": 0.31,
     "sensitivity2029": [
       {
         "key": "plan",
         "case": "The plan",
-        "revenue": 49167930,
-        "ebitda": 17606830,
-        "value": 223702169,
-        "roundMultiple": 3.39,
-        "value2032": 746357065,
-        "roundMultiple2032": 11.31,
-        "lowestCashZAR": 6012244,
+        "revenue": 46114482,
+        "ebitda": 17553382,
+        "value": 213103814,
+        "roundMultiple": 3.23,
+        "value2032": 631354852,
+        "roundMultiple2032": 9.57,
+        "lowestCashZAR": 6043220,
         "lowestQuarter": "Q1 2028",
         "cashLastsTo": null,
-        "bayInvestorsCalledZAR": 33870082,
-        "bayPayoutsToUsZAR": 33452656
+        "bayInvestorsCalledZAR": 19838897,
+        "bayPayoutsToUsZAR": 19865051
       },
       {
         "key": "halfAttach",
         "case": "Golfzon at half the attach",
-        "revenue": 36402930,
-        "ebitda": 8458580,
-        "value": 185407169,
-        "roundMultiple": 2.81,
-        "value2032": 542117065,
-        "roundMultiple2032": 8.21,
-        "lowestCashZAR": 4384526,
+        "revenue": 33349482,
+        "ebitda": 8405132,
+        "value": 174808814,
+        "roundMultiple": 2.65,
+        "value2032": 427114852,
+        "roundMultiple2032": 6.47,
+        "lowestCashZAR": 4426683,
         "lowestQuarter": "Q2 2028",
         "cashLastsTo": null,
-        "bayInvestorsCalledZAR": 33870082,
-        "bayPayoutsToUsZAR": 33452656
+        "bayInvestorsCalledZAR": 19838897,
+        "bayPayoutsToUsZAR": 19865051
       },
       {
         "key": "halfAttachHalfTicket",
         "case": "Golfzon at half the attach and half the ticket",
-        "revenue": 30020430,
-        "ebitda": 3768830,
-        "value": 166259669,
-        "roundMultiple": 2.52,
-        "value2032": 439997065,
-        "roundMultiple2032": 6.67,
-        "lowestCashZAR": 3161701,
+        "revenue": 26966982,
+        "ebitda": 3715382,
+        "value": 155661314,
+        "roundMultiple": 2.36,
+        "value2032": 324994852,
+        "roundMultiple2032": 4.92,
+        "lowestCashZAR": 3195245,
         "lowestQuarter": "Q3 2028",
         "cashLastsTo": null,
-        "bayInvestorsCalledZAR": 33870082,
-        "bayPayoutsToUsZAR": 33452656
+        "bayInvestorsCalledZAR": 19838897,
+        "bayPayoutsToUsZAR": 19865051
       },
       {
         "key": "noVirginActive",
         "case": "No Virgin Active",
-        "revenue": 42450709,
-        "ebitda": 10889609,
-        "value": 150945023,
-        "roundMultiple": 2.29,
-        "value2032": 550955579,
-        "roundMultiple2032": 8.35,
-        "lowestCashZAR": 4462863,
+        "revenue": 41518477,
+        "ebitda": 12957377,
+        "value": 145062503,
+        "roundMultiple": 2.2,
+        "value2032": 521883841,
+        "roundMultiple2032": 7.91,
+        "lowestCashZAR": 4601094,
         "lowestQuarter": "Q2 2028",
         "cashLastsTo": null,
-        "bayInvestorsCalledZAR": 9844043,
-        "bayPayoutsToUsZAR": 6542978
+        "bayInvestorsCalledZAR": 7174493,
+        "bayPayoutsToUsZAR": 3473643
       },
       {
         "key": "hard",
         "case": "Half attach, half ticket, no Virgin Active",
-        "revenue": 23303209,
-        "ebitda": -2948391,
-        "value": 93502523,
-        "roundMultiple": 1.42,
-        "value2032": 244595579,
-        "roundMultiple2032": 3.71,
-        "lowestCashZAR": -4489741,
-        "lowestQuarter": "Q4 2030",
-        "cashLastsTo": "Q4 2028",
-        "bayInvestorsCalledZAR": 9844043,
-        "bayPayoutsToUsZAR": 6542978
+        "revenue": 22370977,
+        "ebitda": -880623,
+        "value": 87620003,
+        "roundMultiple": 1.33,
+        "value2032": 215523841,
+        "roundMultiple2032": 3.27,
+        "lowestCashZAR": -502410,
+        "lowestQuarter": "Q4 2029",
+        "cashLastsTo": "Q1 2029",
+        "bayInvestorsCalledZAR": 7174493,
+        "bayPayoutsToUsZAR": 3473643
       },
       {
         "key": "outsideKorea",
         "case": "Golfzon outside Korea only",
-        "revenue": 25169730,
-        "ebitda": 408120,
-        "value": 151707569,
-        "roundMultiple": 2.3,
-        "value2032": 362385865,
-        "roundMultiple2032": 5.49,
-        "lowestCashZAR": 536404,
-        "lowestQuarter": "Q3 2031",
+        "revenue": 22116282,
+        "ebitda": 354672,
+        "value": 141109214,
+        "roundMultiple": 2.14,
+        "value2032": 247383652,
+        "roundMultiple2032": 3.75,
+        "lowestCashZAR": 1848361,
+        "lowestQuarter": "Q3 2030",
         "cashLastsTo": null,
-        "bayInvestorsCalledZAR": 33870082,
-        "bayPayoutsToUsZAR": 33452656
+        "bayInvestorsCalledZAR": 19838897,
+        "bayPayoutsToUsZAR": 19865051
       },
       {
         "key": "koreaOutNoVirginActive",
         "case": "Outside Korea only, and no Virgin Active",
-        "revenue": 18452509,
-        "ebitda": -6309101,
-        "value": 78950423,
-        "roundMultiple": 1.2,
-        "value2032": 166984379,
-        "roundMultiple2032": 2.53,
-        "lowestCashZAR": -39304917,
+        "revenue": 17520277,
+        "ebitda": -4241333,
+        "value": 73067903,
+        "roundMultiple": 1.11,
+        "value2032": 137912641,
+        "roundMultiple2032": 2.09,
+        "lowestCashZAR": -26343972,
         "lowestQuarter": "Q4 2032",
         "cashLastsTo": "Q2 2028",
-        "bayInvestorsCalledZAR": 9844043,
-        "bayPayoutsToUsZAR": 6542978
+        "bayInvestorsCalledZAR": 7174493,
+        "bayPayoutsToUsZAR": 3473643
       },
       {
         "key": "bayUse70",
         "case": "Every bay at 70% of planned use",
-        "revenue": 46592938,
-        "ebitda": 15031838,
-        "value": 139778815,
-        "roundMultiple": 2.12,
-        "value2032": 595533826,
-        "roundMultiple2032": 9.02,
-        "lowestCashZAR": 5457594,
-        "lowestQuarter": "Q2 2028",
+        "revenue": 44353313,
+        "ebitda": 15792213,
+        "value": 140956968,
+        "roundMultiple": 2.14,
+        "value2032": 542327628,
+        "roundMultiple2032": 8.22,
+        "lowestCashZAR": 5522016,
+        "lowestQuarter": "Q1 2028",
         "cashLastsTo": null,
-        "bayInvestorsCalledZAR": 57449833,
+        "bayInvestorsCalledZAR": 34476562,
         "bayPayoutsToUsZAR": 0
       },
       {
         "key": "targets",
         "case": "Our targets",
-        "revenue": 94929142,
-        "ebitda": 43487342,
-        "value": 437648233,
-        "roundMultiple": 6.63,
-        "value2032": 1451898935,
-        "roundMultiple2032": 22.0,
+        "revenue": 91177298,
+        "ebitda": 39735498,
+        "value": 399110674,
+        "roundMultiple": 6.05,
+        "value2032": 1299749270,
+        "roundMultiple2032": 19.69,
         "lowestCashZAR": 6102723,
         "lowestQuarter": "Q3 2027",
         "cashLastsTo": null,
-        "bayInvestorsCalledZAR": 25772280,
-        "bayPayoutsToUsZAR": 88573907
+        "bayInvestorsCalledZAR": 16080130,
+        "bayPayoutsToUsZAR": 56206208
       }
     ],
     "termCases": [
       {
         "key": "split20",
         "case": "Get Lucky takes 20% of the bay company after the hurdle, not 50%",
-        "value2029": 177983142,
-        "roundMultiple": 2.7,
-        "roundMultiple2032": 9.24
+        "value2029": 168247593,
+        "roundMultiple": 2.55,
+        "roundMultiple2032": 8.39
       },
       {
         "key": "simPremium30",
         "case": "The insurer prices simulator swings at 30%, not 24%",
-        "value2029": 213712169,
-        "roundMultiple": 3.24,
-        "roundMultiple2032": 10.5
+        "value2029": 203113814,
+        "roundMultiple": 3.08,
+        "roundMultiple2032": 8.76
       }
     ],
     "cases": {
@@ -1265,19 +1241,19 @@
         },
         "centralZAR": [
           9000000,
-          14000000,
-          22000000,
-          30000000,
-          38000000,
-          45000000
+          13500000,
+          19000000,
+          25000000,
+          32000000,
+          38000000
         ],
         "revenueZAR": [
           9475188,
-          22504170,
-          49167930,
-          89119434,
-          135594386,
-          172934386
+          22009306,
+          46114482,
+          84096984,
+          129946984,
+          167286984
         ],
         "golfzonRevenueZAR": [
           1702000,
@@ -1289,36 +1265,36 @@
         ],
         "ebitdaZAR": [
           -3997582,
-          2472770,
-          17606830,
-          39453834,
-          65567286,
-          85802786
+          2477906,
+          17553382,
+          39431384,
+          65919884,
+          87155384
         ],
         "bayRevenueZAR": [
           20153126,
-          67736164,
-          156965505,
-          200490563,
-          210906426,
-          210906426
+          59488433,
+          106074701,
+          116783064,
+          116783064,
+          116783064
         ],
         "valueZAR": [
           28425563,
-          67512509,
-          223702169,
-          436392563,
-          612506929,
-          746357065
+          66027918,
+          213103814,
+          357859471,
+          506658812,
+          631354852
         ],
-        "roundMultiple2029": 3.39,
-        "roundMultiple2032": 11.31,
-        "noteMultiple2029": 5.27,
-        "noteMultiple2032": 17.59,
-        "lowestCashZAR": 6012244,
+        "roundMultiple2029": 3.23,
+        "roundMultiple2032": 9.57,
+        "noteMultiple2029": 5.02,
+        "noteMultiple2032": 14.88,
+        "lowestCashZAR": 6043220,
         "lowestQuarter": "Q1 2028",
-        "bayInvestorMultiple2032": 9.09,
-        "bayInvestorIrrPct": 70.0
+        "bayInvestorMultiple2032": 8.96,
+        "bayInvestorIrrPct": 64.1
       },
       "targets": {
         "key": "targets",
@@ -1359,11 +1335,11 @@
         ],
         "revenueZAR": [
           12367324,
-          40615993,
-          94929142,
-          185637509,
-          274777079,
-          380197079
+          40000773,
+          91177298,
+          179519991,
+          267919991,
+          373339991
         ],
         "golfzonRevenueZAR": [
           4255000,
@@ -1375,36 +1351,36 @@
         ],
         "ebitdaZAR": [
           -3828796,
-          10885593,
-          43487342,
-          95404909,
-          145435479,
-          207047479
+          10270373,
+          39735498,
+          89287391,
+          138578391,
+          200190391
         ],
         "bayRevenueZAR": [
           25805407,
-          85933219,
-          196302367,
-          248958479,
-          261284646,
-          261284646
+          75679550,
+          133771625,
+          146999844,
+          146999844,
+          146999844
         ],
         "valueZAR": [
           37101973,
-          128516670,
-          437648233,
-          806524698,
-          1113808799,
-          1451898935
+          149078463,
+          399110674,
+          694363888,
+          970813230,
+          1299749270
         ],
-        "roundMultiple2029": 6.63,
-        "roundMultiple2032": 22.0,
-        "noteMultiple2029": 10.31,
-        "noteMultiple2032": 34.22,
+        "roundMultiple2029": 6.05,
+        "roundMultiple2032": 19.69,
+        "noteMultiple2029": 9.41,
+        "noteMultiple2032": 30.63,
         "lowestCashZAR": 6102723,
         "lowestQuarter": "Q3 2027",
-        "bayInvestorMultiple2032": 16.75,
-        "bayInvestorIrrPct": 108.1
+        "bayInvestorMultiple2032": 15.92,
+        "bayInvestorIrrPct": 101.5
       }
     }
   },

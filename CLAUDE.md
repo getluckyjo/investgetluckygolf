@@ -27,6 +27,9 @@ reuse the old investgetlucky site.
 - Statuses as the founder set them: Golfzon "in" on its October 2026 proposal,
   Ernie onboard as Founding Ambassador, Planet Fitness signed (first installs
   Q1 2027), Virgin Active in talks (modelled from mid-2027).
+- The gym plan is the best half of each chain's clubs: 136 bays in 68 clubs (the
+  founder, October 2026). Don't overinvest in simulators, and never claim a signed
+  bay count.
 - The bay company's terms (6% fee, 15% preferred return, 50/50 split, R3m
   reserve, 1.25× lock-up) are proposals and the page says so.
 - Directors' ID numbers and home addresses never appear anywhere.

@@ -125,30 +125,29 @@ BAY_SPLIT_GL = 0.50           # Get Lucky's share of what is distributed after c
 BAY_RESERVE = 3_000_000       # cash the bay company always holds; funded by the investors at the start
 BAY_DIST_DSCR = 1.25          # RMB's lock-up: no distribution in a year bay EBITDA covers debt service less than this
 
+# The best half of each chain's clubs only: 136 bays in 68 clubs, not 272 in 172. We do not
+# overinvest in simulators (the founder, 26 Oct 2026); the smaller clubs are left out.
 CHAINS = {
     "planetFitness": dict(
         name="Planet Fitness", status="Signed", members_per_club=3_500,
-        people={2027: 2.0e6, 2028: 3.2e6, 2029: 4.4e6}, people_after=4.8e6,
+        # the bays' own staff, at the cost per bay of the 272-bay plan: 2027 is the same flagship bays
+        people={2027: 2.0e6, 2028: 1.9e6, 2029: 2.2e6}, people_after=2.4e6,
         central={2027: 1.2e6, 2028: 1.6e6}, central_after=2.0e6,
         phases=[
             dict(name="Phase 1", year=2027, live=0.75, units={"Signature": 20}, clubs=10,
                  note="Q1 2027: two Signature bays in ten Signature and Megaclubs, Sandton first"),
-            dict(name="Phase 2", year=2028, live=0.50, units={"Play": 40}, clubs=20,
-                 note="Two Play bays in twenty clubs"),
-            dict(name="Phase 3", year=2029, live=0.60, units={"Play": 6, "Practice": 6}, clubs=12,
-                 note="One bay in twelve smaller clubs"),
+            dict(name="Phase 2", year=2028, live=0.50, units={"Play": 16}, clubs=8,
+                 note="Two Play bays in eight of the best metro clubs"),
         ]),
     "virginActive": dict(
         name="Virgin Active", status="In talks", members_per_club=623_000 / 136,
-        people={2027: 4.0e6, 2028: 8.0e6, 2029: 11.0e6}, people_after=12.0e6,
+        people={2027: 4.0e6, 2028: 5.5e6, 2029: 5.5e6}, people_after=6.0e6,
         central={2027: 2.0e6, 2028: 3.0e6}, central_after=4.0e6,
         phases=[
             dict(name="Phase 1", year=2027, live=0.50, units={"Signature": 40}, clubs=20,
                  note="Mid-2027: two Signature bays in twenty flagship clubs"),
-            dict(name="Phase 2", year=2028, live=0.25, units={"Play": 100}, clubs=50,
-                 note="Two Play bays in fifty metro clubs, ordered a quarter after Planet Fitness's phase two"),
-            dict(name="Phase 3", year=2029, live=0.60, units={"Play": 20, "Practice": 40}, clubs=60,
-                 note="One bay in sixty smaller clubs"),
+            dict(name="Phase 2", year=2028, live=0.25, units={"Play": 60}, clubs=30,
+                 note="Two Play bays in thirty of the best metro clubs, ordered a quarter after Planet Fitness's phase two"),
         ]),
 }
 
@@ -173,9 +172,10 @@ PLAN = dict(
     gz_rounds=GZ_ROUNDS,
     # Share of the bookable 15 hours a day a mature bay is booked
     util={"Signature": 0.30, "Play": 0.25, "Practice": 0.22},
-    # Get Lucky's team, technology and launch
-    central={2027: 9_000_000, 2028: 14_000_000, 2029: 22_000_000,
-             2030: 30_000_000, 2031: 38_000_000, 2032: 45_000_000},
+    # Get Lucky's team, technology and launch. The team that runs the bays is sized to the
+    # 136 bays: R3m-R7m a year less from 2029 than the 272-bay plan budgeted.
+    central={2027: 9_000_000, 2028: 13_500_000, 2029: 19_000_000,
+             2030: 25_000_000, 2031: 32_000_000, 2032: 38_000_000},
     brand_fixed={2027: 3_000_000, 2028: 2_000_000},   # the global launch with Ernie, then the base
     chains=("planetFitness", "virginActive"),
     bay_use=1.0,            # x planned bay use (the quiet case is 0.7)

@@ -194,7 +194,7 @@ def hero():
     <div class="stats tab">
       <div class="stat"><div class="n">{app['courses']}</div><div class="l">On course: South African courses live in the app</div></div>
       <div class="stat"><div class="n">{n(gz['locations'])}</div><div class="l">On simulators: Golfzon locations worldwide</div></div>
-      <div class="stat"><div class="n">{bc['totalBays']}</div><div class="l">In the gym: bays, {pt['planetFitness']['bays']} signed with Planet Fitness, {pt['virginActive']['bays']} in talks with Virgin Active</div></div>
+      <div class="stat"><div class="n">{bc['totalBays']}</div><div class="l">In the gym: bays in the best Planet Fitness and Virgin Active clubs</div></div>
       <div class="stat"><div class="n"><span class="lime">{r0(ladder[-1]['prize'])}</span></div><div class="l">Top prize, insured by Santam</div></div>
     </div>
   </div>
@@ -243,8 +243,8 @@ def concept():
         <span class="num">02 · Golfzon · Worldwide</span><h3>On simulators</h3><p>The same swing on the world's biggest simulator network. The bay measures the shot and signs it.</p>
         {facts_(("Golfzon locations", n(gz['locations'])), ("Our revenue, 2029", rm(rev['golfzon'][k29])))}</a>
       <a class="tile reveal" href="#gyms"><img src="assets/img/planet-golf-mobile.webp" alt="" loading="lazy" width="1672" height="941" style="object-position:30% 50%"><span class="chip live">Planet Fitness signed</span>
-        <span class="num">03 · Planet Fitness, Virgin Active</span><h3>In the gym</h3><p>Golf bays in the gym, booked like padel. The aim: own the local simulator market.</p>
-        {facts_((f"Bays: {pt['planetFitness']['bays']} signed, {pt['virginActive']['bays']} in talks", bc['totalBays']), ("Our fee, 2029", rm(rev['bayFee'][k29])))}</a>
+        <span class="num">03 · Planet Fitness, Virgin Active</span><h3>In the gym</h3><p>Golf bays in the best gyms, booked like padel. The aim: own the local simulator market.</p>
+        {facts_(("Bays, best clubs only", bc['totalBays']), ("Our fee, 2029", rm(rev['bayFee'][k29])))}</a>
       <a class="tile wide reveal" href="#ernie"><img src="assets/img/ernie-open.webp" alt="" loading="lazy" width="1800" height="1200" style="object-position:30% 28%"><span class="chip">Founding Ambassador</span>
         <span class="num">Across all three</span><h3>Ernie Els</h3><p>The face of the swing in every channel, and a shareholder, not a hired face.</p></a>
     </div>
@@ -378,13 +378,13 @@ def gyms_section():
         f'<tr{" class=\"total\"" if y == 2031 else ""}><td>{y}{"<span class=\"t\">PF Q1, VA mid-year</span>" if y == 2027 else ("<span class=\"t\">Fully ramped</span>" if y == 2031 else "")}</td>'
         f'<td class="n">{f["kpis"]["baysLive"][I[y]]}</td><td class="n">{rm(bc["revenueZAR"][I[y]])}</td><td class="n">{rm(bc["ebitdaZAR"][I[y]])}</td>'
         f'<td class="n">{rm(bc["debtClosingZAR"][I[y]])}</td><td class="n hide-sm">{rm(bc["feeZAR"][I[y]])}</td></tr>' for y in (2027, 2028, 2029, 2031))
-    earns = f"""<div class="bays">{bay('Signature', 'Signature bay', 'Flagship clubs')}{bay('Play', 'Play bay', 'Metro clubs')}{bay('Practice', 'Practice bay', 'Smaller clubs')}</div>
+    earns = f"""<div class="bays">{bay('Signature', 'Signature bay', 'Flagship clubs')}{bay('Play', 'Play bay', 'Metro clubs')}</div>
     <p>A mature Golfzon TwoVision NX bay at the price from the 41st bay on. Payback is on contribution: after the gym's {bc['assumptions']['gymSharePct']}% and our {st['feePct']}% fee, before staff, finance and the first-year ramp.</p>"""
     table = f"""<div class="tablewrap" tabindex="0" role="region" aria-label="The bay company by year">
       <table>
         <thead><tr><th>The bay company</th><th class="n">Bays</th><th class="n">Revenue</th><th class="n">EBITDA</th><th class="n">Debt</th><th class="n hide-sm">Our fee</th></tr></thead>
         <tbody>{yr_rows}</tbody>
-        <caption>Forecast, ex VAT, in {bc['totalClubs']} clubs once all three phases are in. EBITDA is after the gyms' {bc['assumptions']['gymSharePct']}%, our {st['feePct']}% fee, staff and the bays' own team. RMB's debt is modelled, not committed: {rm(bc['totalCapexZAR'])} of bays, {st['debtPct']}% financed over five years after a year interest-only.</caption>
+        <caption>Forecast, ex VAT, in {bc['totalClubs']} clubs once both phases are in. EBITDA is after the gyms' {bc['assumptions']['gymSharePct']}%, our {st['feePct']}% fee, staff and the bays' own team. RMB's debt is modelled, not committed: {rm(bc['totalCapexZAR'])} of bays, {st['debtPct']}% financed over five years after a year interest-only.</caption>
       </table>
     </div>"""
     backers = f"""<p><strong>{rm(inv['calledZAR'])} between 2027 and 2029:</strong> the {st['investorEquityPct']}% on every bay, a R{st['reserveZAR'] / 1e6:.0f}m reserve, and what the bays need while they ramp. They only cover their interest and overheads from 2029, and the bay investors carry that, not Get Lucky.</p>
@@ -397,7 +397,7 @@ def gyms_section():
       <div class="head" style="margin:0">
         <span class="kicker">03 · In the gym · South Africa</span>
         <h2 class="display-lg" id="gyms-h">In the gym. <span class="green">Owning the local market.</span></h2>
-        <p class="lede"><strong>Golf bays in South Africa's leading gym chains, booked like padel.</strong> Planet Fitness has signed for {pt['planetFitness']['bays']} bays, first installs in {esc(pt['planetFitness']['firstInstalls'])}; Virgin Active is in talks for {pt['virginActive']['bays']} more. The gym gives us the space and the members and takes {bc['assumptions']['gymSharePct']}% of every rand. It puts in no capital.</p>
+        <p class="lede"><strong>Golf bays in South Africa's leading gym chains, booked like padel.</strong> Planet Fitness has signed, first installs in {esc(pt['planetFitness']['firstInstalls'])}; Virgin Active is in talks. We only go into the best clubs: {pf['bays']} bays in {pf['clubs']} Planet Fitness clubs and {va['bays']} in {va['clubs']} Virgin Active clubs. The gym gives us the space and the members and takes {bc['assumptions']['gymSharePct']}% of every rand. It puts in no capital.</p>
       </div>
       <figure class="photo reveal" style="aspect-ratio:16/9"><img src="assets/img/planet-golf-mobile.webp" alt="Concept render: a Planet Golf simulator bay, powered by Golfzon, in a mobile unit outside a Planet Fitness club at dusk" loading="lazy" width="1672" height="941"><figcaption>Concept: Planet Golf at a Planet Fitness club</figcaption></figure>
     </div>
@@ -549,7 +549,7 @@ def numbers_section():
     </div>"""
     assumptions = f"""<ul>
       <li><strong>Golfzon:</strong> {gz['roundsPerYear'] / 1e6:.0f} million rounds a year held flat, about 94 million of them in Korea; rounds carrying a swing rise {" → ".join(f"{v}%" for v in plan['golfzonAttachPct'])} from 2027 to 2032, at {" → ".join(f"${v:.0f}" for v in plan['golfzonTicketUSD'][:5])} a swing. We keep {split['getLucky']}%; payments 3%, risk and support $0.05 a swing, launches 12% of our share.</li>
-      <li><strong>The bays:</strong> 15 bookable hours, 360 days. Signature booked {plan['bayUtilisationPct']['Signature']}% of hours at R{unit['Signature']['yieldZAR']}, Play {plan['bayUtilisationPct']['Play']}% at R{unit['Play']['yieldZAR']}, Practice {plan['bayUtilisationPct']['Practice']}% at R{unit['Practice']['yieldZAR']}; 55% of mature use in year one, 80% in year two.</li>
+      <li><strong>The bays:</strong> 15 bookable hours, 360 days. Signature booked {plan['bayUtilisationPct']['Signature']}% of hours at R{unit['Signature']['yieldZAR']}, Play {plan['bayUtilisationPct']['Play']}% at R{unit['Play']['yieldZAR']}; 55% of mature use in year one, 80% in year two.</li>
       <li><strong>The app, on course:</strong> {n(f['kpis']['onCourseSwings'][0])} paid swings in 2027 ({n(tr['paidSwings'])} in our first year) rising to {n(f['kpis']['onCourseSwings'][-1])} in 2032, at R{f['kpis']['onCourseAvgZAR'][0]} to R{f['kpis']['onCourseAvgZAR'][-1]} a swing.</li>
       <li><strong>Sponsorship:</strong> Indwe's R3m is contracted for 2027 only; we assume it renews at R3m a year.</li>
       <li><strong>Get Lucky:</strong> central team {rm(plan['centralZAR'][0], 0)} in 2027 to {rm(plan['centralZAR'][-1], 0)} in 2032; brand 8% of product revenue plus a launch budget; tax at 27% after the 2027 loss. Net profit is before the Founding Ambassador's share of profit, paid from cash.</li>
@@ -679,8 +679,8 @@ def deal_section():
       <li class="key"><time>{esc(rd['timing'])}</time><b>The round · Sandton</b><span>{rm(rd['amountZAR'])} closes. First Planet Fitness bays.</span></li>
       <li><time>Q2 2027</time><b>Golfzon phase one</b><span>Live on Golfzon bays.</span></li>
       <li><time>Mid-2027</time><b>Virgin Active</b><span>Twenty clubs, on signature.</span></li>
-      <li><time>2028</time><b>{f['kpis']['baysLive'][k28]} bays</b><span>In the Golfzon app and in-game.</span></li>
-      <li><time>2029</time><b>{f['kpis']['baysLive'][k29]} bays</b><span>Built into Golfzon's game.</span></li>
+      <li><time>2028</time><b>All {f['kpis']['baysLive'][k28]} gym bays live</b><span>Golfzon in its app and in-game.</span></li>
+      <li><time>2029</time><b>Golfzon phase three</b><span>Built into Golfzon's game.</span></li>
     </ol>
 
     <div class="split" style="margin-top:48px;align-items:start">
@@ -813,7 +813,9 @@ BANNED = [
     (r"(?i)\bregistry\b|\bgames\b|game of chance|icons cup|back an icon|\bbet(s|ting)?\b|bet on yourself|\bjackpot\b|golf gods",
      "retired features and language: games, the registry, betting"),
     (r"(?i)whatsapp|\bunlimited\b|\bpivot\b|old plan|previous plan", "retired framings"),
-    (r"(?i)signed with (golfzon|virgin active)|virgin active (has )?signed|exclusive with golfzon", "a signature that does not exist"),
+    (r"(?i)signed with (golfzon|virgin active)|virgin active (has )?signed|exclusive with golfzon|signed for \d+ bays",
+     "a signature that does not exist"),
+    (r"272 bays|172 clubs|\b272\b|200 in talks|Practice bay", "the superseded 272-bay gym plan"),
     (r"4,167", "the simulator break-even before commission"),
 ]
 
