@@ -420,7 +420,7 @@ def gyms_section():
         <h2 class="display-lg" id="gyms-h">In the gym. <span class="green">Owning the local market.</span></h2>
         <p class="lede"><strong>Golf bays in South Africa's leading gym chains, booked like padel.</strong> Planet Fitness has signed, first installs in {esc(pt['planetFitness']['firstInstalls'])}; Virgin Active is in talks. We only go into the best clubs: {pf['bays']} bays in {pf['clubs']} Planet Fitness clubs and {va['bays']} in {va['clubs']} Virgin Active clubs. The gym gives us the space and the members and takes {bc['assumptions']['gymSharePct']}% of every rand. It puts in no capital.</p>
       </div>
-      <figure class="photo reveal" style="aspect-ratio:16/9"><img src="assets/img/planet-golf-mobile.webp" alt="Concept render: a Planet Golf simulator bay, powered by Golfzon, in a mobile unit outside a Planet Fitness club at dusk" loading="lazy" width="1672" height="941"><figcaption>Concept: Planet Golf at a Planet Fitness club</figcaption></figure>
+      <figure class="photo reveal" style="aspect-ratio:16/9"><img src="assets/img/virgin-golf-pavilion.webp" alt="Concept render: a Virgin Golf pavilion, powered by Golfzon, beside the padel courts at a Virgin Active club at dusk" loading="lazy" width="1672" height="941"><figcaption>Concept: Virgin Golf at a Virgin Active club</figcaption></figure>
     </div>
     <div class="grid c2">
       <article class="party reveal">
@@ -440,7 +440,7 @@ def gyms_section():
         <div class="card iconcard reveal">{icon('users')}<div><h3>Leagues across the chain</h3><p>Sandton against Umhlanga, on one network, with coaching in every flagship club.</p></div></div>
         <div class="card iconcard reveal">{icon('trophy')}<div><h3>The insured shot on every bay</h3><p>Half of simulator players aren't course golfers. The bay sells golf to people who'd never join a club.</p></div></div>
       </div>
-      <figure class="photo reveal" style="min-height:320px"><img src="assets/img/virgin-golf.webp" alt="Concept render: a Virgin Golf bay, powered by Virgin Active, beside the padel courts at a Virgin Active club at dusk" loading="lazy" width="1280" height="720" style="object-position:55% 50%"><figcaption>Concept: Virgin Golf at a Virgin Active club</figcaption></figure>
+      <figure class="photo photo-side reveal"><img src="assets/img/planet-golf-mobile.webp" alt="Concept render: a Planet Golf simulator bay, powered by Golfzon, in a mobile unit outside a Planet Fitness club at dusk" loading="lazy" width="1672" height="941" style="object-position:50% 50%"><figcaption>Concept: Planet Golf at a Planet Fitness club</figcaption></figure>
     </div>
 
     <div class="grid c2" style="margin-top:16px">

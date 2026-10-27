@@ -600,3 +600,7 @@ h3, h4 { text-wrap: balance; }
 @media (min-width: 900px) and (max-width: 1099px) {
   .channels .tile:not(.wide) .num { min-height: 2lh; display: flex; align-items: flex-end; margin-top: 180px; }
 }
+/* a photo beside a stack of cards: fills the stack on desktop, a 16:9 picture on phones */
+.photo-side { aspect-ratio: 16 / 9; }
+@media (min-width: 960px) { .photo-side { aspect-ratio: auto; min-height: 320px; } }
+@media (max-width: 520px) { .photo figcaption { font-size: 10px; letter-spacing: .04em; left: 12px; right: 12px; bottom: 10px; } }
