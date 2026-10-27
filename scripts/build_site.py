@@ -431,14 +431,14 @@ def gyms_section():
 
     <div class="grid c2" style="margin-top:16px">
       <article class="card idea reveal">
-        <div class="row"><span class="mark-text">Discovery Vitality</span><span class="chip talks">Next idea</span></div>
+        <div class="row"><img class="mark-img" src="assets/logos/vitality.png" alt="Discovery Vitality" width="279" height="160" loading="lazy"><span class="chip talks">Next idea</span></div>
         <h3>Vitality points for golf on our bays</h3>
         <p>Vitality members already earn points for going to the gym. We want an hour on our simulators to count too, which gives members one more reason to book a bay.</p>
       </article>
       <article class="card idea reveal">
-        <div class="row">{icon('pin')}<span class="chip talks">Next idea</span></div>
+        <div class="row"><img class="mark-img wide" src="assets/logos/growthpoint.png" alt="Growthpoint Properties" width="548" height="98" loading="lazy"><span class="chip talks">Next idea</span></div>
         <h3>Mobile bays where the crowds are</h3>
-        <p>The mobile Planet Golf and Virgin Golf units can park at busy malls like the V&amp;A Waterfront and Brooklyn Mall, putting the swing in front of shoppers and pointing them to the nearest club.</p>
+        <p>The mobile Planet Golf and Virgin Golf units can park at busy malls in Growthpoint's portfolio, like the V&amp;A Waterfront and Brooklyn Mall, putting the swing in front of shoppers and pointing them to the nearest club.</p>
       </article>
     </div>
     <p class="note" style="margin-top:10px">Two ideas we're working on. Neither is in our numbers.</p>

@@ -548,4 +548,5 @@ details.more[open] > summary { margin-bottom: 4px; }
 /* ideas we're working on: not in the numbers */
 .idea .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; min-height: 44px; }
 .idea .mark-text { font-size: 19px; font-weight: 800; letter-spacing: -.01em; color: var(--ink); }
-.idea .mark-img { height: 34px; width: auto; }
+.idea .mark-img { height: 40px; width: auto; }
+.idea .mark-img.wide { height: 30px; }
