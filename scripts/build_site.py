@@ -243,7 +243,7 @@ def concept():
       <p class="lede"><strong>Every channel sells the same thing: one swing at a hole-in-one, for a prize Santam insures.</strong> We proved it on South African courses. Now it goes onto simulators worldwide with Golfzon, and into the gym, where we plan to own South Africa's simulator market.</p>
     </div>
     <div class="channels">
-      <a class="tile reveal" href="#app"><img src="assets/img/golf-day-scan.webp" alt="" loading="lazy" width="900" height="1350"><span class="chip live">Live</span>
+      <a class="tile tile-app reveal" href="#app"><img src="assets/img/app-in-hand.webp" alt="" loading="lazy" width="900" height="1016" style="object-position:38% 0%"><span class="chip live">Live</span>
         <span class="num">01 · The app · South Africa</span><h3>On course</h3><p>Pick a par 3 on any of {app['courses']} courses and film the swing. Hole it and Santam pays.</p>
         {facts_(("Paid swings, year one", n(tr['paidSwings'])), ("Our revenue, 2029", rm(rev['onCourse'][k29])))}</a>
       <a class="tile reveal" href="#golfzon"><img src="assets/img/golfzon-demo.webp" alt="" loading="lazy" width="1200" height="630"><span class="chip live">Integration built</span>

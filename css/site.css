@@ -563,3 +563,6 @@ details.more[open] > summary { margin-bottom: 4px; }
 .proof--photo::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(30, 49, 32, .62) 0%, rgba(30, 49, 32, .88) 55%, rgba(30, 49, 32, .95) 100%); }
 .proof--photo::after { content: "A Get Lucky golf day, Cape Town"; position: absolute; right: 16px; top: 12px; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(245, 238, 222, .75); }
 .proof--photo > div:nth-child(-n+2) { margin-top: 22px; }
+
+/* the on-course tile: keep the phone in the hand clear above the words */
+.channels .tile.tile-app::before { background: linear-gradient(0deg, rgba(12, 22, 14, .97) 0%, rgba(12, 22, 14, .86) 42%, rgba(12, 22, 14, .1) 70%, rgba(12, 22, 14, 0) 100%); }
