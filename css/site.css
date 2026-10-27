@@ -460,6 +460,7 @@ footer a { color: rgba(245, 238, 222, .8); }
 .terms { align-items: start; }
 .calc .note, .termcard .note { color: var(--muted); }
 .marks img.pf { filter: brightness(0) invert(1); }
+.marks img.virgin { height: 44px; filter: brightness(0) invert(1); }
 .split > *, .grid > *, .terms > *, .hero-grid > * { min-width: 0; }
 
 /* phones: tighter step cards, term rows stacked, narrow tables wrap */
