@@ -294,7 +294,7 @@ def app_section():
           <div class="qr"><img src="assets/logos/install-qr.svg" alt="QR code to install the Get Lucky app" width="112" height="112"></div>
           <div><h3 style="color:var(--cream);font-size:18px">Try it yourself</h3><p>Scan to install, or open <a href="{app['url']}" target="_blank" rel="noopener" style="color:var(--lime)">getluckyholeinone.com</a> on your phone.</p></div>
         </div>
-        <div class="proof proof--stack tab reveal">
+        <div class="proof proof--stack proof--photo tab reveal" role="group" aria-label="Traction, over a Get Lucky golf day in Cape Town">
           <div><div class="n">{n(tr['paidSwings'])}</div><div class="l">Paid swings in our first year</div></div>
           <div><div class="n">{rm(tr['trailingRevenueZAR'])}</div><div class="l">Traded: {rm(tr['sponsorshipZAR'])} sponsorship, {rm(tr['entriesZAR'])} entries</div></div>
           <div><div class="n">{n(tr['golfDaysPerYear'])}</div><div class="l">Golf days a year, {esc(tr['partnerCourses'])} partner courses</div></div>

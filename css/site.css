@@ -557,3 +557,9 @@ details.more[open] > summary { margin-bottom: 4px; }
 .phones img { width: 100%; height: auto; border-radius: 22px; border: 5px solid var(--ink); background: var(--ink); box-shadow: 0 24px 50px -24px rgba(15, 27, 18, .45); }
 .phones figcaption { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--green); text-align: center; }
 @media (max-width: 520px) { .phones { gap: 8px; } .phones img { border-radius: 14px; border-width: 3px; } .phones figcaption { font-size: 10px; letter-spacing: .06em; } }
+
+/* the traction numbers over a real golf day (Cape Town Stadium behind) */
+.proof--photo { position: relative; overflow: hidden; isolation: isolate; background: var(--forest) url("../assets/img/golf-day.webp") 50% 35% / cover no-repeat; }
+.proof--photo::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(30, 49, 32, .62) 0%, rgba(30, 49, 32, .88) 55%, rgba(30, 49, 32, .95) 100%); }
+.proof--photo::after { content: "A Get Lucky golf day, Cape Town"; position: absolute; right: 16px; top: 12px; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(245, 238, 222, .75); }
+.proof--photo > div:nth-child(-n+2) { margin-top: 22px; }
