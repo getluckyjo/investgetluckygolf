@@ -180,6 +180,7 @@ def nav():
 def hero():
     return f"""
 <header class="hero on-dark dot-grid" id="top">
+  <div class="bg" aria-hidden="true"><img src="assets/img/hero-metropolitan-2000.webp" srcset="assets/img/hero-metropolitan-1200.webp 1200w, assets/img/hero-metropolitan-2000.webp 2000w" sizes="100vw" alt="" width="2000" height="1124" fetchpriority="high"></div>
   <div class="glow" style="right:-220px;top:-160px" aria-hidden="true"></div>
   <div class="wrap hero-grid">
     <div class="copy">
