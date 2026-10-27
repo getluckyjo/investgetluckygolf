@@ -542,6 +542,24 @@ def main():
     nm = lambda run_, y: run_["vals"][y]["total"] * note_pct / NOTE_ZAR
     hard = runs["hard"]
 
+    # A sale in 2032 at the same yardstick, for the round: in at the end of Q1 2027, out on
+    # 31 December 2032. The marks leave out Get Lucky's cash; a buyer pays for it (or it is
+    # paid out as dividends on the way), so the cash-included figure is shown as extra.
+    EXIT_YEAR, HOLD_YEARS = 2032, 5.75
+    a_year = lambda mult: (mult ** (1 / HOLD_YEARS) - 1) * 100
+    exit_cash = rows[EXIT_YEAR]["closing"]
+    with_cash = (vals[EXIT_YEAR]["total"] + exit_cash) * round_pct / ROUND_ZAR
+    exit_view = {
+        "year": EXIT_YEAR, "holdYears": HOLD_YEARS, "valueZAR": round(vals[EXIT_YEAR]["total"]),
+        "ebitdaMultiple": round(vals[EXIT_YEAR]["total"] / rows[EXIT_YEAR]["ebitda"], 1),
+        "multiple": round(rm(p, EXIT_YEAR), 2), "aYearPct": round(a_year(rm(p, EXIT_YEAR))),
+        "hardCaseValueZAR": round(hard["vals"][EXIT_YEAR]["total"]),
+        "hardCaseMultiple": round(rm(hard, EXIT_YEAR), 2), "hardCaseAYearPct": round(a_year(rm(hard, EXIT_YEAR))),
+        "cashZAR": round(exit_cash), "withCashMultiple": round(with_cash, 2), "withCashAYearPct": round(a_year(with_cash)),
+        "_basis": ("Illustrative: the round's stake sold on 31 December 2032 at the plan's value, held from the end "
+                   "of Q1 2027. withCash adds Get Lucky's closing cash, before any dividend tax."),
+    }
+
     sens = []
     for c in CASES:
         r_ = runs[c["key"]]
@@ -636,6 +654,7 @@ def main():
                       "hardCaseMultiple2032": round(rm(hard, 2032), 2),
                       "targetsValue2029ZAR": round(t["vals"][2029]["total"]),
                       "targetsMultiple2029": round(rm(t, 2029), 2), "targetsMultiple2032": round(rm(t, 2032), 2),
+                      "exit": exit_view,
                       "multipleBasis": ("Your stake at the round's post-money, marked at the plan's value on "
                                         "31 December. An unrealised mark on a private holding, not a cash return.")},
             "useOfFunds": use_of_funds(p),

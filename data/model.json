@@ -75,6 +75,21 @@
       "targetsValue2029ZAR": 399110674,
       "targetsMultiple2029": 6.14,
       "targetsMultiple2032": 20.0,
+      "exit": {
+        "year": 2032,
+        "holdYears": 5.75,
+        "valueZAR": 631354852,
+        "ebitdaMultiple": 7.2,
+        "multiple": 9.71,
+        "aYearPct": 48,
+        "hardCaseValueZAR": 215523841,
+        "hardCaseMultiple": 3.32,
+        "hardCaseAYearPct": 23,
+        "cashZAR": 172794657,
+        "withCashMultiple": 12.37,
+        "withCashAYearPct": 55,
+        "_basis": "Illustrative: the round's stake sold on 31 December 2032 at the plan's value, held from the end of Q1 2027. withCash adds Get Lucky's closing cash, before any dividend tax."
+      },
       "multipleBasis": "Your stake at the round's post-money, marked at the plan's value on 31 December. An unrealised mark on a private holding, not a cash return."
     },
     "useOfFunds": {

@@ -20,6 +20,7 @@ facts = json.loads((ROOT / "data/facts.json").read_text())
 FX = m["fx"]
 f, d, bc, st, cash, val = m["forecast"], m["deal"], m["bayCompany"], m["structure"], m["cash"], m["valuation"]
 nt, rd = d["note"], d["round"]
+ex = rd["exit"]   # a sale in 2032, for the round
 pt, tr, prod = m["partners"], m["traction"], m["product"]
 Y = f["years"]
 I = {y: k for k, y in enumerate(Y)}
@@ -576,8 +577,8 @@ def numbers_section():
       <div>{icon('lock')}<div><b>None</b><span>Further equity rounds in the plan</span></div></div>
     </div>
     <div class="cases tab">
-      <div class="case reveal"><span class="k">The plan</span><b>{x(rd['multiple2029'])}</b><span class="l">What {rm(rd['amountZAR'])} in the round is marked at, December 2029. {x(rd['multiple2032'])} by 2032.</span></div>
-      <div class="case hard reveal"><span class="k">The hard case</span><b>{x(rd['hardCaseMultiple2029'])}</b><span class="l">Half the Golfzon attach and ticket, no Virgin Active. Cash lasts to {cash['hardCaseCashLastsTo']} without cutting a cost.</span></div>
+      <div class="case reveal"><span class="k">The plan</span><b>{x(rd['multiple2029'])}</b><span class="l">What {rm(rd['amountZAR'])} in the round is marked at, December 2029. Sold in {ex['year']}: {x(ex['multiple'])}, about {ex['aYearPct']}% a year.</span></div>
+      <div class="case hard reveal"><span class="k">The hard case</span><b>{x(rd['hardCaseMultiple2029'])}</b><span class="l">Half the Golfzon attach and ticket, no Virgin Active. Cash lasts to {cash['hardCaseCashLastsTo']} without cutting a cost. Sold in {ex['year']}: {x(ex['hardCaseMultiple'])}, about {ex['hardCaseAYearPct']}% a year.</span></div>
       <div class="case up reveal"><span class="k">Our targets</span><b>{x(rd['targetsMultiple2029'])}</b><span class="l">Twice the Golfzon attach at a $10 swing, and busier bays. {x(rd['targetsMultiple2032'])} by 2032.</span></div>
     </div>
     <p class="note" style="margin-top:12px">The round prices Get Lucky at {price_on(2028)} our 2028 revenue and {price_on(2029)} our 2029 revenue. We mark it at {val['platformMultiple']}× each year's revenue plus our share of the bay company. Unrealised marks on a private holding, not cash returns.</p>
@@ -636,7 +637,9 @@ def deal_section():
       <li><div><b>Quarterly reporting</b><span>Accounts for Get Lucky and the bay company, bays, swings, claims and the Golfzon roll-out.</span></div></li>
       <li><div><b>A board seat for the lead</b><span>No liquidation preference and no ratchet, offered or asked for.</span></div></li>
     </ul>"""
-    exits = f"""<p>A simulator network that wants the prize layer on its own bays. An insurer buying distribution on risk it already carries. A leisure or gym group buying the operator of {bc['totalBays']} bays and its half of their profit. Or none of them: a cash-generative company that pays dividends.</p>"""
+    exits = f"""<p>A simulator network that wants the prize layer on its own bays. An insurer buying distribution on risk it already carries. A leisure or gym group buying the operator of {bc['totalBays']} bays and its half of their profit. Or none of them: a cash-generative company that pays dividends.</p>
+    <p><strong>What a sale would mean for you.</strong> On our yardstick Get Lucky is worth {r0(ex['valueZAR'])} in {ex['year']}, about {ex['ebitdaMultiple']:.0f}× that year's EBITDA. Sold then, R1m in the round becomes {rm(ex['multiple'] * 1e6)}: {x(ex['multiple'])}, about {ex['aYearPct']}% a year from the end of Q1 2027.</p>
+    <p><strong>On top of that, the cash.</strong> Our marks leave out the cash the plan builds: {rm(ex['cashZAR'])} by {ex['year']}. A buyer pays for it, or it reaches you as dividends along the way, before dividend tax. Counted in, it's {x(ex['withCashMultiple'])}, about {ex['withCashAYearPct']}% a year. Illustrative, not a promise.</p>"""
     return f"""
 <section class="section on-dark forest raise" id="deal" aria-labelledby="deal-h">
   <div class="glow" style="left:-300px;bottom:-300px" aria-hidden="true"></div>
@@ -666,7 +669,8 @@ def deal_section():
           <dt>Raising</dt><dd>{rm(rd['amountZAR'])} for {EQ}<small>≈ {usd(rd['amountZAR'])}</small></dd>
           <dt>Pre / post</dt><dd>{r0(rd['preMoneyZAR'])} / {r0(rd['postMoneyZAR'])}<small>≈ {usd(rd['preMoneyZAR'])} / {usd(rd['postMoneyZAR'])}</small></dd>
           <dt>Minimum ticket</dt><dd>{rm(rd['minimumTicketZAR'])}</dd>
-          <dt>Marked at December 2029</dt><dd>{x(rd['multiple2029'])}<small>{x(rd['hardCaseMultiple2029'])} in the hard case · {x(rd['multiple2032'])} by 2032</small></dd>
+          <dt>Marked at December 2029</dt><dd>{x(rd['multiple2029'])}<small>{x(rd['hardCaseMultiple2029'])} in the hard case</small></dd>
+          <dt>A sale in {ex['year']}</dt><dd>{x(ex['multiple'])}, about {ex['aYearPct']}% a year<small>{x(ex['hardCaseMultiple'])}, about {ex['hardCaseAYearPct']}% a year, in the hard case</small></dd>
         </dl>
         <p class="uses"><strong>What the {rm(rd['amountZAR'])} pays for</strong></p>
         <div class="usebar tab" role="img" aria-label="Use of funds: {esc(', '.join(f"{u['label']} {u['pct']}%" for u in order))}">{bar}</div>
@@ -700,9 +704,9 @@ def deal_section():
           <tr><th scope="row" id="calc-stake-l">Your stake at {r0(rd['postMoneyZAR'])} post</th><td id="calc-stake">{stake * 100:.2f}%</td></tr>
           <tr><th scope="row">December 2029 ({r0(rd['value2029ZAR'])})</th><td id="calc-2029">R{stake * rd['value2029ZAR'] / 1e6:.2f}m · {x(stake * rd['value2029ZAR'] / rd['minimumTicketZAR'])}</td></tr>
           <tr><th scope="row">The hard case, December 2029 ({r0(rd['hardCaseValue2029ZAR'])})</th><td id="calc-hard">R{stake * rd['hardCaseValue2029ZAR'] / 1e6:.2f}m · {x(stake * rd['hardCaseValue2029ZAR'] / rd['minimumTicketZAR'])}</td></tr>
-          <tr><th scope="row">2032 ({r0(rd['value2032ZAR'])})</th><td id="calc-2032">R{stake * rd['value2032ZAR'] / 1e6:.2f}m · {x(stake * rd['value2032ZAR'] / rd['minimumTicketZAR'])}</td></tr>
+          <tr><th scope="row">A sale in {ex['year']} ({r0(rd['value2032ZAR'])})</th><td id="calc-2032">R{stake * rd['value2032ZAR'] / 1e6:.2f}m · {x(stake * rd['value2032ZAR'] / rd['minimumTicketZAR'])}</td></tr>
         </table>
-        <p class="note">Illustrative, from the plan. Unrealised marks, not cash returns.</p>
+        <p class="note">Illustrative, from the plan: the marks are unrealised and the sale is a what-if, not a promise.</p>
       </div>
       <div class="reveal">
         <h3 class="display-sm" style="color:var(--cream)">Your rights</h3>
