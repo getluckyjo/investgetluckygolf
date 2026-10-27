@@ -74,9 +74,13 @@ OC_PROCESSING = 0.03
 OC_VERIFY_ZAR = 8             # video review and claims handling per swing
 
 # ============================================================================
-# 3. SPONSORSHIP - Indwe and Santam, R3m confirmed for 2027, held flat
+# 3. SPONSORSHIP - grows with reach. Indwe's R3m is contracted for 2027 and assumed
+# to renew; on top, sponsors pay for the reach we add: about R5 (~$0.27) for every paid
+# swing beyond 2027's, on course and on Golfzon - a seventh of what Indwe's R3m pays a
+# swing in 2027.
 # ============================================================================
-SPONSORSHIP = {y: 3_000_000 for y in YEARS}
+SPONSOR_BASE_ZAR = 3_000_000
+SPONSOR_PER_SWING_ZAR = 5
 
 # ============================================================================
 # GET LUCKY - brand, tax, the ambassador
@@ -417,6 +421,7 @@ def run(case):
 
     # ===================== Get Lucky =========================================
     rows = {}
+    swings_2027 = case["gz_rounds"] * case["gz_attach"][2027] + OC_SWINGS[2027]   # the reach Indwe's R3m buys
     for y in YEARS:
         r = {}
         swings = case["gz_rounds"] * case["gz_attach"][y]
@@ -430,7 +435,7 @@ def run(case):
         r["ocGross"] = OC_SWINGS[y] * OC_AVG_ZAR[y]
         r["ocRevenue"] = r["ocGross"] * (1 - PREMIUM - COURSE_SHARE)
         r["ocDirect"] = r["ocGross"] * OC_PROCESSING + OC_SWINGS[y] * OC_VERIFY_ZAR
-        r["sponsorship"] = SPONSORSHIP[y]
+        r["sponsorship"] = SPONSOR_BASE_ZAR + SPONSOR_PER_SWING_ZAR * max(swings + OC_SWINGS[y] - swings_2027, 0)
         r["bayFee"] = bay[y]["fee"]
         r["productRevenue"] = r["gzRevenue"] + r["ocRevenue"] + r["sponsorship"]
         r["revenue"] = r["productRevenue"] + r["bayFee"]
