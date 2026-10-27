@@ -268,7 +268,7 @@ def app_section():
     track = "".join(f'<li class="reveal">{icon(i)}<span class="no">{k + 1}</span><h3>{t}</h3><p>{d_}</p></li>' for k, (i, t, d_) in enumerate(steps))
     hood = f"""<ul>
       <li><strong>Built to be audited:</strong> about {app['testsApprox']} automated tests, error monitoring, append-only audit logs and fraud rules on every claim.</li>
-      <li><strong>Golf days on their own link:</strong> every sponsored day gets a page, and every player gets a free swing. Multi-day trips and dollar prizes too. This month: {esc(gd[0])} and {esc(gd[1])}.</li>
+      <li><strong>Golf days on their own link:</strong> every sponsored day gets a page, and every player gets a pre-sold swing. Multi-day trips and dollar prizes too. This month: {esc(gd[0])} and {esc(gd[1])}.</li>
       <li><strong>The traction above</strong> is July 2025 to July 2026, on the tee, before the app.</li>
     </ul>"""
     return f"""
