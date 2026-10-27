@@ -563,6 +563,16 @@ def main():
     a_year = lambda mult: (mult ** (1 / HOLD_YEARS) - 1) * 100
     exit_cash = rows[EXIT_YEAR]["closing"]
     with_cash = (vals[EXIT_YEAR]["total"] + exit_cash) * round_pct / ROUND_ZAR
+    # A sale of the bay company at the end of the forecast, at the same 5x EBITDA: RMB is
+    # repaid first, then anything still owed to the bay investors, then the 50/50 split.
+    b_end = bay[EXIT_YEAR]
+    bay_sale = {
+        "year": EXIT_YEAR, "ebitdaMultiple": BAYS_EBITDA_MULTIPLE,
+        "evZAR": round(b_end["ebitda"] * BAYS_EBITDA_MULTIPLE), "debtZAR": round(b_end["debt_closing"]),
+        "cashZAR": round(b_end["cash"]), "hurdleZAR": round(b_end["hurdle"]), "equityZAR": round(b_end["value"]),
+        "toGetLuckyZAR": round(b_end["valueGetLucky"]), "toInvestorsZAR": round(b_end["valueInvestors"]),
+        "perRoundMillionZAR": round(b_end["valueGetLucky"] * round_pct / ROUND_ZAR * 1e6),
+    }
     exit_view = {
         "year": EXIT_YEAR, "holdYears": HOLD_YEARS, "valueZAR": round(vals[EXIT_YEAR]["total"]),
         "ebitdaMultiple": round(vals[EXIT_YEAR]["total"] / rows[EXIT_YEAR]["ebitda"], 1),
@@ -780,6 +790,7 @@ def main():
             "cashClosingZAR": B("cash"), "hurdleClosingZAR": B("hurdle"),
             "dscr": [round(bay[y]["dscr"], 2) if bay[y]["dscr"] else None for y in YEARS],
             "valueZAR": {"total": B("value"), "investors": B("valueInvestors"), "getLucky": B("valueGetLucky")},
+            "sale": bay_sale,
             "investors": {"calledZAR": round(inv["calledZAR"]), "distributedZAR": round(inv["distributedZAR"]),
                           "value2032ZAR": round(inv["value2032ZAR"]), "multiple2032": round(inv["multiple2032"], 2),
                           "irrPct": round(inv["irr"] * 100, 1), "capitalBackBy": inv["capitalBackBy"],

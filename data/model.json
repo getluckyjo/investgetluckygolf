@@ -910,6 +910,18 @@
         129493901
       ]
     },
+    "sale": {
+      "year": 2032,
+      "ebitdaMultiple": 5.0,
+      "evZAR": 269167069,
+      "debtZAR": 13179268,
+      "cashZAR": 3000000,
+      "hurdleZAR": 0,
+      "equityZAR": 258987802,
+      "toGetLuckyZAR": 129493901,
+      "toInvestorsZAR": 129493901,
+      "perRoundMillionZAR": 1992214
+    },
     "investors": {
       "calledZAR": 19838897,
       "distributedZAR": 48350745,

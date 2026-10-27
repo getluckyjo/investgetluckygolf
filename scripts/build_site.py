@@ -20,6 +20,7 @@ facts = json.loads((ROOT / "data/facts.json").read_text())
 FX = m["fx"]
 f, d, bc, st, cash, val = m["forecast"], m["deal"], m["bayCompany"], m["structure"], m["cash"], m["valuation"]
 nt, rd = d["note"], d["round"]
+bsale = m["bayCompany"]["sale"]   # the bay company sold at the end of the forecast
 amb = d["ambassador"]   # Ernie Els, Founding Ambassador
 ex = rd["exit"]   # a sale in 2032, for the round
 pt, tr, prod = m["partners"], m["traction"], m["product"]
@@ -434,11 +435,17 @@ def gyms_section():
       <div class="co you reveal"><span class="k">Where the note and the round go</span><h3>Get Lucky</h3><p>The app, Golfzon, golf days, sponsorship. Runs every bay. No bay debt, no bay capex.</p></div>
       <ul class="flows reveal">
         <li><span class="arr" aria-hidden="true"></span><b>{st['feePct']}%</b><span>of every rand the bays take, our fee for running them</span></li>
-        <li><span class="arr" aria-hidden="true"></span><b>{st['getLuckySplitPct']}%</b><span>of the profit, once bay investors have their capital and {st['prefPct']}% a year</span></li>
+        <li><span class="arr" aria-hidden="true"></span><b>{st['getLuckySplitPct']}%</b><span>of the profit and of any sale, once bay investors have their capital and {st['prefPct']}% a year</span></li>
       </ul>
       <div class="co reveal"><span class="k">Where the bays sit</span><h3>The bay company</h3><p>Owns the {bc['totalBays']} bays. RMB lends {st['debtPct']}%; bay investors put up {st['investorEquityPct']}% and a R{st['reserveZAR'] / 1e6:.0f}m reserve.</p></div>
     </div>
-    <p class="note" style="margin-top:10px">The fee, the {st['prefPct']}% and the split are our proposal to the bay investors, final once they agree them.</p>
+    <h3 class="display-sm" style="margin:32px 0 14px">What Get Lucky gets from the bays</h3>
+    <div class="grid c3">
+      <div class="card iconcard reveal">{icon('coins')}<div><h3>{st['feePct']}% of every rand, from day one</h3><p>Our fee for running the bays: {rm(bc['feeZAR'][0])} in 2027, {rm(bc['feeZAR'][I[2029]])} in 2029, {rm(bc['feeZAR'][-1])} a year by 2032.</p></div></div>
+      <div class="card iconcard reveal">{icon('chart')}<div><h3>Half the profit, once the bay investors are repaid</h3><p>They get their capital and {st['prefPct']}% a year first, by {inv['capitalBackBy']} on the plan. Then every payout splits {st['getLuckySplitPct']}/{100 - st['getLuckySplitPct']}: {rm(sum(bc['toGetLuckyZAR']))} to us by 2032.</p></div></div>
+      <div class="card iconcard reveal">{icon('key')}<div><h3>Half the sale, if the bays are sold</h3><p>Sold at the end of {bsale['year']} at {bsale['ebitdaMultiple']:.0f}× EBITDA, RMB's last {rm(bsale['debtZAR'])} is repaid first, leaving {r0(bsale['equityZAR'])}: {r0(bsale['toGetLuckyZAR'])} to us, the same to the bay investors.</p></div></div>
+    </div>
+    <p class="note" style="margin-top:10px">Our half is in our valuation: {r0(mv['2029']['bayShare'])} of our December 2029 value and {r0(mv['2032']['bayShare'])} of 2032's. The fee, the {st['prefPct']}% and the split are our proposal to the bay investors, final once they agree them.</p>
     {more("What one bay earns", earns)}
     {more("The bay company, year by year", table)}
     {more("What the bay investors put in, and get back", backers)}
@@ -744,6 +751,8 @@ def faq_section():
          f"A bay is an asset that debt can finance; the platform is a growth business that equity should. Split them and your money builds Golfzon and the team, Get Lucky carries no bay debt, and the bays are funded by investors who want an asset-backed investment that pays out. We still earn {st['feePct']}% of everything the bays take, and half their profit once the bay investors are paid back."),
         ("Can I invest in the bay company too?",
          f"Yes, separately. Bay investors put up {rm(inv['calledZAR'])} between 2027 and 2029 and take their capital and {st['prefPct']}% a year first; then the profit splits {st['getLuckySplitPct']}/{100 - st['getLuckySplitPct']} with us. Those terms are our proposal. Ask us for the bay company pack."),
+        ("What if the bay company is sold?",
+         f"The sale repays RMB first, then anything still owed to the bay investors, and the rest splits {st['getLuckySplitPct']}/{100 - st['getLuckySplitPct']}. On the plan, a sale at the end of {bsale['year']} at {bsale['ebitdaMultiple']:.0f}× EBITDA leaves {r0(bsale['equityZAR'])} after RMB's last {rm(bsale['debtZAR'])}: {r0(bsale['toGetLuckyZAR'])} in cash to Get Lucky. Paid out, that's about {rm(bsale['perRoundMillionZAR'])} on R1m in the round, before tax, and you keep your Get Lucky shares. Our {st['feePct']}% fee carries on only if the buyer keeps us running the bays, so we'll ask for the management agreement to survive a sale."),
         ("What does Ernie get?",
          f"{amb['equityPct']}% non-diluting equity as Founding Ambassador. No fee, no profit share, no capital, no guarantees, no liability. His {amb['equityPct']}% sits inside the {r0(rd['preMoneyZAR'])} pre-money, top-up included, so the note and the round still buy their full stakes. The full terms are available under NDA."),
         ("What if someone wins R1m, or $100,000?",
