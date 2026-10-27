@@ -1,8 +1,8 @@
 # Get Lucky Golf — investor briefing 2027
 
 The pitch for the R1.0m convertible note (November 2026; R36m cap or 20%
-discount, whichever is better) and the R10.0m round (Q1 2027, about 15% at R56m
-pre-money, R66m post).
+discount, whichever is better) and the R9.0m round (Q1 2027, about 14% at R56m
+pre-money, R65m post).
 
 The story: the app we built, Golfzon's 15,029-location network and the
 integration we built for it, golf bays in Planet Fitness (signed) and Virgin

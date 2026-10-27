@@ -39,8 +39,8 @@ YEARS = list(range(2027, 2033))
 NOTE_ZAR = 1_000_000          # convertible note, closes November 2026
 NOTE_DISCOUNT = 0.20          # converts at a 20% discount to the round price...
 NOTE_CAP_PRE_ZAR = 36_000_000 # ...or at a R36m pre-money cap, whichever is better for the note
-ROUND_ZAR = 10_000_000        # Q1 2027: the plan needs about R4m; the rest carries any one risk
-ROUND_PRE_ZAR = 56_000_000    # the founder's price: R56m pre, R66m post, about 15% for R10m
+ROUND_ZAR = 9_000_000         # Q1 2027: the plan needs about R4m; the rest carries any one risk (136 bays)
+ROUND_PRE_ZAR = 56_000_000    # the founder's price: R56m pre, R65m post, about 14% for R9m
 OPENING_CASH_2027 = 500_000   # cash on 1 Jan 2027, after the note funds November and December
 
 # ============================================================================
@@ -609,8 +609,8 @@ def main():
         },
         "deal": {
             "_note": ("Two steps, both into Get Lucky. A R1.0m convertible note in November 2026, converting at a "
-                      "R36m cap or a 20% discount to the round, whichever is better for the note; then R10.0m for "
-                      "about 15% at R56m pre in Q1 2027 to roll out the plan. Both prices are the founder's (26 Oct 2026)."),
+                      "R36m cap or a 20% discount to the round, whichever is better for the note; then R9.0m for "
+                      "about 14% at R56m pre in Q1 2027 to roll out the plan. Both prices are the founder's (26 Oct 2026)."),
             "note": {"amountZAR": NOTE_ZAR, "discountPct": round(NOTE_DISCOUNT * 100), "closes": "November 2026",
                      "capPreMoneyZAR": NOTE_CAP_PRE_ZAR, "conversionPreMoneyZAR": round(note_conv_pre),
                      "capApplies": NOTE_CAP_PRE_ZAR < ROUND_PRE_ZAR * (1 - NOTE_DISCOUNT),
@@ -760,7 +760,7 @@ def main():
                           "quiet70EbitdaZAR2031": round(sum(r[2031]["ebitda"] for r in quiet.values()))},
         },
         "cash": {
-            "_note": ("Get Lucky's cash. No bay capex and no bay debt: those sit in the bay company. The R10.0m "
+            "_note": ("Get Lucky's cash. No bay capex and no bay debt: those sit in the bay company. The R9.0m "
                       "round carries the team, the Golfzon build and the launch until the engines pay for "
                       "themselves. No further equity round is assumed."),
             "openingZAR": OPENING_CASH_2027,

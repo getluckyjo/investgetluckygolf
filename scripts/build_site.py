@@ -66,6 +66,9 @@ unit = bc["unit"]
 dc = bc["debtCover"]
 q70 = sens["bayUse70"]
 EQ = f"{rd['amountZAR'] / rd['postMoneyZAR'] * 100:.1f}".rstrip("0").rstrip(".") + "%"   # 15.2%, 20%
+# when the mark first reaches the round's post-money, and how a year's mark sits against it
+mark_reaches_round = next(int(y) for y in sorted(mv) if mv[y]["total"] >= rd["postMoneyZAR"])
+vs_round = lambda v: "below" if v < rd["postMoneyZAR"] else ("level with" if v < rd["postMoneyZAR"] * 1.1 else "above")
 first_payout = next(y for y in Y if f["bayDistributionsZAR"][I[y]] > 0)
 
 
@@ -518,7 +521,7 @@ def numbers_section():
       <div class="total"><span>December 2029</span><span>{r0(m29['total'])}</span></div>
       <div class="total"><span>2032, same method</span><span>{r0(mv['2032']['total'])}</span></div>
     </div>
-    <p>2027 and 2028 are build years: until the bay investors are paid back the bay company adds nothing to our value, so Get Lucky marks at {r0(mv['2027']['total'])} in December 2027 and {r0(mv['2028']['total'])} in December 2028, below the round's {r0(rd['postMoneyZAR'])}. Our half of the bay company is a proposal; at 20% the round marks at {x(terms['split20']['roundMultiple'])} in 2029.</p>"""
+    <p>2027 and 2028 are build years: until the bay investors are paid back the bay company adds nothing to our value, so Get Lucky marks at {r0(mv['2027']['total'])} in December 2027 and {r0(mv['2028']['total'])} in December 2028, {vs_round(mv['2028']['total'])} the round's {r0(rd['postMoneyZAR'])}. Our half of the bay company is a proposal; at 20% the round marks at {x(terms['split20']['roundMultiple'])} in 2029.</p>"""
     order = ["plan", "halfAttach", "halfAttachHalfTicket", "noVirginActive", "hard", "outsideKorea",
              "koreaOutNoVirginActive", "bayUse70", "targets"]
     labels = {"halfAttachHalfTicket": "Half the attach and half the ticket", "hard": "The hard case: all three at once"}
@@ -578,7 +581,7 @@ def numbers_section():
       <div class="case hard reveal"><span class="k">The hard case</span><b>{x(rd['hardCaseMultiple2029'])}</b><span class="l">Half the Golfzon attach and ticket, no Virgin Active. Cash lasts to {cash['hardCaseCashLastsTo']} without cutting a cost.</span></div>
       <div class="case up reveal"><span class="k">Our targets</span><b>{x(rd['targetsMultiple2029'])}</b><span class="l">Twice the Golfzon attach at a $10 swing, and busier bays. {x(rd['targetsMultiple2032'])} by 2032.</span></div>
     </div>
-    <p class="note" style="margin-top:12px">Unrealised marks on a private holding, not cash returns. Get Lucky is valued at {val['platformMultiple']}× revenue plus our share of the bay company, and marks below the round until 2029.</p>
+    <p class="note" style="margin-top:12px">Unrealised marks on a private holding, not cash returns. Get Lucky is valued at {val['platformMultiple']}× revenue plus our share of the bay company, and only reaches the round's price in December {mark_reaches_round}.</p>
     {more("The full P&amp;L", pl_block)}
     {more("How we value it", value_block)}
     {more("Every stress case", stress)}
@@ -808,7 +811,7 @@ BANNED = [
     (r"\$43,000|\$40,000|\$35,000|\$32,000|\$30,000|\$25,000|\$99[ -]a[ -]month|Tier 1 pricing|Tier 2 pricing|FOB Busan|1\.3× (the )?hardware",
      "Golfzon's confidential chain pricing"),
     (r"5% non-diluting|5% of (the company's )?net profit|5% of Get Lucky|5% of any sale|founding 5%|holds 5%", "Ernie's percentage"),
-    (r"R126m|R140m post|R14\.0m for 10%|R53\.3m|R8\.0m for 15%|R4\.0m for 10%|R70m post|R14\.0m for 20%|R14\.0m in Q1|R14m in Q1|R70m",
+    (r"R126m|R140m post|R14\.0m for 10%|R53\.3m|R8\.0m for 15%|R4\.0m for 10%|R70m post|R14\.0m for 20%|R14\.0m in Q1|R14m in Q1|R70m|R66m post|R10\.0m for 15|R10m in Q1|R10\.0m in Q1|R56m / R66m",
      "a superseded round"),
     (r"(?i)\bregistry\b|\bgames\b|game of chance|icons cup|back an icon|\bbet(s|ting)?\b|bet on yourself|\bjackpot\b|golf gods",
      "retired features and language: games, the registry, betting"),
