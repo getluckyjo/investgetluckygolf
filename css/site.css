@@ -544,3 +544,8 @@ details.more summary::after { content: "+"; display: grid; place-items: center; 
 details.more summary:hover { opacity: .8; }
 details.more[open] > summary { margin-bottom: 4px; }
 .display-xl, .display-lg, .display-md { text-wrap: balance; }
+
+/* ideas we're working on: not in the numbers */
+.idea .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; min-height: 44px; }
+.idea .mark-text { font-size: 19px; font-weight: 800; letter-spacing: -.01em; color: var(--ink); }
+.idea .mark-img { height: 34px; width: auto; }
