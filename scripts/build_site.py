@@ -66,9 +66,8 @@ unit = bc["unit"]
 dc = bc["debtCover"]
 q70 = sens["bayUse70"]
 EQ = f"{rd['amountZAR'] / rd['postMoneyZAR'] * 100:.1f}".rstrip("0").rstrip(".") + "%"   # 15.2%, 20%
-# when the mark first reaches the round's post-money, and how a year's mark sits against it
-mark_reaches_round = next(int(y) for y in sorted(mv) if mv[y]["total"] >= rd["postMoneyZAR"])
-vs_round = lambda v: "below" if v < rd["postMoneyZAR"] else ("level with" if v < rd["postMoneyZAR"] * 1.1 else "above")
+# the round's price against a year's revenue: the forward view an early investor buys
+price_on = lambda y: f"{rd['postMoneyZAR'] / rev['total'][I[y]]:.1f}×"
 first_payout = next(y for y in Y if f["bayDistributionsZAR"][I[y]] > 0)
 
 
@@ -521,7 +520,7 @@ def numbers_section():
       <div class="total"><span>December 2029</span><span>{r0(m29['total'])}</span></div>
       <div class="total"><span>2032, same method</span><span>{r0(mv['2032']['total'])}</span></div>
     </div>
-    <p>2027 and 2028 are build years: until the bay investors are paid back the bay company adds nothing to our value, so Get Lucky marks at {r0(mv['2027']['total'])} in December 2027 and {r0(mv['2028']['total'])} in December 2028, {vs_round(mv['2028']['total'])} the round's {r0(rd['postMoneyZAR'])}. Our half of the bay company is a proposal; at 20% the round marks at {x(terms['split20']['roundMultiple'])} in 2029.</p>"""
+    <p>The round's price looks forward: {r0(rd['postMoneyZAR'])} is {price_on(2027)} our 2027 revenue, {price_on(2028)} our 2028 revenue and {price_on(2029)} our 2029 revenue. Our yardstick values each year on that year's revenue, so it starts low while we build: {r0(mv['2027']['total'])} in December 2027 and {r0(mv['2028']['total'])} in December 2028. The bay company adds nothing until its investors are paid back. Our half of the bay company is a proposal; at 20% the round marks at {x(terms['split20']['roundMultiple'])} in 2029.</p>"""
     order = ["plan", "halfAttach", "halfAttachHalfTicket", "noVirginActive", "hard", "outsideKorea",
              "koreaOutNoVirginActive", "bayUse70", "targets"]
     labels = {"halfAttachHalfTicket": "Half the attach and half the ticket", "hard": "The hard case: all three at once"}
@@ -581,7 +580,7 @@ def numbers_section():
       <div class="case hard reveal"><span class="k">The hard case</span><b>{x(rd['hardCaseMultiple2029'])}</b><span class="l">Half the Golfzon attach and ticket, no Virgin Active. Cash lasts to {cash['hardCaseCashLastsTo']} without cutting a cost.</span></div>
       <div class="case up reveal"><span class="k">Our targets</span><b>{x(rd['targetsMultiple2029'])}</b><span class="l">Twice the Golfzon attach at a $10 swing, and busier bays. {x(rd['targetsMultiple2032'])} by 2032.</span></div>
     </div>
-    <p class="note" style="margin-top:12px">Unrealised marks on a private holding, not cash returns. Get Lucky is valued at {val['platformMultiple']}× revenue plus our share of the bay company, and only reaches the round's price in December {mark_reaches_round}.</p>
+    <p class="note" style="margin-top:12px">The round prices Get Lucky at {price_on(2028)} our 2028 revenue and {price_on(2029)} our 2029 revenue. We mark it at {val['platformMultiple']}× each year's revenue plus our share of the bay company. Unrealised marks on a private holding, not cash returns.</p>
     {more("The full P&amp;L", pl_block)}
     {more("How we value it", value_block)}
     {more("Every stress case", stress)}
