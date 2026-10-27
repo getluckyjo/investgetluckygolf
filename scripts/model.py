@@ -42,11 +42,11 @@ NOTE_CAP_PRE_ZAR = 36_000_000 # ...or at a R36m pre-money cap, whichever is bett
 ROUND_ZAR = 9_000_000         # Q1 2027: the plan needs about R4m; the rest carries any one risk (136 bays)
 ROUND_PRE_ZAR = 56_000_000    # the founder's price: R56m pre, R65m post, about 14% for R9m
 OPENING_CASH_2027 = 500_000   # cash on 1 Jan 2027, after the note funds November and December
-# What the note pays for in November and December (the founder's split, to confirm); the
+# What the note pays for in November and December (the founder's split, 27 Oct 2026); the
 # rest is the working capital the model opens 2027 with.
 NOTE_USE = [
-    ("golfzon", "The first build of the Golfzon integration on a real bay", "Golfzon", 250_000),
-    ("fancourt", "The December sit-down with Golfzon and Ernie Els at Fancourt", "Fancourt", 150_000),
+    ("golfzon", "The first build of the Golfzon integration on a real bay", "Golfzon", 300_000),
+    ("fancourt", "The December sit-down with Golfzon and Ernie Els at Fancourt", "Fancourt", 100_000),
     ("baycompany", "Setting up the bay company for the first Planet Fitness bays", "Bay co.", 100_000),
 ]
 assert NOTE_ZAR - sum(z for *_, z in NOTE_USE) == OPENING_CASH_2027

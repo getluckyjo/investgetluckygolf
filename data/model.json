@@ -55,15 +55,15 @@
           "key": "golfzon",
           "label": "The first build of the Golfzon integration on a real bay",
           "short": "Golfzon",
-          "ZAR": 250000,
-          "pct": 25
+          "ZAR": 300000,
+          "pct": 30
         },
         {
           "key": "fancourt",
           "label": "The December sit-down with Golfzon and Ernie Els at Fancourt",
           "short": "Fancourt",
-          "ZAR": 150000,
-          "pct": 15
+          "ZAR": 100000,
+          "pct": 10
         },
         {
           "key": "baycompany",
