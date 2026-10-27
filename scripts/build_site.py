@@ -465,7 +465,7 @@ def team_section():
     people = [
         ("team-johannes.webp", "Johannes le Roux", "Founder &amp; Managing Director", "Built The Duchess with AB InBev and RMB: ten million units in five countries. Runs Get Lucky, Golfzon and the gym roll-out."),
         ("team-andrew.webp", "Andrew Davenport", "Founder &amp; Marketing Director", "Founder of DOPE Drinks, fifteen years in drinks and entertainment brands. Runs partnerships, brand and the golf days."),
-        ("team-willie.webp", "Willie Ross", "Chief Financial Officer", "Partner at Bellair Road Investment Partners, R5 billion under management. Harvard MBA. Owns the numbers and the financing."),
+        ("team-willie.webp", "Willie Ross", "Investor &amp; Strategic Advisor", "Partner at Bellair Road Investment Partners, R5 billion under management. Harvard MBA. Advises on the numbers and the financing."),
         ("team-ernie.webp", "Ernie Els", "Founding Ambassador", f"{ernie['majors']} majors, {esc(ernie['wins'])} wins, World Golf Hall of Fame."),
     ]
     cards = "".join(f'<div class="person reveal"><img src="assets/img/{img}" alt="" width="72" height="72" loading="lazy"><div><b>{nm}</b><span class="role">{role}</span></div><p>{bio}</p></div>'
