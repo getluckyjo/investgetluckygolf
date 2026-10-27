@@ -284,7 +284,11 @@ def app_section():
     </div>
     <ol class="track icons">{track}</ol>
     <div class="split" style="margin-top:28px;align-items:stretch">
-      <figure class="photo reveal" style="min-height:360px"><img src="assets/img/golf-day.webp" alt="Golfers celebrate at a Get Lucky challenge tee, Cape Town Stadium behind" loading="lazy" width="1600" height="1067"><figcaption>A Get Lucky golf day, Cape Town</figcaption></figure>
+      <div class="phones reveal" role="group" aria-label="The live app">
+        <figure><img src="assets/img/app-home.webp" alt="The Get Lucky app's home screen: 1 shot, R1 million" width="480" height="943" loading="lazy"><figcaption>The app, live</figcaption></figure>
+        <figure><img src="assets/img/app-courses.webp" alt="Select a course: South African courses by province, with each par 3's length" width="480" height="943" loading="lazy"><figcaption>Pick a par 3</figcaption></figure>
+        <figure><img src="assets/img/app-stake.webp" alt="Choose your stake: R50 to win R25,000, R100 to win R60,000, up to R1 million" width="480" height="943" loading="lazy"><figcaption>Pick a stake</figcaption></figure>
+      </div>
       <div style="display:grid;gap:14px;align-content:start">
         <div class="card card--dark tryit reveal">
           <div class="qr"><img src="assets/logos/install-qr.svg" alt="QR code to install the Get Lucky app" width="112" height="112"></div>
