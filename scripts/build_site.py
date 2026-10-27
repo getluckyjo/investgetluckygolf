@@ -620,15 +620,27 @@ def risk_section():
 </section>"""
 
 
-def deal_section():
-    colours = {"golfzon": "var(--lime)", "launch": "var(--green-light)", "reserve": "var(--green)"}
-    text_col = {"golfzon": "var(--green)"}
-    order = uof
+USE_COLOURS = {"golfzon": "var(--lime)", "launch": "var(--green-light)", "fancourt": "var(--green-light)",
+               "baycompany": "#8fbf7a", "reserve": "var(--green)"}
+USE_DARK_TEXT = {"golfzon", "baycompany"}
+
+
+def use_of_funds_block(items):
+    """The bar and the list under "What the R… pays for", for the note and the round."""
+    amount = lambda v: f"R{v / 1e3:.0f}k" if v < 1e6 else rm(v)
     bar = "".join(
-        f'<div style="flex:{u["pct"]};background:{colours[u["key"]]};color:{text_col.get(u["key"], "var(--cream)")}" title="{esc(u["label"])}, {u["pct"]}%">'
-        + (f'{u["pct"]}%<span>{esc(u["short"])}</span>' if u["pct"] >= 10 else "") + "</div>" for u in order)
-    ulist = "".join(f'<li><i style="background:{colours[u["key"]]};{"outline:1px solid var(--line-strong)" if u["key"] == "golfzon" else ""}"></i>'
-                    f'<span>{esc(u["label"])}</span><b>{rm(u["ZAR"])}</b></li>' for u in order)
+        f'<div style="flex:{u["pct"]};background:{USE_COLOURS[u["key"]]};color:{"var(--green)" if u["key"] in USE_DARK_TEXT else "var(--cream)"}" title="{esc(u["label"])}, {u["pct"]}%">'
+        + (f'{u["pct"]}%' if u["pct"] >= 10 else "") + (f'<span>{esc(u["short"])}</span>' if u["pct"] >= 20 else "") + "</div>"
+        for u in items)
+    ulist = "".join(f'<li><i style="background:{USE_COLOURS[u["key"]]};{"outline:1px solid var(--line-strong)" if u["key"] == "golfzon" else ""}"></i>'
+                    f'<span>{esc(u["label"])}</span><b>{amount(u["ZAR"])}</b></li>' for u in items)
+    label = esc(", ".join(f"{u['label']} {u['pct']}%" for u in items))
+    return (f'<div class="usebar tab" role="img" aria-label="Use of funds: {label}">{bar}</div>'
+            f'<ul class="uselist tab">{ulist}</ul>')
+
+
+def deal_section():
+    order = uof
     calc_attrs = (f'data-post="{rd["postMoneyZAR"]}" data-round="{rd["amountZAR"]}" data-min="{rd["minimumTicketZAR"]}" '
                   f'data-note="{nt["amountZAR"]}" data-note-equiv="{nt["equivalentAtRoundZAR"]}" data-v29="{rd["value2029ZAR"]}" '
                   f'data-v32="{rd["value2032ZAR"]}" data-vhard="{rd["hardCaseValue2029ZAR"]}" data-fx="{FX}"')
@@ -662,6 +674,8 @@ def deal_section():
           <dt>At the round's price</dt><dd>R1m converts as R{nt['equivalentAtRoundZAR'] / 1e6:.2f}m<small>{nt['stakePct']}% of the company</small></dd>
           <dt>Marked at December 2029</dt><dd>{x(nt['multiple2029'])}<small>{x(nt['hardCaseMultiple2029'])} in the hard case</small></dd>
         </dl>
+        <p class="uses"><strong>What the {rm(nt['amountZAR'])} pays for</strong></p>
+        {use_of_funds_block(nt['useOfFunds'])}
         <p class="uses">At {r0(rd['preMoneyZAR'])} pre the cap is the better price, so the note converts as if we were worth {r0(nt['conversionPreMoneyZAR'])}. It converts inside the pre-money, so the round still buys its full {EQ}. Term sheet on request.</p>
       </div>
       <div class="termcard reveal">
@@ -675,8 +689,7 @@ def deal_section():
           <dt>A sale in {ex['year']}</dt><dd>{x(ex['multiple'])}, about {ex['aYearPct']}% a year<small>{x(ex['hardCaseMultiple'])}, about {ex['hardCaseAYearPct']}% a year, in the hard case</small></dd>
         </dl>
         <p class="uses"><strong>What the {rm(rd['amountZAR'])} pays for</strong></p>
-        <div class="usebar tab" role="img" aria-label="Use of funds: {esc(', '.join(f"{u['label']} {u['pct']}%" for u in order))}">{bar}</div>
-        <ul class="uselist tab">{ulist}</ul>
+        {use_of_funds_block(order)}
         <p class="uses">Our revenue already pays for the team and the day-to-day: {rm(uof_running)} in 2027, against {rm(uof_revenue)} of revenue. So the round goes into what's new. At our lowest point, {cash['lowestQuarter']}, we still hold {rm(cash['lowestQuarterZAR'])}: enough to ride out any one thing going wrong without cutting a cost. None of it goes into the bays.</p>
       </div>
     </div>

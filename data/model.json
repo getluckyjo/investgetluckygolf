@@ -51,10 +51,34 @@
       "hardCaseMultiple2029": 2.2,
       "targetsMultiple2029": 9.86,
       "useOfFunds": [
-        "The December sit-down with Golfzon and Ernie Els at Fancourt",
-        "The first build of the Golfzon integration on a real bay",
-        "Setting up the bay company for the first Planet Fitness bays",
-        "Working capital into the round"
+        {
+          "key": "golfzon",
+          "label": "The first build of the Golfzon integration on a real bay",
+          "short": "Golfzon",
+          "ZAR": 250000,
+          "pct": 25
+        },
+        {
+          "key": "fancourt",
+          "label": "The December sit-down with Golfzon and Ernie Els at Fancourt",
+          "short": "Fancourt",
+          "ZAR": 150000,
+          "pct": 15
+        },
+        {
+          "key": "baycompany",
+          "label": "Setting up the bay company for the first Planet Fitness bays",
+          "short": "Bay co.",
+          "ZAR": 100000,
+          "pct": 10
+        },
+        {
+          "key": "reserve",
+          "label": "Working capital into the round",
+          "short": "Working capital",
+          "ZAR": 500000,
+          "pct": 50
+        }
       ]
     },
     "round": {
