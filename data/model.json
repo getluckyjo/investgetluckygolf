@@ -1211,6 +1211,21 @@
         "bayPayoutsToUsZAR": 3473643
       },
       {
+        "key": "outsideKoreaTrackman",
+        "case": "Golfzon outside Korea, plus Trackman from 2028",
+        "revenue": 25018982,
+        "ebitda": 2557957,
+        "value": 149817314,
+        "roundMultiple": 2.3,
+        "value2032": 290461852,
+        "roundMultiple2032": 4.47,
+        "lowestCashZAR": 1753076,
+        "lowestQuarter": "Q3 2028",
+        "cashLastsTo": null,
+        "bayInvestorsCalledZAR": 19838897,
+        "bayPayoutsToUsZAR": 19865051
+      },
+      {
         "key": "bayUse70",
         "case": "Every bay at 70% of planned use",
         "revenue": 46848313,

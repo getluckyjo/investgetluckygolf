@@ -304,6 +304,51 @@
    "usedIn": [
     "market"
    ]
+  },
+  {
+   "id": "trackman-bays",
+   "claim": "Trackman runs a global platform of 50,000+ active simulator bays, many in commercial facilities",
+   "value": "50,000+ bays",
+   "source": "Dell Technologies customer story: Trackman (vendor-published)",
+   "url": "https://www.dell.com/en-in/lp/customer-stories-trackman",
+   "accessed": "2026-10-27",
+   "usedIn": [
+    "beyond-golfzon",
+    "stress-case"
+   ]
+  },
+  {
+   "id": "toptracer-usage",
+   "claim": "Every Toptracer screen deployed globally was in use on average 6 hours a day through 2025; installations rose 29% on H1 2025",
+   "value": "~6 hrs/day per screen",
+   "source": "Topgolf press release, 30 July 2026",
+   "url": "https://press.topgolf.com/2026-07-30-Toptracer-Growth-Accelerates-Ahead-of-The-Open-at-Royal-Birkdale",
+   "accessed": "2026-10-27",
+   "usedIn": [
+    "beyond-golfzon"
+   ]
+  },
+  {
+   "id": "xgolf-venues",
+   "claim": "X-Golf has over 130 locations across 38 US states, typically 7-8 simulators each",
+   "value": "130+ venues",
+   "source": "NGF Top 100 Businesses in Golf 2025",
+   "url": "https://www.ngf.org/top-100-business-in-golf/x-golf/",
+   "accessed": "2026-10-27",
+   "usedIn": [
+    "beyond-golfzon"
+   ]
+  },
+  {
+   "id": "fiveiron-venues",
+   "claim": "Five Iron Golf operates nearly 50 locations across 20 US states, on Trackman simulators",
+   "value": "~50 venues",
+   "source": "First Call Golf, 29 July 2026",
+   "url": "https://www.firstcallgolf.com/industry-news/release/2026-07-29/five-iron-golf-announces-new-northern-virginia-location-at-capital-one-center",
+   "accessed": "2026-10-27",
+   "usedIn": [
+    "beyond-golfzon"
+   ]
   }
  ]
 }

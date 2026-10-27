@@ -372,6 +372,16 @@ def golfzon_section():
         <div class="phases compact">{phases}</div>
       </div>
     </div>
+    <div class="beyond reveal">
+      <div class="beyond-head"><span class="chip talks">Next conversations</span><h3>Beyond Golfzon</h3>
+        <p>The swing can run on any simulator that measures the shot. Golfzon outside Korea is about {(gz['roundsPerYear'] - 94_000_000) / 1e6:.0f} million rounds a year; these networks add more, and none of them is in our plan.</p></div>
+      <div class="beyond-grid tab">
+        <div><b>50,000+</b><span>Trackman bays worldwide, behind venues like Five Iron Golf. Our next simulator conversation.</span></div>
+        <div><b>~6 hrs</b><span>a day each Toptracer screen is in use, on driving ranges across the UK and Europe.</span></div>
+        <div><b>180+</b><span>US simulator venues in two chains: 130+ X&#8209;Golf and about 50 Five Iron Golf.</span></div>
+      </div>
+      <p class="note">In the stress cases: Golfzon outside Korea plus Trackman from 2028 marks the round at {x(sens['outsideKoreaTrackman']['roundMultiple'])} in 2029.</p>
+    </div>
     {more("Why an insurer can cover it", insurable)}
     {more("The Golfzon numbers, year by year", ramp)}
   </div>
@@ -552,7 +562,7 @@ def numbers_section():
     </div>
     <p>The round's price looks forward: {r0(rd['postMoneyZAR'])} is {price_on(2027)} our 2027 revenue, {price_on(2028)} our 2028 revenue and {price_on(2029)} our 2029 revenue. Our yardstick values each year on that year's revenue, so it starts low while we build: {r0(mv['2027']['total'])} in December 2027 and {r0(mv['2028']['total'])} in December 2028. The bay company adds nothing until its investors are paid back. Our half of the bay company is a proposal; at 20% the round marks at {x(terms['split20']['roundMultiple'])} in 2029.</p>"""
     order = ["plan", "halfAttach", "halfAttachHalfTicket", "noVirginActive", "hard", "outsideKorea",
-             "koreaOutNoVirginActive", "bayUse70", "targets"]
+             "koreaOutNoVirginActive", "outsideKoreaTrackman", "bayUse70", "targets"]
     labels = {"halfAttachHalfTicket": "Half the attach and half the ticket", "hard": "The hard case: all three at once"}
     srows = "".join(
         f'<tr{" class=\"total\"" if k == "plan" else ""}><td>{esc(labels.get(k, sens[k]["case"]))}</td><td class="n hide-sm">{rm(sens[k]["revenue"])}</td>'
@@ -623,7 +633,7 @@ def numbers_section():
 def risk_section():
     qa = [
         ("globe", "Will Golfzon's bays carry this, and what if Korea says no?",
-         f"Phase one runs on features Golfzon's bays already have, and the integration is built. Most rounds are in Korea, where paid-entry prizes still need clearing; the plan assumes 2027. On the rest of the network alone the round marks at {x(sens['outsideKorea']['roundMultiple'])}. Without Korea and without Virgin Active it's {x(sens['koreaOutNoVirginActive']['roundMultiple'])}, and cash would run to {sens['koreaOutNoVirginActive']['cashLastsTo']}; we'd know about Korea during 2027 and cut costs well before then."),
+         f"Phase one runs on features Golfzon's bays already have, and the integration is built. Most rounds are in Korea, where paid-entry prizes still need clearing; the plan assumes 2027. On the rest of the network alone the round marks at {x(sens['outsideKorea']['roundMultiple'])}. Without Korea and without Virgin Active it's {x(sens['koreaOutNoVirginActive']['roundMultiple'])}, and cash would run to {sens['koreaOutNoVirginActive']['cashLastsTo']}; we'd know about Korea during 2027 and cut costs well before then. Trackman is the hedge: add its bays from 2028, without Korea, and the round marks at {x(sens['outsideKoreaTrackman']['roundMultiple'])}, or {x(sens['outsideKoreaTrackman']['roundMultiple2032'])} by 2032."),
         ("shield", "Will an insurer cover a simulator ace?",
          f"Santam has agreed in principle. After commission the cover breaks even at one ace in {n(prod['simInsurerBreakEvenOneIn'])}; Golfzon measures about one in {n(prod['simAceMeasuredOneIn'])}. That's why we play the hardest setting, rotate the hole weekly and cap entries. If the premium lands at 30%, not 24%, it comes out of our share and the round marks at {x(terms['simPremium30']['roundMultiple'])}. Indwe both sponsors us and places the cover, so a second carrier joins the panel before the simulator tiers scale."),
         ("bank", "Who pays for the bays?",

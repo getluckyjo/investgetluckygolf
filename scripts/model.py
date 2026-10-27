@@ -69,6 +69,11 @@ GZ_KOREA = 10_802
 GZ_NORTH_AMERICA = 331
 GZ_KOREA_ROUNDS = 94_000_000  # research.json korea-sim-rounds: most of the network's rounds are Korean
 GZ_ROUNDS = 100_000_000       # "more than 100 million rounds a year", held flat
+# Trackman: 50,000+ active simulator bays worldwide (research.json trackman-bays). Not a partner
+# yet, so only in a stress case: if half are commercial and each plays one round a day, that is
+# about 9 million rounds a year, on the same attach, ticket and split as Golfzon, from 2028.
+TRACKMAN_BAYS = 50_000
+TRACKMAN_ROUNDS = TRACKMAN_BAYS * 0.5 * 1 * 360
 GZ_PROCESSING = 0.03          # of gross
 GZ_OPS_USD = 0.05             # risk, claims and support per swing (the bay verifies the ace)
 GZ_MARKETING = 0.12           # of Get Lucky's share: launches, in-game media, the Tour
@@ -224,6 +229,8 @@ CASES = [
     scaled(PLAN, "outsideKorea", "Golfzon outside Korea only", rounds=GZ_ROUNDS - GZ_KOREA_ROUNDS),
     scaled(PLAN, "koreaOutNoVirginActive", "Outside Korea only, and no Virgin Active",
            rounds=GZ_ROUNDS - GZ_KOREA_ROUNDS, chains=PF_ONLY),
+    scaled(PLAN, "outsideKoreaTrackman", "Golfzon outside Korea, plus Trackman from 2028",
+           rounds={y: GZ_ROUNDS - GZ_KOREA_ROUNDS + (TRACKMAN_ROUNDS if y >= 2028 else 0) for y in YEARS}),
     scaled(PLAN, "bayUse70", "Every bay at 70% of planned use", bay_use=0.7),
     TARGETS,
 ]
@@ -431,10 +438,11 @@ def run(case):
 
     # ===================== Get Lucky =========================================
     rows = {}
-    swings_2027 = case["gz_rounds"] * case["gz_attach"][2027] + OC_SWINGS[2027]   # the reach Indwe's R3m buys
+    gz_rounds = lambda y: case["gz_rounds"][y] if isinstance(case["gz_rounds"], dict) else case["gz_rounds"]
+    swings_2027 = gz_rounds(2027) * case["gz_attach"][2027] + OC_SWINGS[2027]   # the reach Indwe's R3m buys
     for y in YEARS:
         r = {}
-        swings = case["gz_rounds"] * case["gz_attach"][y]
+        swings = gz_rounds(y) * case["gz_attach"][y]
         r["gzSwings"] = swings
         r["gzGross"] = swings * case["gz_ticket"][y] * FX
         r["gzRevenue"] = r["gzGross"] * (1 - SIM_SPLIT["golfzonAndVenue"] - case["sim_premium"])

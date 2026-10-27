@@ -568,3 +568,13 @@ details.more[open] > summary { margin-bottom: 4px; }
 .channels .tile.tile-app::before { background: linear-gradient(0deg, rgba(12, 22, 14, .97) 0%, rgba(12, 22, 14, .86) 42%, rgba(12, 22, 14, .1) 70%, rgba(12, 22, 14, 0) 100%); }
 
 .tile p { text-wrap: pretty; }
+
+/* beyond Golfzon: the next simulator networks, not in the plan */
+.beyond { margin-top: 36px; padding: 24px; border-radius: 24px; background: rgba(245, 238, 222, .05); border: 1px solid rgba(245, 238, 222, .12); display: grid; gap: 18px; }
+.beyond-head { display: grid; gap: 8px; justify-items: start; }
+.beyond-head h3 { font-family: var(--display); text-transform: uppercase; font-size: 1.6rem; line-height: 1; color: var(--cream); }
+.beyond-head p { max-width: 46rem; }
+.beyond-grid { display: grid; gap: 16px; }
+@media (min-width: 900px) { .beyond-grid { grid-template-columns: repeat(3, 1fr); } .beyond-grid > div + div { border-left: 1px solid rgba(245, 238, 222, .14); padding-left: 20px; } }
+.beyond-grid b { display: block; font-family: var(--display); font-size: 2rem; line-height: 1; color: var(--lime); }
+.beyond-grid span { display: block; margin-top: 6px; font-size: 13.5px; line-height: 1.45; color: rgba(245, 238, 222, .74); }
