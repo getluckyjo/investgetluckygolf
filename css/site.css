@@ -566,3 +566,5 @@ details.more[open] > summary { margin-bottom: 4px; }
 
 /* the on-course tile: keep the phone in the hand clear above the words */
 .channels .tile.tile-app::before { background: linear-gradient(0deg, rgba(12, 22, 14, .97) 0%, rgba(12, 22, 14, .86) 42%, rgba(12, 22, 14, .1) 70%, rgba(12, 22, 14, 0) 100%); }
+
+.tile p { text-wrap: pretty; }

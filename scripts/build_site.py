@@ -253,7 +253,7 @@ def concept():
         <span class="num">03 · Planet Fitness, Virgin Active</span><h3>In the gym</h3><p>Golf bays in the best gyms, booked like padel. The aim: own the local simulator market.</p>
         {facts_(("Bays, best clubs only", bc['totalBays']), ("Our fee, 2029", rm(rev['bayFee'][k29])))}</a>
       <a class="tile wide reveal" href="#ernie"><img src="assets/img/ernie-open.webp" alt="" loading="lazy" width="1800" height="1200" style="object-position:30% 28%"><span class="chip">Founding Ambassador</span>
-        <span class="num">Across all three</span><h3>Ernie Els</h3><p>The face of the swing in every channel, and a shareholder, not a hired face.</p></a>
+        <span class="num">Across all three</span><h3>Ernie Els</h3><p>{ernie['careerAces']} career aces, and his name behind every swing we sell: on course, on Golfzon and in the gym. He owns {amb['equityPct']}%, so he's in it with us.</p></a>
     </div>
     <p class="note" style="margin-top:12px">Revenue from our plan. Add {rm(other)} of sponsorship and 2029 comes to {rm(rev['total'][k29])}. In the gym we also earn half the bays' profit once the bay investors are repaid.</p>
   </div>
