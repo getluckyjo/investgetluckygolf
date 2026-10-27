@@ -358,7 +358,7 @@ def golfzon_section():
       <div class="stat"><div class="n"><span class="lime">${sim_ladder[-1]['prize'] // 1000}K</span></div><div class="l">Top prize: every tier pays 1,000×</div></div>
     </div>
     <ol class="track icons four" style="margin-top:40px">{track}</ol>
-    <div class="split" style="margin-top:28px;align-items:end">
+    <div class="split pair" style="margin-top:28px;align-items:stretch">
       <div class="reveal">
         <h3 class="display-sm" style="color:var(--cream)">What a $10 swing pays</h3>
         <div class="splitbar tab" role="img" aria-label="A ten dollar swing: {split['getLucky'] / 10:.2f} dollars to Get Lucky, {split['golfzonAndVenue'] / 10:.2f} to Golfzon and the venue, {split['insurer'] / 10:.2f} to the insurer">
@@ -380,7 +380,7 @@ def golfzon_section():
         <div><b>~6 hrs</b><span>a day each Toptracer screen is in use, on driving ranges across the UK and Europe.</span></div>
         <div><b>180+</b><span>US simulator venues in two chains: 130+ X&#8209;Golf and about 50 Five Iron Golf.</span></div>
       </div>
-      <p class="note">In the stress cases: Golfzon outside Korea plus Trackman from 2028 marks the round at {x(sens['outsideKoreaTrackman']['roundMultiple'])} in 2029.</p>
+      <p class="note">Trackman's bays track 150 shots a second, mostly practice; we put the rounds at about {pt['trackman']['roundsPerYear'] / 1e6:.0f} million a year. In the stress cases, Golfzon outside Korea plus Trackman from {pt['trackman']['fromYear']} marks the round at {x(sens['outsideKoreaTrackman']['roundMultiple'])} in 2029.</p>
     </div>
     {more("Why an insurer can cover it", insurable)}
     {more("The Golfzon numbers, year by year", ramp)}
@@ -761,7 +761,7 @@ def deal_section():
         </table>
         <p class="note">Illustrative, from the plan: the marks are unrealised and the sale is a what-if, not a promise.</p>
       </div>
-      <div class="reveal">
+      <div class="reveal beside-card">
         <h3 class="display-sm" style="color:var(--cream)">Your rights</h3>
         <div style="margin-top:16px">{rights}</div>
         {more("Who buys this, one day", exits)}

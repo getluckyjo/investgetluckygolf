@@ -160,6 +160,12 @@
     }
   },
   "partners": {
+    "trackman": {
+      "status": "Not a partner",
+      "bays": 50000,
+      "roundsPerYear": 21000000.0,
+      "fromYear": 2028
+    },
     "golfzon": {
       "status": "In",
       "locations": 15029,
@@ -1213,13 +1219,13 @@
       {
         "key": "outsideKoreaTrackman",
         "case": "Golfzon outside Korea, plus Trackman from 2028",
-        "revenue": 25018982,
-        "ebitda": 2557957,
-        "value": 149817314,
-        "roundMultiple": 2.3,
-        "value2032": 290461852,
-        "roundMultiple2032": 4.47,
-        "lowestCashZAR": 1753076,
+        "revenue": 28415617,
+        "ebitda": 5053812,
+        "value": 160007220,
+        "roundMultiple": 2.46,
+        "value2032": 343596232,
+        "roundMultiple2032": 5.29,
+        "lowestCashZAR": 2337365,
         "lowestQuarter": "Q3 2028",
         "cashLastsTo": null,
         "bayInvestorsCalledZAR": 19838897,

@@ -69,11 +69,15 @@ GZ_KOREA = 10_802
 GZ_NORTH_AMERICA = 331
 GZ_KOREA_ROUNDS = 94_000_000  # research.json korea-sim-rounds: most of the network's rounds are Korean
 GZ_ROUNDS = 100_000_000       # "more than 100 million rounds a year", held flat
-# Trackman: 50,000+ active simulator bays worldwide (research.json trackman-bays). Not a partner
-# yet, so only in a stress case: if half are commercial and each plays one round a day, that is
-# about 9 million rounds a year, on the same attach, ticket and split as Golfzon, from 2028.
+# Trackman: 50,000+ simulator bays (research.json trackman-bays), and 70,000+ bays on ranges and in
+# simulators tracking 150 shots a second (trackman-shots), about 4.7bn shots a year. Not a partner
+# yet, so only in a stress case. Its bays are mostly practice (ranges, coaching, fitting, home sims),
+# not Korea's evenings of full rounds: take the simulators' share of the shots, half of those hit in
+# rounds, at 80 shots a round. About 21 million rounds a year, on the same attach, ticket and split
+# as Golfzon, from 2028.
 TRACKMAN_BAYS = 50_000
-TRACKMAN_ROUNDS = TRACKMAN_BAYS * 0.5 * 1 * 360
+TRACKMAN_SHOTS = 150 * 60 * 60 * 24 * 365
+TRACKMAN_ROUNDS = TRACKMAN_SHOTS * (TRACKMAN_BAYS / 70_000) * 0.5 / 80
 GZ_PROCESSING = 0.03          # of gross
 GZ_OPS_USD = 0.05             # risk, claims and support per swing (the bay verifies the ace)
 GZ_MARKETING = 0.12           # of Get Lucky's share: launches, in-game media, the Tour
@@ -695,6 +699,8 @@ def main():
                                       "no capital, no guarantees, no liability.")},
         },
         "partners": {
+            "trackman": {"status": "Not a partner", "bays": TRACKMAN_BAYS,
+                         "roundsPerYear": round(TRACKMAN_ROUNDS, -6), "fromYear": 2028},
             "golfzon": {"status": "In", "locations": GZ_LOCATIONS, "korea": GZ_KOREA,
                         "northAmerica": GZ_NORTH_AMERICA, "koreaSharePct": 74, "roundsPerYear": GZ_ROUNDS,
                         "tourVenues": 130, "tourCountries": 15, "tourPurseUSD": 300_000,

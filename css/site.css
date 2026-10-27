@@ -301,7 +301,7 @@ figure { margin: 0; }
 .structure .co h3 { font-family: var(--display); text-transform: uppercase; font-size: 1.8rem; line-height: 1; margin-top: 8px; color: var(--ink); }
 .structure .co p { font-size: 15px; color: var(--muted); margin-top: 8px; }
 .structure .co.you p { color: var(--forest); }
-.structure .flows { list-style: none; display: grid; gap: 10px; align-content: center; }
+.structure .flows { list-style: none; display: grid; grid-auto-rows: 1fr; gap: 10px; align-content: center; }
 .structure .flows li { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: var(--r); background: var(--forest); color: var(--cream); }
 .structure .flows .arr { flex: none; color: var(--lime); font-size: 1.2rem; }
 .structure .flows .arr::before { content: "↑"; }
@@ -366,6 +366,12 @@ details.more .body strong { color: var(--ink); }
 .termcard dd small { display: block; font-size: 12px; font-weight: 500; color: var(--muted); }
 .termcard .uses { font-size: 14px; color: var(--muted); }
 .termcard .uses strong { color: var(--ink); }
+@media (min-width: 900px) {
+  /* the two cards share rows, so they end level and their use-of-funds blocks line up */
+  .terms { grid-template-rows: repeat(7, auto); row-gap: 14px; }
+  .termcard { display: grid; grid-template-rows: subgrid; grid-row: span 7; }
+  .termcard dl, .termcard .uselist { align-self: start; }
+}
 .usebar { display: flex; height: 46px; border-radius: 12px; overflow: hidden; margin-top: 4px; }
 .usebar div { display: flex; flex-direction: column; justify-content: center; padding: 0 10px; font-size: 13px; font-weight: 700; min-width: 0; overflow: hidden; white-space: nowrap; }
 .usebar div span { font-size: 10.5px; font-weight: 600; opacity: .85; overflow: hidden; text-overflow: ellipsis; }
@@ -461,7 +467,6 @@ footer a { color: rgba(245, 238, 222, .8); }
 .hero .bg::after { background: linear-gradient(90deg, rgba(12, 22, 14, .93) 0%, rgba(12, 22, 14, .74) 48%, rgba(12, 22, 14, .42) 100%), linear-gradient(0deg, var(--night) 0%, rgba(12, 22, 14, .15) 40%, rgba(12, 22, 14, .5) 100%); }
 @media (max-width: 959px) { .hero .bg::after { background: linear-gradient(0deg, var(--night) 10%, rgba(12, 22, 14, .8) 50%, rgba(12, 22, 14, .62) 100%); } }
 @media (max-width: 959px) { .hero-photo { aspect-ratio: 4 / 3; max-height: 420px; } }
-.terms { align-items: start; }
 .calc .note, .termcard .note { color: var(--muted); }
 .marks img.pf { filter: brightness(0) invert(1); }
 .marks img.virgin { height: 44px; filter: brightness(0) invert(1); }
@@ -552,7 +557,7 @@ details.more[open] > summary { margin-bottom: 4px; }
 .idea .mark-img.wide { height: 30px; }
 
 /* the live app: three real screens in phone frames */
-.phones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-content: start; }
+.phones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-content: center; }
 .phones figure { margin: 0; display: grid; gap: 8px; }
 .phones img { width: 100%; height: auto; border-radius: 22px; border: 5px solid var(--ink); background: var(--ink); box-shadow: 0 24px 50px -24px rgba(15, 27, 18, .45); }
 .phones figcaption { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--green); text-align: center; }
@@ -578,3 +583,20 @@ details.more[open] > summary { margin-bottom: 4px; }
 @media (min-width: 900px) { .beyond-grid { grid-template-columns: repeat(3, 1fr); } .beyond-grid > div + div { border-left: 1px solid rgba(245, 238, 222, .14); padding-left: 20px; } }
 .beyond-grid b { display: block; font-family: var(--display); font-size: 2rem; line-height: 1; color: var(--lime); }
 .beyond-grid span { display: block; margin-top: 6px; font-size: 13.5px; line-height: 1.45; color: rgba(245, 238, 222, .74); }
+
+/* side-by-side blocks line up: headings level, cards and bars the same height */
+h3, h4 { text-wrap: balance; }
+.split.pair > * { display: flex; flex-direction: column; }
+.split.pair .splitbar { flex: 1; height: auto; min-height: 64px; }
+.split.pair .phases { flex: 1; }
+@media (min-width: 960px) { .beside-card { padding-top: 26px; } }
+@media (min-width: 900px) {
+  /* the three channel tiles: headings at the same height, facts along the bottom, however the copy wraps */
+  .channels .tile:not(.wide) { justify-content: flex-start; }
+  .channels .tile:not(.wide) .num { margin-top: 196px; }
+  .channels .tile:not(.wide) p { margin-bottom: 16px; }
+  .channels .tile:not(.wide) .tile-facts { margin-top: auto; }
+}
+@media (min-width: 900px) and (max-width: 1099px) {
+  .channels .tile:not(.wide) .num { min-height: 2lh; display: flex; align-items: flex-end; margin-top: 180px; }
+}

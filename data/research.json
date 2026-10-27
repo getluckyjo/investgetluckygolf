@@ -318,6 +318,18 @@
    ]
   },
   {
+   "id": "trackman-shots",
+   "claim": "Over 70,000 Trackman-powered bays, on ranges and in simulators, track 150 shots a second",
+   "value": "70,000+ bays · 150 shots/second (~4.7bn a year)",
+   "source": "LIV Golf and Trackman partnership announcement, 2025",
+   "url": "https://www.livgolf.com/news/liv-golf-trackman-announce-global-multi-year-partnership-2025",
+   "accessed": "2026-10-27",
+   "usedIn": [
+    "beyond-golfzon",
+    "stress-case"
+   ]
+  },
+  {
    "id": "toptracer-usage",
    "claim": "Every Toptracer screen deployed globally was in use on average 6 hours a day through 2025; installations rose 29% on H1 2025",
    "value": "~6 hrs/day per screen",
