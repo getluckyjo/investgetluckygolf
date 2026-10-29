@@ -782,7 +782,7 @@ def faq_section():
         ("What if the bay company is sold?",
          f"The sale repays RMB first, then anything still owed to the bay investors, and the rest splits {st['getLuckySplitPct']}/{100 - st['getLuckySplitPct']}. On the plan, a sale at the end of {bsale['year']} at {bsale['ebitdaMultiple']:.0f}× EBITDA leaves {r0(bsale['equityZAR'])} after RMB's last {rm(bsale['debtZAR'])}: {r0(bsale['toGetLuckyZAR'])} in cash to Get Lucky. Paid out, that's about {rm(bsale['perRoundMillionZAR'])} on R1m in the round, before tax, and you keep your Get Lucky shares. Our {st['feePct']}% fee carries on only if the buyer keeps us running the bays, so we'll ask for the management agreement to survive a sale."),
         ("What does Ernie get?",
-         f"{amb['equityPct']}% non-diluting equity as Founding Ambassador. No fee, no profit share, no capital, no guarantees, no liability. His {amb['equityPct']}% sits inside the {r0(rd['preMoneyZAR'])} pre-money, top-up included, so the note and the round still buy their full stakes. The full terms are available under NDA."),
+         f"{amb['equityPct']}% non-diluting equity as Founding Ambassador, with normal shareholder rights: his {amb['equityPct']}% shares in any profit we pay out and in any sale, like every other share. No fee, no capital, no guarantees, no liability. His {amb['equityPct']}% sits inside the {r0(rd['preMoneyZAR'])} pre-money, top-up included, so the note and the round still buy their full stakes. The full terms are available under NDA."),
         ("What if someone wins R1m, or $100,000?",
          "The insurer pays, and it's the best marketing day of our year. 24% of every entry goes to the insurer as premium, on the same swing that creates the risk."),
     ]
@@ -875,8 +875,8 @@ def page():
 BANNED = [
     (r"\$43,000|\$40,000|\$35,000|\$32,000|\$30,000|\$25,000|\$99[ -]a[ -]month|Tier 1 pricing|Tier 2 pricing|FOB Busan|1\.3× (the )?hardware",
      "Golfzon's confidential chain pricing"),
-    (r"(?i)equity and a share of profit|ambassador's share of profit|5% of (the company's )?net profit|5% of any sale",
-     "Ernie's old terms: he has 5% non-diluting equity and no profit share"),
+    (r"(?i)equity and a share of profit|ambassador's share of profit|5% of (the company's )?net profit|no profit share",
+     "Ernie's terms: ordinary shares with normal shareholder rights, not a separate profit share or a payout every year"),
     (r"R126m|R140m post|R14\.0m for 10%|R53\.3m|R8\.0m for 15%|R4\.0m for 10%|R70m post|R14\.0m for 20%|R14\.0m in Q1|R14m in Q1|R70m|R66m post|R10\.0m for 15|R10m in Q1|R10\.0m in Q1|R56m / R66m",
      "a superseded round"),
     (r"(?i)\bregistry\b|\bgames\b|game of chance|icons cup|back an icon|\bbet(s|ting)?\b|bet on yourself|\bjackpot\b|golf gods",

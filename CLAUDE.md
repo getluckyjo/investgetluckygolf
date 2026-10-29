@@ -22,8 +22,10 @@ reuse the old investgetlucky site.
 - **Golfzon's chain pricing is confidential.** It lives in `scripts/model.py`
   only (excluded from the deploy by `.vercelignore`). Never on the page.
 - **Ernie Els:** 5% non-diluting equity as Founding Ambassador, topped up inside the
-  pre-money (the founder, 27 October 2026). No profit share, no fee. The page may
-  show the 5%.
+  pre-money (the founder, 27 October 2026). Normal shareholder rights: his 5% shares
+  in any profit paid out and in any sale, like every other share (the founder,
+  29 October 2026). No separate profit share on top of his shares, no fee. The page
+  may show the 5%.
 - **No old material:** no games, no hole-in-one registry, no betting language,
   no Icons fan pick, no membership/club tab, no superseded rounds.
 - Statuses as the founder set them: Golfzon "in" on its October 2026 proposal,
