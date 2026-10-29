@@ -5,8 +5,8 @@ discount, whichever is better) and the R9.0m round (Q1 2027, about 14% at R56m
 pre-money, R65m post).
 
 The story: the app we built, Golfzon's 15,029-location network and the
-integration we built for it, golf bays in Planet Fitness (signed) and Virgin
-Active (in talks) funded in their own company, and Ernie Els as Founding
+integration we built for it, golf bays in Planet Fitness and Virgin Active
+(both with their boards) funded in their own company, and Ernie Els as Founding
 Ambassador.
 
 ```

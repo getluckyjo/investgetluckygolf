@@ -29,8 +29,11 @@ reuse the old investgetlucky site.
 - **No old material:** no games, no hole-in-one registry, no betting language,
   no Icons fan pick, no membership/club tab, no superseded rounds.
 - Statuses as the founder set them: Golfzon "in" on its October 2026 proposal,
-  Ernie onboard as Founding Ambassador, Planet Fitness signed (first installs
-  Q1 2027), Virgin Active in talks (modelled from mid-2027).
+  Ernie onboard as Founding Ambassador. Planet Fitness is in as long as we find
+  the space (which led to the mobile units and pavilions); Planet Fitness and
+  Virgin Active are both taking it through their boards and operations teams;
+  60 bays in 2027, 40 Virgin Active and 20 Planet Fitness (the founder, 29 October
+  2026). Never say Planet Fitness or Virgin Active has signed.
 - The gym plan is the best half of each chain's clubs: 136 bays in 68 clubs (the
   founder, October 2026). Don't overinvest in simulators, and never claim a signed
   bay count.

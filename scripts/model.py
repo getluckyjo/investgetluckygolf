@@ -12,8 +12,9 @@ companies, and this script builds both from their own drivers:
     3. Sponsorship.
     4. A management fee on every rand the gym bays take: Get Lucky designs,
        books, runs and markets the bays for the bay company.
-  THE BAY COMPANY - owns the Golfzon bays in Planet Fitness (signed, first
-    installs Q1 2027) and Virgin Active (in talks, modelled from mid-2027).
+  THE BAY COMPANY - owns the Golfzon bays in Planet Fitness (in, subject to
+    space; first installs Q1 2027) and Virgin Active (modelled from mid-2027),
+    both going through their boards and operations teams.
     RMB lends 90% of every bay; bay investors put up the other 10%. They take
     their money back plus a preferred return first; the profit after that is
     split with Get Lucky, which puts in no capital.
@@ -152,7 +153,7 @@ BAY_DIST_DSCR = 1.25          # RMB's lock-up: no distribution in a year bay EBI
 # overinvest in simulators (the founder, 26 Oct 2026); the smaller clubs are left out.
 CHAINS = {
     "planetFitness": dict(
-        name="Planet Fitness", status="Signed", members_per_club=3_500,
+        name="Planet Fitness", status="In, subject to space", members_per_club=3_500,
         # the bays' own staff, at the cost per bay of the 272-bay plan: 2027 is the same flagship bays
         people={2027: 2.0e6, 2028: 1.9e6, 2029: 2.2e6}, people_after=2.4e6,
         central={2027: 1.2e6, 2028: 1.6e6}, central_after=2.0e6,
@@ -163,7 +164,7 @@ CHAINS = {
                  note="Two Play bays in eight of the best metro clubs"),
         ]),
     "virginActive": dict(
-        name="Virgin Active", status="In talks", members_per_club=623_000 / 136,
+        name="Virgin Active", status="With the board", members_per_club=623_000 / 136,
         people={2027: 4.0e6, 2028: 5.5e6, 2029: 5.5e6}, people_after=6.0e6,
         central={2027: 2.0e6, 2028: 3.0e6}, central_after=4.0e6,
         phases=[
@@ -713,10 +714,10 @@ def main():
                         "_pricing": ("Golfzon's chain quote is confidential to Golfzon: it lives in scripts/model.py and "
                                      "the NDA workbook only, never on the page or in this file.")},
             "ernie": {"status": "Onboard", "role": "Founding Ambassador"},
-            "planetFitness": {"status": "Signed", "firstInstalls": "Q1 2027",
+            "planetFitness": {"status": "In, subject to space", "firstInstalls": "Q1 2027",
                               "bays": sum(ph["bays"] for ph in CHAINS["planetFitness"]["phases"]),
                               "clubs": sum(ph["clubs"] for ph in CHAINS["planetFitness"]["phases"])},
-            "virginActive": {"status": "In talks", "modelledFrom": "Mid-2027",
+            "virginActive": {"status": "With the board", "modelledFrom": "Mid-2027",
                              "bays": sum(ph["bays"] for ph in CHAINS["virginActive"]["phases"]),
                              "clubs": sum(ph["clubs"] for ph in CHAINS["virginActive"]["phases"]),
                              "members": 623_000, "saClubs": 136},

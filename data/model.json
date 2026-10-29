@@ -201,13 +201,13 @@
       "role": "Founding Ambassador"
     },
     "planetFitness": {
-      "status": "Signed",
+      "status": "In, subject to space",
       "firstInstalls": "Q1 2027",
       "bays": 36,
       "clubs": 18
     },
     "virginActive": {
-      "status": "In talks",
+      "status": "With the board",
       "modelledFrom": "Mid-2027",
       "bays": 100,
       "clubs": 50,
@@ -602,7 +602,7 @@
     "chains": {
       "planetFitness": {
         "name": "Planet Fitness",
-        "status": "Signed",
+        "status": "In, subject to space",
         "bays": 36,
         "clubs": 18,
         "capexZAR": 32996600,
@@ -665,7 +665,7 @@
       },
       "virginActive": {
         "name": "Virgin Active",
-        "status": "In talks",
+        "status": "With the board",
         "bays": 100,
         "clubs": 50,
         "capexZAR": 86099000,

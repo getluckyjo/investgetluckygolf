@@ -249,7 +249,7 @@ def concept():
       <a class="tile reveal" href="#golfzon"><img src="assets/img/golfzon-demo.webp" alt="" loading="lazy" width="1200" height="630"><span class="chip live">Integration built</span>
         <span class="num">02 · Golfzon · Worldwide</span><h3>On simulators</h3><p>The same swing on the world's biggest simulator network. The bay measures the shot and signs it.</p>
         {facts_(("Golfzon locations", n(gz['locations'])), ("Our revenue, 2029", rm(rev['golfzon'][k29])))}</a>
-      <a class="tile reveal" href="#gyms"><img src="assets/img/planet-golf-mobile.webp" alt="" loading="lazy" width="1672" height="941" style="object-position:30% 50%"><span class="chip live">Planet Fitness signed</span>
+      <a class="tile reveal" href="#gyms"><img src="assets/img/planet-golf-mobile.webp" alt="" loading="lazy" width="1672" height="941" style="object-position:30% 50%"><span class="chip live">Planet Fitness in</span>
         <span class="num">03 · Planet Fitness, Virgin Active</span><h3>In the gym</h3><p>Golf bays in the best gyms, booked like padel. The aim: own the local simulator market.</p>
         {facts_(("Bays, best clubs only", bc['totalBays']), ("Our fee, 2029", rm(rev['bayFee'][k29])))}</a>
       <a class="tile wide reveal" href="#ernie"><img src="assets/img/ernie-open.webp" alt="" loading="lazy" width="1800" height="1200" style="object-position:30% 28%"><span class="chip">Founding Ambassador</span>
@@ -418,20 +418,20 @@ def gyms_section():
       <div class="head" style="margin:0">
         <span class="kicker">03 · In the gym · South Africa</span>
         <h2 class="display-lg" id="gyms-h">In the gym. <span class="green">Owning the local market.</span></h2>
-        <p class="lede"><strong>Golf bays in South Africa's leading gym chains, booked like padel.</strong> Planet Fitness has signed, first installs in {esc(pt['planetFitness']['firstInstalls'])}; Virgin Active is in talks. We only go into the best clubs: {pf['bays']} bays in {pf['clubs']} Planet Fitness clubs and {va['bays']} in {va['clubs']} Virgin Active clubs. The gym gives us the space and the members and takes {bc['assumptions']['gymSharePct']}% of every rand. It puts in no capital.</p>
+        <p class="lede"><strong>Golf bays in South Africa's leading gym chains, booked like padel.</strong> Planet Fitness is in, as long as we find the space, which is what led to our mobile units and pavilions. Planet Fitness and Virgin Active are now taking it through their boards and operations teams. We only go into the best clubs: {pf['bays']} bays in {pf['clubs']} Planet Fitness clubs and {va['bays']} in {va['clubs']} Virgin Active clubs, {sum(sum(p['units'].values()) for c in (pf, va) for p in c['phases'] if p['year'] == 2027)} of them in 2027. The gym gives us the site and the members and takes {bc['assumptions']['gymSharePct']}% of every rand. It puts in no capital.</p>
       </div>
       <figure class="photo reveal" style="aspect-ratio:16/9"><img src="assets/img/virgin-golf-pavilion.webp" alt="Concept render: a Virgin Golf pavilion, powered by Golfzon, beside the padel courts at a Virgin Active club at dusk" loading="lazy" width="1672" height="941"><figcaption>Concept: Virgin Golf at a Virgin Active club</figcaption></figure>
     </div>
     <div class="grid c2">
       <article class="party reveal">
-        <div class="row"><div class="mark"><img src="assets/logos/planet-fitness.webp" alt="Planet Fitness"></div><span class="chip live">Signed</span></div>
-        <div class="facts tab"><div><div class="n">{pf['bays']}</div><div class="l">Bays</div></div><div><div class="n">{pf['clubs']}</div><div class="l">Clubs</div></div><div><div class="n">{esc(pt['planetFitness']['firstInstalls'])}</div><div class="l">First bays</div></div></div>
-        <p>Ten flagship clubs first, Sandton first. About <strong>{rm(pf['gymShareZAR'][k31])} a year to Planet Fitness</strong> at maturity.</p>
+        <div class="row"><div class="mark"><img src="assets/logos/planet-fitness.webp" alt="Planet Fitness"></div><span class="chip live">In, subject to space</span></div>
+        <div class="facts tab"><div><div class="n">{pf['bays']}</div><div class="l">Bays</div></div><div><div class="n">{pf['clubs']}</div><div class="l">Clubs</div></div><div><div class="n">{esc(pt['planetFitness']['firstInstalls'])}</div><div class="l">In the plan</div></div></div>
+        <p>Ten flagship clubs first, with a mobile unit outside where there's no room inside. About <strong>{rm(pf['gymShareZAR'][k31])} a year to Planet Fitness</strong> at maturity. Nothing is ordered until it signs.</p>
       </article>
       <article class="party reveal">
-        <div class="row"><div class="mark"><img src="assets/logos/virgin.webp" alt="Virgin Active"></div><span class="chip talks">In talks</span></div>
+        <div class="row"><div class="mark"><img src="assets/logos/virgin.webp" alt="Virgin Active"></div><span class="chip talks">With the board</span></div>
         <div class="facts tab"><div><div class="n">{va['bays']}</div><div class="l">Bays</div></div><div><div class="n">{va['clubs']}</div><div class="l">Clubs</div></div><div><div class="n">{esc(pt['virginActive']['modelledFrom'])}</div><div class="l">In the plan</div></div></div>
-        <p>Twenty flagship clubs first. About <strong>{rm(va['gymShareZAR'][k31])} a year to Virgin Active</strong> at maturity. Nothing is ordered until it signs.</p>
+        <p>Twenty flagship clubs first, with pavilions beside the padel courts. About <strong>{rm(va['gymShareZAR'][k31])} a year to Virgin Active</strong> at maturity. Nothing is ordered until it signs.</p>
       </article>
     </div>
     <div class="split" style="margin-top:16px;align-items:stretch">
@@ -829,8 +829,8 @@ def footer():
 
 def page():
     desc = (f"Get Lucky Golf sells one insured swing at a hole-in-one, in three places: on course with our app, live in South Africa; "
-            f"on Golfzon's {n(gz['locations'])} simulator locations worldwide; and in our own gym bays in Planet Fitness (signed) "
-            f"and Virgin Active (in talks). Ernie Els is Founding Ambassador. A {rm(nt['amountZAR'])} convertible note now, {rm(rd['amountZAR'])} in {rd['timing']}.")
+            f"on Golfzon's {n(gz['locations'])} simulator locations worldwide; and in our own gym bays in Planet Fitness "
+            f"and Virgin Active clubs. Ernie Els is Founding Ambassador. A {rm(nt['amountZAR'])} convertible note now, {rm(rd['amountZAR'])} in {rd['timing']}.")
     body = "".join([nav(), hero(), '<main id="main">', raiseband(), concept(), app_section(), golfzon_section(), gyms_section(),
                     ernie_section(), team_section(), numbers_section(), risk_section(), deal_section(), faq_section(),
                     cta_section(), "</main>", footer()])
@@ -882,7 +882,7 @@ BANNED = [
     (r"(?i)\bregistry\b|\bgames\b|game of chance|icons cup|back an icon|\bbet(s|ting)?\b|bet on yourself|\bjackpot\b|golf gods",
      "retired features and language: games, the registry, betting"),
     (r"(?i)whatsapp|\bunlimited\b|\bpivot\b|old plan|previous plan", "retired framings"),
-    (r"(?i)signed with (golfzon|virgin active)|virgin active (has )?signed|exclusive with golfzon|signed for \d+ bays",
+    (r"(?i)signed with (golfzon|virgin active|planet fitness)|(virgin active|planet fitness) (has )?signed|planet fitness \(signed\)|exclusive with golfzon|signed for \d+ bays",
      "a signature that does not exist"),
     (r"272 bays|172 clubs|\b272\b|200 in talks|Practice bay", "the superseded 272-bay gym plan"),
     (r"4,167", "the simulator break-even before commission"),
