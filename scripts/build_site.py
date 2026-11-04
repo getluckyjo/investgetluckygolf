@@ -8,8 +8,8 @@ updates every sentence that carries it.
     python3 scripts/model.py && python3 scripts/build_site.py
 
 The build fails if the page would carry anything on the banned list
-(Golfzon's chain pricing, Ernie's percentage, superseded rounds, retired
-features) or if a figure the checks expect is missing.
+(Golfzon's chain pricing, superseded rounds, the withdrawn note, the gym
+numbers, retired features) or if a figure the checks expect is missing.
 """
 import html, json, pathlib, re, sys
 
@@ -18,9 +18,8 @@ m = json.loads((ROOT / "data/model.json").read_text())
 facts = json.loads((ROOT / "data/facts.json").read_text())
 
 FX = m["fx"]
-f, d, bc, st, cash, val = m["forecast"], m["deal"], m["bayCompany"], m["structure"], m["cash"], m["valuation"]
-nt, rd = d["note"], d["round"]
-bsale = m["bayCompany"]["sale"]   # the bay company sold at the end of the forecast
+f, d, cash, val = m["forecast"], m["deal"], m["cash"], m["valuation"]
+rd = d["round"]
 amb = d["ambassador"]   # Ernie Els, Founding Ambassador
 ex = rd["exit"]   # a sale in 2032, for the round
 pt, tr, prod = m["partners"], m["traction"], m["product"]
@@ -30,7 +29,6 @@ rev = f["revenueZAR"]
 sens = {s["key"]: s for s in val["sensitivity2029"]}
 terms = {c["key"]: c for c in val["termCases"]}
 plan, targets = val["cases"]["plan"], val["cases"]["targets"]
-inv = bc["investors"]
 mv = val["milestonesZAR"]
 app, gzf, ernie = facts["app"], facts["golfzon"], facts["ernie"]
 uof = d["useOfFunds"]["items"]
@@ -61,18 +59,14 @@ EMAIL = "johannes@getluckygolfclub.com"
 SITE_URL = "https://investgetluckygolf.vercel.app"   # link previews need absolute URLs
 PHONE, PHONE_TEL = "+27 60 961 5091", "+27609615091"
 gz = pt["golfzon"]
-pf, va = bc["chains"]["planetFitness"], bc["chains"]["virginActive"]
+GZ_SIGNED = gz["signed"]   # the deck is the post-signing version; see scripts/model.py
 k27, k28, k29, k31, k32 = I[2027], I[2028], I[2029], I[2031], I[2032]
 ladder = prod["saLadderZAR"]
 sim_ladder = prod["simLadderUSD"]
 split = prod["simSplitPct"]
-unit = bc["unit"]
-dc = bc["debtCover"]
-q70 = sens["bayUse70"]
 EQ = f"{rd['amountZAR'] / rd['postMoneyZAR'] * 100:.1f}".rstrip("0").rstrip(".") + "%"   # 15.2%, 20%
 # the round's price against a year's revenue: the forward view an early investor buys
 price_on = lambda y: f"{rd['postMoneyZAR'] / rev['total'][I[y]]:.1f}×"
-first_payout = next(y for y in Y if f["bayDistributionsZAR"][I[y]] > 0)
 
 
 ICON = {
@@ -113,8 +107,8 @@ def more(summary, body, cls="more"):
 
 # ------------------------------------------------------------------ the revenue chart
 def revenue_chart():
-    series = [("On simulators (Golfzon)", rev["golfzon"], "#d6fb4b"), ("In the gym (our fee)", rev["bayFee"], "#8fbf7a"),
-              ("On course (the app)", rev["onCourse"], "#c9a94e"), ("Sponsorship", rev["sponsorship"], "rgba(245,238,222,.5)")]
+    series = [("On simulators (Golfzon)", rev["golfzon"], "#d6fb4b"), ("On course (the app)", rev["onCourse"], "#c9a94e"),
+              ("Sponsorship", rev["sponsorship"], "rgba(245,238,222,.5)")]
     W, H, L, R, T, B = 720, 320, 56, 48, 22, 36
     top = max(rev["total"])
     step = 50e6
@@ -163,8 +157,8 @@ def revenue_chart():
 
 # ------------------------------------------------------------------ sections
 # The story, in the order an investor needs it: what we do and the ask; the
-# plan in four moves; proof (the app); the two engines (Golfzon, the gyms);
-# Ernie; the people; the numbers; what could go wrong; the terms.
+# hole-in-one app in three places; the app on course; Golfzon; the gyms as an
+# option we hold; Ernie; the people; the numbers; what could go wrong; the terms.
 
 def nav():
     return """
@@ -173,7 +167,7 @@ def nav():
   <div class="pill">
     <a class="logo" href="#top" aria-label="Get Lucky Golf, back to top"><img src="assets/logos/logo-corner.svg" alt="Get Lucky" width="52" height="40"></a>
     <div class="links">
-      <a href="#app">On course</a><a href="#golfzon">Simulators</a><a href="#gyms">Gyms</a><a href="#ernie">Ernie</a><a href="#team">Team</a><a href="#numbers">Numbers</a><a href="#deal">The raise</a>
+      <a href="#app">On course</a><a href="#golfzon">Simulators</a><a href="#ernie">Ernie</a><a href="#team">Team</a><a href="#numbers">Numbers</a><a href="#deal">The raise</a>
     </div>
     <a class="btn btn-lime" href="#deal">The terms</a>
   </div>
@@ -187,21 +181,21 @@ def hero():
   <div class="glow" style="right:-220px;top:-160px" aria-hidden="true"></div>
   <div class="wrap hero-grid">
     <div class="copy">
-      <span class="chip live"><span class="live-dot"></span>Investor briefing · October 2026</span>
+      <span class="chip live"><span class="live-dot"></span>Investor briefing · November 2026</span>
       <h1 class="display-xl">Golf's biggest shot <span class="lime">goes global.</span></h1>
-      <p class="lede"><strong>One insured swing at a life-changing prize, in three places.</strong> On course with our app, live in South Africa. On Golfzon's {n(gz['locations'])} simulator locations worldwide. And in our gym bays with Planet Fitness and Virgin Active, to own the local simulator market. Ernie Els is on board.</p>
+      <p class="lede"><strong>Get Lucky is the hole-in-one app: one insured swing at a life-changing prize, wherever you play.</strong> On course, built for {app['courses']} South African courses. On simulators, across Golfzon's {n(gz['locations'])} locations worldwide. And next, on the driving range. Presented by Ernie Els.</p>
       <div class="btns">
         <a class="btn btn-lime" href="#raise">See the raise</a>
-        <a class="btn btn-outline" href="{app['url']}" target="_blank" rel="noopener">Try the app</a>
+        <a class="btn btn-outline" href="{app['url']}" target="_blank" rel="noopener">Preview the app</a>
       </div>
     </div>
     <figure class="hero-photo"><img src="assets/img/ernie-ace.webp" alt="Ernie Els holding the ball from his 24th career ace" width="1000" height="1155" fetchpriority="high" style="object-position:50% 25%"><figcaption><span class="chip">Ernie Els · Founding Ambassador</span></figcaption></figure>
   </div>
   <div class="wrap">
     <div class="stats tab">
-      <div class="stat"><div class="n">{app['courses']}</div><div class="l">On course: South African courses live in the app</div></div>
+      <div class="stat"><div class="n">{app['courses']}</div><div class="l">On course: South African courses in the app</div></div>
       <div class="stat"><div class="n">{n(gz['locations'])}</div><div class="l">On simulators: Golfzon locations worldwide</div></div>
-      <div class="stat"><div class="n">{bc['totalBays']}</div><div class="l">In the gym: bays in the best Planet Fitness and Virgin Active clubs</div></div>
+      <div class="stat"><div class="n">{gz['roundsPerYear'] / 1e6:.0f}M+</div><div class="l">Rounds a year on Golfzon's network</div></div>
       <div class="stat"><div class="n"><span class="lime">{r0(ladder[-1]['prize'])}</span></div><div class="l">Top prize, insured by Santam</div></div>
     </div>
   </div>
@@ -213,18 +207,18 @@ def raiseband():
 <section class="raiseband" id="raise" aria-label="The raise at a glance">
   <div class="wrap row">
     <div class="step">
-      <span class="k">Step one · now · closes {esc(nt['closes'])}</span>
-      <div class="n tab">{rm(nt['amountZAR'])} <small>convertible note</small></div>
-      <p>Converts at a <strong>{r0(nt['capPreMoneyZAR'])} cap</strong> or a {nt['discountPct']}% discount to the round, whichever is better.</p>
+      <span class="k">One round · {esc(rd['timing'])}</span>
+      <div class="n tab">{rm(rd['amountZAR'])} <small>for {EQ}</small></div>
+      <p>{r0(rd['preMoneyZAR'])} pre-money, {r0(rd['postMoneyZAR'])} post. {rm(rd['minimumTicketZAR'])} minimum. Ordinary shares in Get Lucky.</p>
     </div>
     <div class="step">
-      <span class="k">Step two · {esc(rd['timing'])}</span>
-      <div class="n tab">{rm(rd['amountZAR'])} <small>for {EQ}</small></div>
-      <p>{r0(rd['preMoneyZAR'])} pre-money, {r0(rd['postMoneyZAR'])} post. {rm(rd['minimumTicketZAR'])} minimum. The bays are funded separately.</p>
+      <span class="k">Asset-light</span>
+      <div class="n tab">No hardware <small>no debt</small></div>
+      <p>The round builds the platform: the Golfzon roll-out and the launch with Ernie. The swing costs nothing to add to another simulator.</p>
     </div>
     <div class="act">
       <a class="btn btn-ink" href="#deal">The terms</a>
-      <a class="btn btn-outline" href="mailto:{EMAIL}?subject=Get%20Lucky%20Golf%20%E2%80%94%20the%20note">Book a call</a>
+      <a class="btn btn-outline" href="mailto:{EMAIL}?subject=Get%20Lucky%20Golf%20%E2%80%94%20the%20round">Book a call</a>
     </div>
   </div>
 </section>"""
@@ -233,29 +227,30 @@ def raiseband():
 def concept():
     def facts_(*pairs):
         return '<dl class="tile-facts tab">' + "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in pairs) + "</dl>"
-    other = rev["total"][k29] - rev["onCourse"][k29] - rev["golfzon"][k29] - rev["bayFee"][k29]
+    dots = "background-image:radial-gradient(rgba(214,251,75,.09) 1px,transparent 1.2px);background-size:22px 22px"
+    gz_chip = '<span class="chip live">Golfzon partner</span>' if GZ_SIGNED else '<span class="chip talks">In talks</span>'
     return f"""
 <section class="section paper" aria-labelledby="concept-h">
   <div class="wrap">
     <div class="head">
       <span class="kicker">The concept</span>
       <h2 class="display-lg" id="concept-h">One shot. <span class="green">Three places to play.</span></h2>
-      <p class="lede"><strong>Every channel sells the same thing: one swing at a hole-in-one, for a prize Santam insures.</strong> We proved it on South African courses. Now it goes onto simulators worldwide with Golfzon, and into the gym, where we plan to own South Africa's simulator market.</p>
+      <p class="lede"><strong>Every place sells the same thing: one swing at a hole-in-one, for a prize Santam insures.</strong> One app, wherever you play golf: on course in South Africa, on Golfzon's simulators worldwide, and next on the driving range.</p>
     </div>
     <div class="channels">
-      <a class="tile tile-app reveal" href="#app"><img src="assets/img/app-in-hand.webp" alt="" loading="lazy" width="900" height="1016" style="object-position:38% 0%"><span class="chip live">Live</span>
+      <a class="tile tile-app reveal" href="#app"><img src="assets/img/app-in-hand.webp" alt="" loading="lazy" width="900" height="1016" style="object-position:38% 0%"><span class="chip live">Built</span>
         <span class="num">01 · The app · South Africa</span><h3>On course</h3><p>Pick a par 3 on any of {app['courses']} courses and film the swing. Hole it and Santam pays.</p>
         {facts_(("Paid swings, year one", n(tr['paidSwings'])), ("Our revenue, 2029", rm(rev['onCourse'][k29])))}</a>
-      <a class="tile reveal" href="#golfzon"><img src="assets/img/golfzon-demo.webp" alt="" loading="lazy" width="1200" height="630"><span class="chip live">Integration built</span>
+      <a class="tile reveal" href="#golfzon"><img src="assets/img/golfzon-demo.webp" alt="" loading="lazy" width="1200" height="630">{gz_chip}
         <span class="num">02 · Golfzon · Worldwide</span><h3>On simulators</h3><p>The same swing on the world's biggest simulator network. The bay measures the shot and signs it.</p>
         {facts_(("Golfzon locations", n(gz['locations'])), ("Our revenue, 2029", rm(rev['golfzon'][k29])))}</a>
-      <a class="tile reveal" href="#gyms"><img src="assets/img/planet-golf-mobile.webp" alt="" loading="lazy" width="1672" height="941" style="object-position:30% 50%"><span class="chip live">Planet Fitness in</span>
-        <span class="num">03 · Planet Fitness, Virgin Active</span><h3>In the gym</h3><p>Golf bays in the best gyms, booked like padel. The aim: own the local simulator market.</p>
-        {facts_(("Bays, best clubs only", bc['totalBays']), ("Our fee, 2029", rm(rev['bayFee'][k29])))}</a>
+      <a class="tile reveal" href="#golfzon" style="{dots}"><span class="chip talks" style="color:var(--cream);border-color:rgba(245,238,222,.4)">Next</span>
+        <span class="num">03 · Driving ranges</span><h3>On the range</h3><p>Ranges that track every ball can carry the same swing, in the same app. Our next conversation, and not in our numbers.</p>
+        {facts_(("One app", "Every place"), ("In our plan", "Not yet"))}</a>
       <a class="tile wide reveal" href="#ernie"><img src="assets/img/ernie-open.webp" alt="" loading="lazy" width="1800" height="1200" style="object-position:30% 28%"><span class="chip">Founding Ambassador</span>
-        <span class="num">Across all three</span><h3>Ernie Els</h3><p>{ernie['careerAces']} career aces, and his name behind every swing we sell: on course, on Golfzon and in the gym. He owns {amb['equityPct']}%, so he's in it with us.</p></a>
+        <span class="num">Across all three</span><h3>Ernie Els</h3><p>{ernie['careerAces']} career aces, and his name behind every swing we sell: on course, on simulators and on the range. He owns {amb['equityPct']}%, so he's in it with us.</p></a>
     </div>
-    <p class="note" style="margin-top:12px">Revenue from our plan. Add {rm(other)} of sponsorship and 2029 comes to {rm(rev['total'][k29])}. In the gym we also earn half the bays' profit once the bay investors are repaid.</p>
+    <p class="note" style="margin-top:12px">Revenue from our plan. Add {rm(rev['sponsorship'][k29])} of sponsorship and 2029 comes to {rm(rev['total'][k29])}. Nothing for the range until a partner signs.</p>
   </div>
 </section>"""
 
@@ -273,26 +268,27 @@ def app_section():
       <li><strong>Built to be audited:</strong> about {app['testsApprox']} automated tests, error monitoring, append-only audit logs and fraud rules on every claim.</li>
       <li><strong>Golf days on their own link:</strong> every sponsored day gets a page, and every player gets a pre-sold swing. Multi-day trips and dollar prizes too. This month: {esc(gd[0])} and {esc(gd[1])}.</li>
       <li><strong>The traction above</strong> is July 2025 to July 2026, on the tee, before the app.</li>
+      <li><strong>Audited before launch:</strong> an independent developer reviews the code, the payments and the claims flow before the public launch.</li>
     </ul>"""
     return f"""
 <section class="section white" id="app" aria-labelledby="app-h">
   <div class="wrap">
     <div class="head">
       <span class="kicker">01 · On course · South Africa</span>
-      <h2 class="display-lg" id="app-h">On course. <span class="green">Live today.</span></h2>
-      <p class="lede"><strong>Pick a par 3, pick a stake, film the swing.</strong> Hole it and Santam pays, never another golfer. Live on {app['courses']} South African courses, and it installs from the browser.</p>
+      <h2 class="display-lg" id="app-h">On course. <span class="green">Built and ready.</span></h2>
+      <p class="lede"><strong>Pick a par 3, pick a stake, film the swing.</strong> Hole it and Santam pays, never another golfer. Built for {app['courses']} South African courses, it installs from the browser and runs at our golf days. {esc(app['status'])}.</p>
     </div>
     <ol class="track icons">{track}</ol>
     <div class="split" style="margin-top:28px;align-items:stretch">
       <div class="phones reveal" role="group" aria-label="The live app">
-        <figure><img src="assets/img/app-home.webp" alt="The Get Lucky app's home screen: 1 shot, R1 million" width="480" height="943" loading="lazy"><figcaption>The app, live</figcaption></figure>
+        <figure><img src="assets/img/app-home.webp" alt="The Get Lucky app's home screen: 1 shot, R1 million" width="480" height="943" loading="lazy"><figcaption>The app</figcaption></figure>
         <figure><img src="assets/img/app-courses.webp" alt="Select a course: South African courses by province, with each par 3's length" width="480" height="943" loading="lazy"><figcaption>Pick a par 3</figcaption></figure>
         <figure><img src="assets/img/app-stake.webp" alt="Choose your stake: R50 to win R25,000, R100 to win R60,000, up to R1 million" width="480" height="943" loading="lazy"><figcaption>Pick a stake</figcaption></figure>
       </div>
       <div style="display:grid;gap:14px;align-content:start">
         <div class="card card--dark tryit reveal">
           <div class="qr"><img src="assets/logos/install-qr.svg" alt="QR code to install the Get Lucky app" width="112" height="112"></div>
-          <div><h3 style="color:var(--cream);font-size:18px">Try it yourself</h3><p>Scan to install, or open <a href="{app['url']}" target="_blank" rel="noopener" style="color:var(--lime)">getluckyholeinone.com</a> on your phone.</p></div>
+          <div><h3 style="color:var(--cream);font-size:18px">Preview it yourself</h3><p>Scan to install, or open <a href="{app['url']}" target="_blank" rel="noopener" style="color:var(--lime)">getluckyholeinone.com</a> on your phone.</p></div>
         </div>
         <div class="proof proof--stack proof--photo tab reveal" role="group" aria-label="Traction, over a Get Lucky golf day in Cape Town">
           <div><div class="n">{n(tr['paidSwings'])}</div><div class="l">Paid swings in our first year</div></div>
@@ -343,7 +339,7 @@ def golfzon_section():
     <div class="head">
       <span class="kicker">02 · On simulators · Worldwide</span>
       <h2 class="display-lg" id="gz-h">On simulators. <span class="lime">{n(gz['locations'])} Golfzon locations.</span></h2>
-      <p class="lede"><strong>Golfzon is the world's biggest simulator network</strong> and the official simulator of the U.S. Open. Its bays already measure every shot. We built the integration that turns one of those shots into an insured swing at up to ${sim_ladder[-1]['prize']:,}. It's live below: take a swing.</p>
+      <p class="lede"><strong>Golfzon is the world's biggest simulator network</strong> and the official simulator of the U.S. Open{", and now our partner" if GZ_SIGNED else ""}. Its bays already measure every shot. We built a working demo of the integration that turns one of those shots into an insured swing at up to ${sim_ladder[-1]['prize']:,}. Take a swing below.</p>
     </div>
     <figure class="reveal">
       <div class="frame demo-embed" id="demo" data-w="1280" data-h="800">
@@ -374,7 +370,7 @@ def golfzon_section():
     </div>
     <div class="beyond reveal">
       <div class="beyond-head"><span class="chip talks">Next conversations</span><h3>Beyond Golfzon</h3>
-        <p>The swing can run on any simulator that measures the shot. Golfzon outside Korea is about {(gz['roundsPerYear'] - 94_000_000) / 1e6:.0f} million rounds a year; these networks add more, and none of them is in our plan.</p></div>
+        <p>The swing can run on any simulator that measures the shot, and on any driving range that tracks the ball. Golfzon outside Korea is about {(gz['roundsPerYear'] - 94_000_000) / 1e6:.0f} million rounds a year; these networks add more, and none of them is in our plan.</p></div>
       <div class="beyond-grid tab">
         <div><b>50,000+</b><span>Trackman bays worldwide, behind venues like Five Iron Golf. Our next simulator conversation.</span></div>
         <div><b>~6 hrs</b><span>a day each Toptracer screen is in use, on driving ranges across the UK and Europe.</span></div>
@@ -389,94 +385,21 @@ def golfzon_section():
 
 
 def gyms_section():
-    def bay(t, label, where):
-        u = unit[t]
-        return f"""<div class="bay"><span class="k">{where}</span><h3>{label}</h3>
-      <dl class="tab"><dt>Landed cost</dt><dd>R{u['capexZAR'] / 1e6:.2f}m</dd><dt>Booked a day</dt><dd>{u['hoursPerDay']:g} hrs at R{u['yieldZAR']}</dd>
-      <dt>Revenue a year</dt><dd>R{u['revenueZAR'] / 1e6:.2f}m</dd></dl>
-      <div class="foot"><span class="n">{u['paybackYears']} yrs</span><span>payback · {u['contributionMarginPct']}%<br>contribution</span></div></div>"""
-    yr_rows = "".join(
-        f'<tr{" class=\"total\"" if y == 2031 else ""}><td>{y}{"<span class=\"t\">PF Q1, VA mid-year</span>" if y == 2027 else ("<span class=\"t\">Fully ramped</span>" if y == 2031 else "")}</td>'
-        f'<td class="n">{f["kpis"]["baysLive"][I[y]]}</td><td class="n">{rm(bc["revenueZAR"][I[y]])}</td><td class="n">{rm(bc["ebitdaZAR"][I[y]])}</td>'
-        f'<td class="n">{rm(bc["debtClosingZAR"][I[y]])}</td><td class="n hide-sm">{rm(bc["feeZAR"][I[y]])}</td></tr>' for y in (2027, 2028, 2029, 2031))
-    earns = f"""<div class="bays">{bay('Signature', 'Signature bay', 'Flagship clubs')}{bay('Play', 'Play bay', 'Metro clubs')}</div>
-    <p>A mature Golfzon TwoVision NX bay at the price from the 41st bay on. Payback is on contribution: after the gym's {bc['assumptions']['gymSharePct']}% and our {st['feePct']}% fee, before staff, finance and the first-year ramp.</p>"""
-    table = f"""<div class="tablewrap" tabindex="0" role="region" aria-label="The bay company by year">
-      <table>
-        <thead><tr><th>The bay company</th><th class="n">Bays</th><th class="n">Revenue</th><th class="n">EBITDA</th><th class="n">Debt</th><th class="n hide-sm">Our fee</th></tr></thead>
-        <tbody>{yr_rows}</tbody>
-        <caption>Forecast, ex VAT, in {bc['totalClubs']} clubs once both phases are in. EBITDA is after the gyms' {bc['assumptions']['gymSharePct']}%, our {st['feePct']}% fee, staff and the bays' own team. RMB's debt is modelled, not committed: {rm(bc['totalCapexZAR'])} of bays, {st['debtPct']}% financed over five years after a year interest-only.</caption>
-      </table>
-    </div>"""
-    backers = f"""<p><strong>{rm(inv['calledZAR'])} between 2027 and 2029:</strong> the {st['investorEquityPct']}% on every bay, a R{st['reserveZAR'] / 1e6:.0f}m reserve, and what the bays need while they ramp. They only cover their interest and overheads from 2029, and the bay investors carry that, not Get Lucky.</p>
-    <p><strong>Their capital and {st['prefPct']}% a year come back first.</strong> Payouts start once bay EBITDA covers debt service {st['distributionLockDscr']}× (RMB's lock-up). On the plan they're paid back by {inv['capitalBackBy']} and have {rm(inv['distributedZAR'])} by 2032; after that the profit splits {st['getLuckySplitPct']}/{100 - st['getLuckySplitPct']} with Get Lucky.</p>
-    <p><strong>Golfzon takes half on order and half before shipment,</strong> so Planet Fitness's {esc(pt['planetFitness']['firstInstalls'])} date depends on the bay company's first close and RMB's facility.</p>"""
+    """The gyms: an option we hold, with no numbers. Bays are hardware, and this round doesn't buy it."""
+    card = lambda logo, alt, cls, text: (f'<article class="party reveal"><div class="row"><div class="mark"><img src="assets/logos/{logo}" alt="{alt}"{cls}></div>'
+                                          f'<span class="chip talks">In discussion</span></div><p>{text}</p></article>')
     return f"""
 <section class="section paper" id="gyms" aria-labelledby="gyms-h">
   <div class="wrap">
-    <div class="split wide-left" style="align-items:end;margin-bottom:32px">
-      <div class="head" style="margin:0">
-        <span class="kicker">03 · In the gym · South Africa</span>
-        <h2 class="display-lg" id="gyms-h">In the gym. <span class="green">Owning the local market.</span></h2>
-        <p class="lede"><strong>Golf bays in South Africa's leading gym chains, booked like padel.</strong> Planet Fitness is in, as long as we find the space, which is what led to our mobile units and pavilions. Planet Fitness and Virgin Active are now taking it through their boards and operations teams. We only go into the best clubs: {pf['bays']} bays in {pf['clubs']} Planet Fitness clubs and {va['bays']} in {va['clubs']} Virgin Active clubs, {sum(sum(p['units'].values()) for c in (pf, va) for p in c['phases'] if p['year'] == 2027)} of them in 2027. The gym gives us the site and the members and takes {bc['assumptions']['gymSharePct']}% of every rand. It puts in no capital.</p>
-      </div>
-      <figure class="photo reveal" style="aspect-ratio:16/9"><img src="assets/img/virgin-golf-pavilion.webp" alt="Concept render: a Virgin Golf pavilion, powered by Golfzon, beside the padel courts at a Virgin Active club at dusk" loading="lazy" width="1672" height="941"><figcaption>Concept: Virgin Golf at a Virgin Active club</figcaption></figure>
+    <div class="head">
+      <span class="kicker">An option we hold</span>
+      <h2 class="display-lg" id="gyms-h">In the gym. <span class="green">An option, not the plan.</span></h2>
+      <p class="lede"><strong>Planet Fitness and Virgin Active are both taking golf bays through their boards.</strong> It's how we first met Golfzon: as a customer. If we go ahead, the bays get their own company and their own investors. They're never paid for by this round, and they're not in our numbers.</p>
     </div>
     <div class="grid c2">
-      <article class="party reveal">
-        <div class="row"><div class="mark"><img src="assets/logos/planet-fitness.webp" alt="Planet Fitness"></div><span class="chip live">In, subject to space</span></div>
-        <div class="facts tab"><div><div class="n">{pf['bays']}</div><div class="l">Bays</div></div><div><div class="n">{pf['clubs']}</div><div class="l">Clubs</div></div><div><div class="n">{esc(pt['planetFitness']['firstInstalls'])}</div><div class="l">In the plan</div></div></div>
-        <p>Ten flagship clubs first, with a mobile unit outside where there's no room inside. About <strong>{rm(pf['gymShareZAR'][k31])} a year to Planet Fitness</strong> at maturity. Nothing is ordered until it signs.</p>
-      </article>
-      <article class="party reveal">
-        <div class="row"><div class="mark"><img src="assets/logos/virgin.webp" alt="Virgin Active"></div><span class="chip talks">With the board</span></div>
-        <div class="facts tab"><div><div class="n">{va['bays']}</div><div class="l">Bays</div></div><div><div class="n">{va['clubs']}</div><div class="l">Clubs</div></div><div><div class="n">{esc(pt['virginActive']['modelledFrom'])}</div><div class="l">In the plan</div></div></div>
-        <p>Twenty flagship clubs first, with pavilions beside the padel courts. About <strong>{rm(va['gymShareZAR'][k31])} a year to Virgin Active</strong> at maturity. Nothing is ordered until it signs.</p>
-      </article>
+      {card("planet-fitness.webp", "Planet Fitness", "", "Golf bays in its flagship clubs, booked like a padel court, with a mobile unit where there's no room inside.")}
+      {card("virgin.webp", "Virgin Active", "", "Golf bays beside the padel courts in its flagship clubs, on its own board's timetable.")}
     </div>
-    <div class="split" style="margin-top:16px;align-items:stretch">
-      <div style="display:grid;gap:12px">
-        <div class="card iconcard reveal">{icon('clock')}<div><h3>Gym, then an hour on the sim</h3><p>Booked in the gym's app like a padel court. A R{bc['assumptions']['addOnZARpm']} add-on includes an hour a month.</p></div></div>
-        <div class="card iconcard reveal">{icon('users')}<div><h3>Leagues across the chain</h3><p>Sandton against Umhlanga, on one network, with coaching in every flagship club.</p></div></div>
-        <div class="card iconcard reveal">{icon('trophy')}<div><h3>The insured shot on every bay</h3><p>Half of simulator players aren't course golfers. The bay sells golf to people who'd never join a club.</p></div></div>
-      </div>
-      <figure class="photo photo-side reveal"><img src="assets/img/planet-golf-mobile.webp" alt="Concept render: a Planet Golf simulator bay, powered by Golfzon, in a mobile unit outside a Planet Fitness club at dusk" loading="lazy" width="1672" height="941" style="object-position:50% 50%"><figcaption>Concept: Planet Golf at a Planet Fitness club</figcaption></figure>
-    </div>
-
-    <div class="grid c2" style="margin-top:16px">
-      <article class="card idea reveal">
-        <div class="row"><img class="mark-img" src="assets/logos/vitality.png" alt="Discovery Vitality" width="279" height="160" loading="lazy"><span class="chip talks">Next idea</span></div>
-        <h3>Vitality points for golf on our bays</h3>
-        <p>Vitality members already earn points for going to the gym. We want an hour on our simulators to count too, which gives members one more reason to book a bay.</p>
-      </article>
-      <article class="card idea reveal">
-        <div class="row"><img class="mark-img wide" src="assets/logos/growthpoint.png" alt="Growthpoint Properties" width="548" height="98" loading="lazy"><span class="chip talks">Next idea</span></div>
-        <h3>Mobile bays where the crowds are</h3>
-        <p>The mobile Planet Golf and Virgin Golf units can park at busy malls in Growthpoint's portfolio, like the V&amp;A Waterfront and Brooklyn Mall, putting the swing in front of shoppers and pointing them to the nearest club.</p>
-      </article>
-    </div>
-    <p class="note" style="margin-top:10px">Two ideas we're working on. Neither is in our numbers.</p>
-
-    <h3 class="display-md" style="margin:56px 0 10px">The bays sit in their own company</h3>
-    <p class="lede" style="margin-bottom:20px">So your money builds the platform, not hardware. RMB lends {st['debtPct']}% of every bay and bay investors put up {st['investorEquityPct']}%. We run the bays for a fee, and share the profit once the bay investors have their money and {st['prefPct']}% a year back.</p>
-    <div class="structure" role="group" aria-label="How Get Lucky and the bay company fit together">
-      <div class="co you reveal"><span class="k">Where the note and the round go</span><h3>Get Lucky</h3><p>The app, Golfzon, golf days, sponsorship. Runs every bay. No bay debt, no bay capex.</p></div>
-      <ul class="flows reveal">
-        <li><span class="arr" aria-hidden="true"></span><b>{st['feePct']}%</b><span>of every rand the bays take, our fee for running them</span></li>
-        <li><span class="arr" aria-hidden="true"></span><b>{st['getLuckySplitPct']}%</b><span>of the profit and of any sale, once bay investors have their capital and {st['prefPct']}% a year</span></li>
-      </ul>
-      <div class="co reveal"><span class="k">Where the bays sit</span><h3>The bay company</h3><p>Owns the {bc['totalBays']} bays. RMB lends {st['debtPct']}%; bay investors put up {st['investorEquityPct']}% and a R{st['reserveZAR'] / 1e6:.0f}m reserve.</p></div>
-    </div>
-    <h3 class="display-sm" style="margin:32px 0 14px">What Get Lucky gets from the bays</h3>
-    <div class="grid c3">
-      <div class="card iconcard reveal">{icon('coins')}<div><h3>{st['feePct']}% of every rand, from day one</h3><p>Our fee for running the bays: {rm(bc['feeZAR'][0])} in 2027, {rm(bc['feeZAR'][I[2029]])} in 2029, {rm(bc['feeZAR'][-1])} a year by 2032.</p></div></div>
-      <div class="card iconcard reveal">{icon('chart')}<div><h3>Half the profit, once the bay investors are repaid</h3><p>They get their capital and {st['prefPct']}% a year first, by {inv['capitalBackBy']} on the plan. Then every payout splits {st['getLuckySplitPct']}/{100 - st['getLuckySplitPct']}: {rm(sum(bc['toGetLuckyZAR']))} to us by 2032.</p></div></div>
-      <div class="card iconcard reveal">{icon('key')}<div><h3>Half the sale, if the bays are sold</h3><p>Sold at the end of {bsale['year']} at {bsale['ebitdaMultiple']:.0f}× EBITDA, RMB's last {rm(bsale['debtZAR'])} is repaid first, leaving {r0(bsale['equityZAR'])}: {r0(bsale['toGetLuckyZAR'])} to us, the same to the bay investors.</p></div></div>
-    </div>
-    <p class="note" style="margin-top:10px">Our half is in our valuation: {r0(mv['2029']['bayShare'])} of our December 2029 value and {r0(mv['2032']['bayShare'])} of 2032's. The fee, the {st['prefPct']}% and the split are our proposal to the bay investors, final once they agree them.</p>
-    {more("What one bay earns", earns)}
-    {more("The bay company, year by year", table)}
-    {more("What the bay investors put in, and get back", backers)}
   </div>
 </section>"""
 
@@ -487,7 +410,7 @@ def ernie_section():
   <div class="bg" aria-hidden="true"><img src="assets/img/ernie-trophies.webp" alt="" loading="lazy" width="1600" height="1067"></div>
   <div class="wrap" style="position:relative">
     <div class="copy">
-      <span class="kicker">04 · Ernie Els</span>
+      <span class="kicker">03 · Ernie Els</span>
       <h2 class="display-lg" id="ernie-h">He doesn't endorse it. <span class="lime">He owns part of it.</span></h2>
       <p class="lede"><strong>Ernie is our Founding Ambassador, with {amb['equityPct']}% non-diluting equity.</strong> No fee, no capital, no liability.</p>
       <p>{ernie['careerAces']} career aces, the latest a 5-iron from 193 yards in a senior major this May. Golfzon wants an Ernie Els challenge on its bays, and his businesses open doors in Asia, the Middle East and the US.</p>
@@ -501,10 +424,10 @@ def ernie_section():
 
 def team_section():
     people = [
-        ("team-johannes.webp", "Johannes le Roux", "Founder &amp; Managing Director", "Built The Duchess with AB InBev and RMB: ten million units in five countries. Runs Get Lucky, Golfzon and the gym roll-out."),
+        ("team-johannes.webp", "Johannes le Roux", "Founder &amp; Managing Director", "Built The Duchess with AB InBev and RMB: ten million units in five countries. Runs Get Lucky and the Golfzon partnership."),
         ("team-andrew.webp", "Andrew Davenport", "Founder &amp; Marketing Director", "Founder of DOPE Drinks, fifteen years in drinks and entertainment brands. Runs partnerships, brand and the golf days."),
         ("team-willie.webp", "Willie Ross", "Investor &amp; Strategic Advisor", "Partner at Bellair Road Investment Partners, R5 billion under management. Harvard MBA. Advises on the numbers and the financing."),
-        ("team-ernie.webp", "Ernie Els", "Founding Ambassador", f"{ernie['majors']} majors, {ernie['careerAces']} career aces. The face of our challenge on course, on Golfzon and in the gym, opening doors in Asia, the Middle East and the US. A {amb['equityPct']}% shareholder."),
+        ("team-ernie.webp", "Ernie Els", "Founding Ambassador", f"{ernie['majors']} majors, {ernie['careerAces']} career aces. The face of our challenge on course, on simulators and on the range, opening doors in Asia, the Middle East and the US. A {amb['equityPct']}% shareholder."),
     ]
     cards = "".join(f'<div class="person reveal"><img src="assets/img/{img}" alt="" width="72" height="72" loading="lazy"><div><b>{nm}</b><span class="role">{role}</span></div><p>{bio}</p></div>'
                     for img, nm, role, bio in people)
@@ -512,15 +435,13 @@ def team_section():
 <section class="section paper" id="team" aria-labelledby="team-h">
   <div class="wrap">
     <div class="head">
-      <span class="kicker">05 · The team</span>
+      <span class="kicker">04 · The team</span>
       <h2 class="display-lg" id="team-h">We've built brands <span class="green">before.</span></h2>
     </div>
     <div class="team">{cards}</div>
-    <p class="note" style="margin-top:14px">Directors: Michelle Hewitt, Andrew Davenport, Johannes le Roux and Inus Smuts. The app and the Golfzon integration are built in-house.</p>
+    <p class="note" style="margin-top:14px">Directors: Michelle Hewitt, Andrew Davenport, Johannes le Roux and Inus Smuts. The app and the Golfzon demo are built in-house.</p>
     <div class="marks" aria-label="Partners">
       <img src="assets/logos/golfzon-white.webp" alt="Golfzon">
-      <img src="assets/logos/planet-fitness.webp" alt="Planet Fitness" class="pf">
-      <img src="assets/logos/virgin.webp" alt="Virgin Active" class="virgin">
       <img src="assets/logos/santam-white.png" alt="Santam" class="tall">
       <img src="assets/logos/indwe.svg" alt="Indwe Risk Services" class="indwe">
     </div>
@@ -540,11 +461,10 @@ def numbers_section():
         pl_row("On simulators: Golfzon", lambda k: mm(rev["golfzon"][k]), "sub"),
         pl_row("On course: the app", lambda k: mm(rev["onCourse"][k]), "sub"),
         pl_row("Sponsorship", lambda k: mm(rev["sponsorship"][k]), "sub"),
-        pl_row("In the gym: our fee", lambda k: mm(rev["bayFee"][k]), "sub", f"{st['feePct']}% of the bay company's revenue"),
         pl_row("Revenue", lambda k: mm(rev["total"][k]), "total"),
         pl_row("EBITDA", lambda k: mm(f["ebitdaZAR"][k])),
         pl_row("EBITDA margin", lambda k: pc(f["ebitdaMarginPct"][k]), "sub"),
-        pl_row("Net profit", lambda k: mm(f["netProfitZAR"][k]), "", "after tax, with the bay company's payouts"),
+        pl_row("Net profit", lambda k: mm(f["netProfitZAR"][k]), "", "after tax"),
         pl_row("Cash at year end", lambda k: mm(cash["closingZAR"][k])),
     ])
     gz_course_cost = c["golfzonDirect"][k29] + c["onCourseDirect"][k29]
@@ -552,18 +472,15 @@ def numbers_section():
       <table><thead><tr><th>Get Lucky, R</th><th class="n">2027</th><th class="n hide-sm">2028</th><th class="n">2029</th><th class="n">2032</th></tr></thead><tbody>{pl}</tbody></table>
     </div>
     <p>2029, revenue to EBITDA: {rm(rev['total'][k29])} revenue, less {rm(gz_course_cost)} of Golfzon and course costs (payments, claims handling, launches), {rm(c['central'][k29])} of central team and technology, and {rm(c['brand'][k29])} of brand, leaves {rm(f['ebitdaZAR'][k29])}. Central cost is a budget; the rest moves with revenue.</p>"""
-    m29 = mv["2029"]
-    value_block = f"""<p>Get Lucky at <strong>{val['platformMultiple']}× its revenue</strong>, the fee included, plus our share of the bay company: the bays at {val['baysEbitdaMultiple']}× EBITDA less net debt, once the bay investors have their capital and {st['prefPct']}% a year.</p>
+    value_block = f"""<p>Get Lucky at <strong>{val['platformMultiple']}× its revenue</strong>: our share of every swing on Golfzon and on course, and sponsorship. Nothing for the gym option or the range.</p>
     <div class="bridge tab">
-      <div><span>Get Lucky, {val['platformMultiple']}× {rm(rev['total'][k29])}</span><span>{r0(m29['platform'])}</span></div>
-      <div><span>Our share of the bay company: {val['baysEbitdaMultiple']}× {rm(bc['ebitdaZAR'][k29])}, less {rm(bc['debtClosingZAR'][k29] - bc['cashClosingZAR'][k29])} net debt and {rm(bc['hurdleClosingZAR'][k29])} still due to the bay investors</span><span>{r0(m29['bayShare'])}</span></div>
-      <div class="total"><span>December 2029</span><span>{r0(m29['total'])}</span></div>
+      <div><span>Get Lucky, {val['platformMultiple']}× {rm(rev['total'][k29])}</span><span>{r0(mv['2029']['total'])}</span></div>
+      <div class="total"><span>December 2029</span><span>{r0(mv['2029']['total'])}</span></div>
       <div class="total"><span>2032, same method</span><span>{r0(mv['2032']['total'])}</span></div>
     </div>
-    <p>The round's price looks forward: {r0(rd['postMoneyZAR'])} is {price_on(2027)} our 2027 revenue, {price_on(2028)} our 2028 revenue and {price_on(2029)} our 2029 revenue. Our yardstick values each year on that year's revenue, so it starts low while we build: {r0(mv['2027']['total'])} in December 2027 and {r0(mv['2028']['total'])} in December 2028. The bay company adds nothing until its investors are paid back. Our half of the bay company is a proposal; at 20% the round marks at {x(terms['split20']['roundMultiple'])} in 2029.</p>"""
-    order = ["plan", "halfAttach", "halfAttachHalfTicket", "noVirginActive", "hard", "outsideKorea",
-             "koreaOutNoVirginActive", "outsideKoreaTrackman", "bayUse70", "targets"]
-    labels = {"halfAttachHalfTicket": "Half the attach and half the ticket", "hard": "The hard case: all three at once"}
+    <p>The round's price looks forward: {r0(rd['postMoneyZAR'])} is {price_on(2027)} our 2027 revenue, {price_on(2028)} our 2028 revenue and {price_on(2029)} our 2029 revenue. Our yardstick values each year on that year's revenue, so it starts low while we build: {r0(mv['2027']['total'])} in December 2027 and {r0(mv['2028']['total'])} in December 2028.</p>"""
+    order = ["plan", "halfAttach", "hard", "golfzonLate", "outsideKorea", "outsideKoreaTrackman", "targets"]
+    labels = {"hard": "The hard case: half the attach and half the ticket"}
     srows = "".join(
         f'<tr{" class=\"total\"" if k == "plan" else ""}><td>{esc(labels.get(k, sens[k]["case"]))}</td><td class="n hide-sm">{rm(sens[k]["revenue"])}</td>'
         f'<td class="n">{r0(sens[k]["value"])}</td><td class="n">{x(sens[k]["roundMultiple"])}</td>'
@@ -579,7 +496,6 @@ def numbers_section():
     tg_rows = [
         ("Golfzon rounds with a swing, 2032", f"{plan['golfzonAttachPct'][k32]}%", f"{targets['golfzonAttachPct'][k32]}%"),
         ("Average Golfzon swing, 2032", f"${plan['golfzonTicketUSD'][k32]:.2f}", f"${targets['golfzonTicketUSD'][k32]:.2f}"),
-        ("Signature bay, hours booked a day", f"{plan['bayHoursPerDay']['Signature']:.1f}", f"{targets['bayHoursPerDay']['Signature']:.1f}"),
         ("Central cost, 2032", rm(plan["centralZAR"][k32]), rm(targets["centralZAR"][k32])),
         ("Revenue, 2029", rm(plan["revenueZAR"][k29]), rm(targets["revenueZAR"][k29])),
         ("Revenue, 2032", rm(plan["revenueZAR"][k32]), rm(targets["revenueZAR"][k32])),
@@ -591,18 +507,18 @@ def numbers_section():
     </div>"""
     assumptions = f"""<ul>
       <li><strong>Golfzon:</strong> {gz['roundsPerYear'] / 1e6:.0f} million rounds a year held flat, about 94 million of them in Korea; rounds carrying a swing rise {" → ".join(f"{v}%" for v in plan['golfzonAttachPct'])} from 2027 to 2032, at {" → ".join(f"${v:.0f}" for v in plan['golfzonTicketUSD'][:5])} a swing. We keep {split['getLucky']}%; payments 3%, risk and support $0.05 a swing, launches 12% of our share.</li>
-      <li><strong>The bays:</strong> 15 bookable hours, 360 days. Signature booked {plan['bayUtilisationPct']['Signature']}% of hours at R{unit['Signature']['yieldZAR']}, Play {plan['bayUtilisationPct']['Play']}% at R{unit['Play']['yieldZAR']}; 55% of mature use in year one, 80% in year two.</li>
       <li><strong>The app, on course:</strong> {n(f['kpis']['onCourseSwings'][0])} paid swings in 2027 ({n(tr['paidSwings'])} in our first year) rising to {n(f['kpis']['onCourseSwings'][-1])} in 2032, at R{f['kpis']['onCourseAvgZAR'][0]} to R{f['kpis']['onCourseAvgZAR'][-1]} a swing.</li>
       <li><strong>Sponsorship grows with reach:</strong> Indwe's R3m is contracted for 2027 and we assume it renews; on top, about R5 for every paid swing beyond 2027's, on course and on Golfzon. {rm(rev['sponsorship'][0])} in 2027 to {rm(rev['sponsorship'][-1])} in 2032.</li>
       <li><strong>Get Lucky:</strong> central team {rm(plan['centralZAR'][0], 0)} in 2027 to {rm(plan['centralZAR'][-1], 0)} in 2032; brand 8% of product revenue plus a launch budget; tax at 27% after the 2027 loss.</li>
+      <li><strong>Cash:</strong> {rm(cash['openingZAR'], 0)} on 1 January 2027, with no interim raise; the round lands in Q1 2027. Without it, the first quarter would end at {rm(cash['q1WithoutRoundZAR'])}.</li>
     </ul>"""
     return f"""
 <section class="section white" id="numbers" aria-labelledby="num-h">
   <div class="wrap">
     <div class="head">
-      <span class="kicker">06 · The numbers</span>
+      <span class="kicker">05 · The numbers</span>
       <h2 class="display-lg" id="num-h">{rm(rev['total'][0])} to {rm(rev['total'][-1])}. <span class="green">Our revenue, forecast.</span></h2>
-      <p class="lede"><strong>This is Get Lucky's own revenue:</strong> our share of every swing on course and on Golfzon, sponsorship, and a {st['feePct']}% fee for running the gym bays. We've planned on about half of what we're aiming for, and it still works.</p>
+      <p class="lede"><strong>This is Get Lucky's own revenue:</strong> our share of every swing on course and on Golfzon, and sponsorship. No hardware, no debt. We've planned on about half of what we're aiming for, and it still works.</p>
     </div>
     <div class="chartcard reveal">
       <h3>Revenue by channel, and EBITDA margin</h3>
@@ -617,10 +533,10 @@ def numbers_section():
     </div>
     <div class="cases tab">
       <div class="case reveal"><span class="k">The plan</span><b>{x(rd['multiple2029'])}</b><span class="l">What {rm(rd['amountZAR'])} in the round is marked at, December 2029. Sold in {ex['year']}: {x(ex['multiple'])}, about {ex['aYearPct']}% a year.</span></div>
-      <div class="case hard reveal"><span class="k">The hard case</span><b>{x(rd['hardCaseMultiple2029'])}</b><span class="l">Half the Golfzon attach and ticket, no Virgin Active. Cash lasts to {cash['hardCaseCashLastsTo']} without cutting a cost. Sold in {ex['year']}: {x(ex['hardCaseMultiple'])}, about {ex['hardCaseAYearPct']}% a year.</span></div>
-      <div class="case up reveal"><span class="k">Our targets</span><b>{x(rd['targetsMultiple2029'])}</b><span class="l">Twice the Golfzon attach at a $10 swing, and busier bays. {x(rd['targetsMultiple2032'])} by 2032.</span></div>
+      <div class="case hard reveal"><span class="k">The hard case</span><b>{x(rd['hardCaseMultiple2029'])}</b><span class="l">Half the Golfzon attach and half the ticket. Cash lasts to {cash['hardCaseCashLastsTo']} if we cut nothing; we'd see it in 2027 and hold the hiring back. Sold in {ex['year']}: {x(ex['hardCaseMultiple'])}, about {ex['hardCaseAYearPct']}% a year.</span></div>
+      <div class="case up reveal"><span class="k">Our targets</span><b>{x(rd['targetsMultiple2029'])}</b><span class="l">Twice the Golfzon attach at a $10 swing. {x(rd['targetsMultiple2032'])} by 2032.</span></div>
     </div>
-    <p class="note" style="margin-top:12px">The round prices Get Lucky at {price_on(2028)} our 2028 revenue and {price_on(2029)} our 2029 revenue. We mark it at {val['platformMultiple']}× each year's revenue plus our share of the bay company. Unrealised marks on a private holding, not cash returns.</p>
+    <p class="note" style="margin-top:12px">The round prices Get Lucky at {price_on(2028)} our 2028 revenue and {price_on(2029)} our 2029 revenue. We mark it at {val['platformMultiple']}× each year's revenue. Unrealised marks on a private holding, not cash returns.</p>
     {more("The full P&amp;L", pl_block)}
     {more("How we value it", value_block)}
     {more("Every stress case", stress)}
@@ -631,15 +547,14 @@ def numbers_section():
 
 
 def risk_section():
+    late, ok, okt = sens["golfzonLate"], sens["outsideKorea"], sens["outsideKoreaTrackman"]
     qa = [
         ("globe", "Will Golfzon's bays carry this, and what if Korea says no?",
-         f"Phase one runs on features Golfzon's bays already have, and the integration is built. Most rounds are in Korea, where paid-entry prizes still need clearing; the plan assumes 2027. On the rest of the network alone the round marks at {x(sens['outsideKorea']['roundMultiple'])}. Without Korea and without Virgin Active it's {x(sens['koreaOutNoVirginActive']['roundMultiple'])}, and cash would run to {sens['koreaOutNoVirginActive']['cashLastsTo']}; we'd know about Korea during 2027 and cut costs well before then. Trackman is the hedge: add its bays from 2028, without Korea, and the round marks at {x(sens['outsideKoreaTrackman']['roundMultiple'])}, or {x(sens['outsideKoreaTrackman']['roundMultiple2032'])} by 2032."),
+         f"Phase one runs on features Golfzon's bays already have, and the integration demo is built. Most rounds are in Korea, where paid-entry prizes still need clearing; the plan assumes 2027. On the rest of the network alone the round marks at {x(ok['roundMultiple'])} and cash would run to {ok['cashLastsTo']}; we'd know about Korea during 2027 and cut costs well before then. Trackman is the hedge: add its bays from 2028, without Korea, and the round marks at {x(okt['roundMultiple'])}, or {x(okt['roundMultiple2032'])} by 2032."),
+        ("clock", "What if Golfzon's roll-out runs late?",
+         f"A year late, the round marks at {x(late['roundMultiple'])} in 2029 and {x(late['roundMultiple2032'])} by 2032, and cash lasts to {late['cashLastsTo']} if we cut nothing. Phase one needs no new Golfzon software, which is why it comes first, and a slow start would show in 2027's numbers, in time to hold the hiring back."),
         ("shield", "Will an insurer cover a simulator ace?",
          f"Santam has agreed in principle. After commission the cover breaks even at one ace in {n(prod['simInsurerBreakEvenOneIn'])}; Golfzon measures about one in {n(prod['simAceMeasuredOneIn'])}. That's why we play the hardest setting, rotate the hole weekly and cap entries. If the premium lands at 30%, not 24%, it comes out of our share and the round marks at {x(terms['simPremium30']['roundMultiple'])}. Indwe both sponsors us and places the cover, so a second carrier joins the panel before the simulator tiers scale."),
-        ("bank", "Who pays for the bays?",
-         f"The bay company, never Get Lucky. RMB is modelled at {st['debtPct']}% but hasn't committed. Bay investors put up {rm(inv['calledZAR'])} over three years, {rm(bc['investorCallsZAR'][0])} of it in 2027. Golfzon wants paying before shipment, so Planet Fitness's {esc(pt['planetFitness']['firstInstalls'])} date depends on both. This is our tightest point."),
-        ("gym", "What if the bays sit empty, or Virgin Active says no?",
-         f"At 70% of planned use the bays cover their debt {dc['quiet70']['2029']:.2f}× in 2029 and {dc['quiet70']['2031']:.2f}× at maturity. The bay investors carry the gap ({rm(q70['bayInvestorsCalledZAR'])} instead of {rm(inv['calledZAR'])}) and the round still marks at {x(q70['roundMultiple'])}. Without Virgin Active, {x(sens['noVirginActive']['roundMultiple'])}."),
         ("scale", "Isn't this gambling?",
          "No. It's a skill competition with an insured prize: there's no pot, and no golfer's entry funds another golfer's win. We have a written legal opinion for South Africa and clear each market before we sell there."),
     ]
@@ -649,7 +564,7 @@ def risk_section():
   <div class="glow" style="right:-260px;top:-200px" aria-hidden="true"></div>
   <div class="wrap" style="position:relative">
     <div class="head">
-      <span class="kicker">07 · The risks</span>
+      <span class="kicker">06 · The risks</span>
       <h2 class="display-lg" id="risk-h">What could go wrong, <span class="lime">and what we do about it.</span></h2>
     </div>
     <div class="qa-list">{items}</div>
@@ -657,13 +572,12 @@ def risk_section():
 </section>"""
 
 
-USE_COLOURS = {"golfzon": "var(--lime)", "launch": "var(--green-light)", "fancourt": "var(--green-light)",
-               "baycompany": "#8fbf7a", "reserve": "var(--green)"}
-USE_DARK_TEXT = {"golfzon", "baycompany"}
+USE_COLOURS = {"golfzon": "var(--lime)", "launch": "var(--green-light)", "reserve": "var(--green)"}
+USE_DARK_TEXT = {"golfzon"}
 
 
 def use_of_funds_block(items):
-    """The bar and the list under "What the R… pays for", for the note and the round."""
+    """The bar and the list under "What the R… pays for"."""
     amount = lambda v: f"R{v / 1e3:.0f}k" if v < 1e6 else rm(v)
     bar = "".join(
         f'<div style="flex:{u["pct"]};background:{USE_COLOURS[u["key"]]};color:{"var(--green)" if u["key"] in USE_DARK_TEXT else "var(--cream)"}" title="{esc(u["label"])}, {u["pct"]}%">'
@@ -677,18 +591,16 @@ def use_of_funds_block(items):
 
 
 def deal_section():
-    order = uof
     calc_attrs = (f'data-post="{rd["postMoneyZAR"]}" data-round="{rd["amountZAR"]}" data-min="{rd["minimumTicketZAR"]}" '
-                  f'data-note="{nt["amountZAR"]}" data-note-equiv="{nt["equivalentAtRoundZAR"]}" data-v29="{rd["value2029ZAR"]}" '
-                  f'data-v32="{rd["value2032ZAR"]}" data-vhard="{rd["hardCaseValue2029ZAR"]}" data-fx="{FX}"')
+                  f'data-v29="{rd["value2029ZAR"]}" data-v32="{rd["value2032ZAR"]}" data-vhard="{rd["hardCaseValue2029ZAR"]}" data-fx="{FX}"')
     stake = rd["minimumTicketZAR"] / rd["postMoneyZAR"]
     rights = """<ul class="ticks">
-      <li><div><b>Ordinary shares</b><span>The same instrument as the founders. The note converts into them.</span></div></li>
+      <li><div><b>Ordinary shares</b><span>The same instrument as the founders.</span></div></li>
       <li><div><b>Pre-emption and tag-along</b><span>Your stake is yours to defend, and you exit when we do, at the same price.</span></div></li>
-      <li><div><b>Quarterly reporting</b><span>Accounts for Get Lucky and the bay company, bays, swings, claims and the Golfzon roll-out.</span></div></li>
+      <li><div><b>Quarterly reporting</b><span>Management accounts and the numbers that matter: swings, claims and the Golfzon roll-out.</span></div></li>
       <li><div><b>A board seat for the lead</b><span>No liquidation preference and no ratchet, offered or asked for.</span></div></li>
     </ul>"""
-    exits = f"""<p>A simulator network that wants the prize layer on its own bays. An insurer buying distribution on risk it already carries. A leisure or gym group buying the operator of {bc['totalBays']} bays and its half of their profit. Or none of them: a cash-generative company that pays dividends.</p>
+    exits = f"""<p>A simulator network that wants the prize layer on its own bays. An insurer buying distribution on risk it already carries. A golf or leisure group that wants one prize app for every place its players swing. Or none of them: a cash-generative company that pays dividends.</p>
     <p><strong>What a sale would mean for you.</strong> On our yardstick Get Lucky is worth {r0(ex['valueZAR'])} in {ex['year']}, about {ex['ebitdaMultiple']:.0f}× that year's EBITDA. Sold then, R1m in the round becomes {rm(ex['multiple'] * 1e6)}: {x(ex['multiple'])}, about {ex['aYearPct']}% a year from the end of Q1 2027.</p>
     <p><strong>On top of that, the cash.</strong> Our marks leave out the cash the plan builds: {rm(ex['cashZAR'])} by {ex['year']}. A buyer pays for it, or it reaches you as dividends along the way, before dividend tax. Counted in, it's {x(ex['withCashMultiple'])}, about {ex['withCashAYearPct']}% a year. Illustrative, not a promise.</p>"""
     return f"""
@@ -696,27 +608,13 @@ def deal_section():
   <div class="glow" style="left:-300px;bottom:-300px" aria-hidden="true"></div>
   <div class="wrap" style="position:relative">
     <div class="head">
-      <span class="kicker">08 · The raise</span>
-      <h2 class="display-lg" id="deal-h" style="color:var(--cream)">Two steps. <span class="lime">{r0(nt['amountZAR'])} now, {r0(rd['amountZAR'])} in {esc(rd['timing'])}.</span></h2>
-      <p class="lede">Both into Get Lucky. The note gets us through December: the sit-down with Golfzon and Ernie at Fancourt, the first build on a real bay, and the bay company set up. The round funds the Golfzon build and the launch with Ernie; our revenue already pays the team.</p>
+      <span class="kicker">07 · The raise</span>
+      <h2 class="display-lg" id="deal-h" style="color:var(--cream)">One round. <span class="lime">{r0(rd['amountZAR'])} in {esc(rd['timing'])}.</span></h2>
+      <p class="lede">Into Get Lucky, asset-light: no hardware, no debt, no interim raise. The round funds the Golfzon build and the launch with Ernie; our revenue already pays the team and the day-to-day.</p>
     </div>
     <div class="terms">
       <div class="termcard reveal">
-        <span class="k">Step one · now</span>
-        <h3>Convertible note</h3>
-        <dl class="tab">
-          <dt>Amount</dt><dd>{rm(nt['amountZAR'])}<small>≈ {usd(nt['amountZAR'])}</small></dd>
-          <dt>Converts at</dt><dd>A {r0(nt['capPreMoneyZAR'])} pre-money cap, or a {nt['discountPct']}% discount to the round, whichever is better</dd>
-          <dt>Closes</dt><dd>{esc(nt['closes'])}, into the {esc(rd['timing'])} round</dd>
-          <dt>At the round's price</dt><dd>R1m converts as R{nt['equivalentAtRoundZAR'] / 1e6:.2f}m<small>{nt['stakePct']}% of the company</small></dd>
-          <dt>Marked at December 2029</dt><dd>{x(nt['multiple2029'])}<small>{x(nt['hardCaseMultiple2029'])} in the hard case</small></dd>
-        </dl>
-        <p class="uses"><strong>What the {rm(nt['amountZAR'])} pays for</strong></p>
-        {use_of_funds_block(nt['useOfFunds'])}
-        <p class="uses">At {r0(rd['preMoneyZAR'])} pre the cap is the better price, so the note converts as if we were worth {r0(nt['conversionPreMoneyZAR'])}. It converts inside the pre-money, so the round still buys its full {EQ}. Term sheet on request.</p>
-      </div>
-      <div class="termcard reveal">
-        <span class="k">Step two · {esc(rd['timing'])}</span>
+        <span class="k">{esc(rd['timing'])}</span>
         <h3>The round</h3>
         <dl class="tab">
           <dt>Raising</dt><dd>{rm(rd['amountZAR'])} for {EQ}<small>≈ {usd(rd['amountZAR'])}</small></dd>
@@ -726,35 +624,33 @@ def deal_section():
           <dt>Marked at December 2029</dt><dd>{x(rd['multiple2029'])}<small>{x(rd['hardCaseMultiple2029'])} in the hard case</small></dd>
           <dt>A sale in {ex['year']}</dt><dd>{x(ex['multiple'])}, about {ex['aYearPct']}% a year<small>{x(ex['hardCaseMultiple'])}, about {ex['hardCaseAYearPct']}% a year, in the hard case</small></dd>
         </dl>
-        <p class="uses"><strong>What the {rm(rd['amountZAR'])} pays for</strong></p>
-        {use_of_funds_block(order)}
-        <p class="uses">Our revenue already pays for the team and the day-to-day: {rm(uof_running)} in 2027, against {rm(uof_revenue)} of revenue. So the round goes into what's new. At our lowest point, {cash['lowestQuarter']}, we still hold {rm(cash['lowestQuarterZAR'])}: enough to ride out any one thing going wrong without cutting a cost. None of it goes into the bays.</p>
+        <p class="uses">Ordinary shares. Ernie's {amb['equityPct']}% sits inside the pre-money, so the round buys its full {EQ}. Term sheet on request.</p>
+      </div>
+      <div class="termcard reveal">
+        <span class="k">Use of funds</span>
+        <h3>What it pays for</h3>
+        <div style="display:grid;gap:12px;align-self:start">{use_of_funds_block(uof)}
+          <p class="uses" style="margin-top:6px">Our revenue already pays for the team and the day-to-day: {rm(uof_running)} in 2027, against {rm(uof_revenue)} of revenue. So the round goes into what's new. At our lowest point, {cash['lowestQuarter']}, we still hold {rm(cash['lowestQuarterZAR'])}. None of it buys hardware.</p></div>
       </div>
     </div>
 
     <ol class="timeline">
-      <li class="key"><time>Nov 2026</time><b>The note closes</b><span>{rm(nt['amountZAR'])} at a {r0(nt['capPreMoneyZAR'])} cap.</span></li>
-      <li class="key"><time>Dec 2026</time><b>Fancourt</b><span>Sit-down with Golfzon and Ernie's team.</span></li>
-      <li class="key"><time>{esc(rd['timing'])}</time><b>The round · Sandton</b><span>{rm(rd['amountZAR'])} closes. First Planet Fitness bays.</span></li>
+      <li class="key"><time>Dec 2026</time><b>Fancourt</b><span>Golfzon and Ernie's team, at one table.</span></li>
+      <li class="key"><time>{esc(rd['timing'])}</time><b>The round</b><span>{rm(rd['amountZAR'])} closes.</span></li>
       <li><time>Q2 2027</time><b>Golfzon phase one</b><span>Live on Golfzon bays.</span></li>
-      <li><time>Mid-2027</time><b>Virgin Active</b><span>Twenty clubs, on signature.</span></li>
-      <li><time>2028</time><b>All {f['kpis']['baysLive'][k28]} gym bays live</b><span>Golfzon in its app and in-game.</span></li>
+      <li><time>2028</time><b>Golfzon phase two</b><span>In Golfzon's app and in-game.</span></li>
       <li><time>2029</time><b>Golfzon phase three</b><span>Built into Golfzon's game.</span></li>
     </ol>
 
     <div class="split" style="margin-top:48px;align-items:start">
       <div class="calc reveal" id="calculator" {calc_attrs}>
         <h3>What your ticket becomes</h3>
-        <div class="toggle" role="group" aria-label="Instrument">
-          <button type="button" data-mode="round" aria-pressed="true">The round</button>
-          <button type="button" data-mode="note" aria-pressed="false">The note</button>
-        </div>
         <div class="amount tab"><span id="calc-amt">{rand(rd['minimumTicketZAR'])}</span><span class="usd" id="calc-usd">≈ ${rd['minimumTicketZAR'] / FX:,.0f}</span></div>
         <label class="sr-only" for="calc-range">Ticket in rand</label>
         <input type="range" id="calc-range" min="{rd['minimumTicketZAR']}" max="{rd['amountZAR']}" step="250000" value="{rd['minimumTicketZAR']}">
         <table class="tab" aria-live="polite">
           <caption class="sr-only">What the ticket is marked at</caption>
-          <tr><th scope="row" id="calc-stake-l">Your stake at {r0(rd['postMoneyZAR'])} post</th><td id="calc-stake">{stake * 100:.2f}%</td></tr>
+          <tr><th scope="row">Your stake at {r0(rd['postMoneyZAR'])} post</th><td id="calc-stake">{stake * 100:.2f}%</td></tr>
           <tr><th scope="row">December 2029 ({r0(rd['value2029ZAR'])})</th><td id="calc-2029">R{stake * rd['value2029ZAR'] / 1e6:.2f}m · {x(stake * rd['value2029ZAR'] / rd['minimumTicketZAR'])}</td></tr>
           <tr><th scope="row">The hard case, December 2029 ({r0(rd['hardCaseValue2029ZAR'])})</th><td id="calc-hard">R{stake * rd['hardCaseValue2029ZAR'] / 1e6:.2f}m · {x(stake * rd['hardCaseValue2029ZAR'] / rd['minimumTicketZAR'])}</td></tr>
           <tr><th scope="row">A sale in {ex['year']} ({r0(rd['value2032ZAR'])})</th><td id="calc-2032">R{stake * rd['value2032ZAR'] / 1e6:.2f}m · {x(stake * rd['value2032ZAR'] / rd['minimumTicketZAR'])}</td></tr>
@@ -774,15 +670,11 @@ def deal_section():
 def faq_section():
     qa = [
         ("What exactly am I buying?",
-         f"Now: a convertible note in Get Lucky Golf Club (Pty) Ltd, {rm(nt['amountZAR'])} in total, converting into the {esc(rd['timing'])} round at a {r0(nt['capPreMoneyZAR'])} cap or a {nt['discountPct']}% discount, whichever is better for you. Then: ordinary shares, {rm(rd['amountZAR'])} for {EQ} at {r0(rd['preMoneyZAR'])} pre-money, from {rm(rd['minimumTicketZAR'])}. Both are in Get Lucky, not the bay company."),
-        ("Why two companies?",
-         f"A bay is an asset that debt can finance; the platform is a growth business that equity should. Split them and your money builds Golfzon and the team, Get Lucky carries no bay debt, and the bays are funded by investors who want an asset-backed investment that pays out. We still earn {st['feePct']}% of everything the bays take, and half their profit once the bay investors are paid back."),
-        ("Can I invest in the bay company too?",
-         f"Yes, separately. Bay investors put up {rm(inv['calledZAR'])} between 2027 and 2029 and take their capital and {st['prefPct']}% a year first; then the profit splits {st['getLuckySplitPct']}/{100 - st['getLuckySplitPct']} with us. Those terms are our proposal. Ask us for the bay company pack."),
-        ("What if the bay company is sold?",
-         f"The sale repays RMB first, then anything still owed to the bay investors, and the rest splits {st['getLuckySplitPct']}/{100 - st['getLuckySplitPct']}. On the plan, a sale at the end of {bsale['year']} at {bsale['ebitdaMultiple']:.0f}× EBITDA leaves {r0(bsale['equityZAR'])} after RMB's last {rm(bsale['debtZAR'])}: {r0(bsale['toGetLuckyZAR'])} in cash to Get Lucky. Paid out, that's about {rm(bsale['perRoundMillionZAR'])} on R1m in the round, before tax, and you keep your Get Lucky shares. Our {st['feePct']}% fee carries on only if the buyer keeps us running the bays, so we'll ask for the management agreement to survive a sale."),
+         f"Ordinary shares in Get Lucky Golf Club (Pty) Ltd: {rm(rd['amountZAR'])} for {EQ} at {r0(rd['preMoneyZAR'])} pre-money, from {rm(rd['minimumTicketZAR'])}, in {esc(rd['timing'])}. One round, no interim raise, no preference and no ratchet."),
+        ("Why not the gym bays?",
+         "Bays are hardware: they need capex and debt, and they take years to pay back. This round builds the platform, and the swing costs nothing to add to another simulator. Planet Fitness and Virgin Active are still taking golf bays through their boards; if we go ahead, the bays get their own company and their own investors, and you'd hear about it first."),
         ("What does Ernie get?",
-         f"{amb['equityPct']}% non-diluting equity as Founding Ambassador, with normal shareholder rights: his {amb['equityPct']}% shares in any profit we pay out and in any sale, like every other share. No fee, no capital, no guarantees, no liability. His {amb['equityPct']}% sits inside the {r0(rd['preMoneyZAR'])} pre-money, top-up included, so the note and the round still buy their full stakes. The full terms are available under NDA."),
+         f"{amb['equityPct']}% non-diluting equity as Founding Ambassador, with normal shareholder rights: his {amb['equityPct']}% shares in any profit we pay out and in any sale, like every other share. No fee, no capital, no guarantees, no liability. His {amb['equityPct']}% sits inside the {r0(rd['preMoneyZAR'])} pre-money, top-up included, so the round still buys its full stake. The full terms are available under NDA."),
         ("What if someone wins R1m, or $100,000?",
          "The insurer pays, and it's the best marketing day of our year. 24% of every entry goes to the insurer as premium, on the same swing that creates the risk."),
     ]
@@ -803,10 +695,10 @@ def cta_section():
     <div class="cta">
       <span class="kicker" style="color:var(--green)">Next step</span>
       <h2 class="display-lg" id="cta-h">Let's talk.</h2>
-      <p><strong>The note closes in {esc(nt['closes'])}.</strong> I'll take you through the model, the Golfzon demo and the Planet Fitness roll-out, and answer anything this page doesn't.</p>
+      <p><strong>The round opens in {esc(rd['timing'])}.</strong> I'll take you through the model, the Golfzon demo and the app, and answer anything this page doesn't.</p>
       <div class="btns">
         <a class="btn btn-ink" href="mailto:{EMAIL}?subject=Get%20Lucky%20Golf%20%E2%80%94%20investor%20call">Book a call</a>
-        <a class="btn btn-outline" href="{app['url']}" target="_blank" rel="noopener" style="border-color:rgba(52,82,49,.4);color:var(--green)">Try the app</a>
+        <a class="btn btn-outline" href="{app['url']}" target="_blank" rel="noopener" style="border-color:rgba(52,82,49,.4);color:var(--green)">Preview the app</a>
       </div>
       <div class="contact"><a href="mailto:{EMAIL}">{EMAIL}</a><a href="tel:{PHONE_TEL}">{PHONE}</a></div>
     </div>
@@ -820,17 +712,17 @@ def footer():
   <div class="wrap">
     <img src="assets/logos/logo-dark-bg.webp" alt="Get Lucky Golf Club" width="64" height="48">
     <p>Get Lucky Golf Club (Pty) Ltd · Registration 2025/047585/07 · 6 Crescent Road, Wynberg, Cape Town · <a href="mailto:{EMAIL}">{EMAIL}</a> · {PHONE}</p>
-    <p>This page is an invitation to discuss a private investment and is not an offer to the public in terms of the Companies Act, 2008. Every forward-looking figure, including forecasts, valuations and the marks shown for an investment, is illustrative, based on stated assumptions and partner proposals, and is not a guarantee of return. Investment in an early-stage business carries risk, including the loss of capital. Golfzon, Planet Fitness, Virgin Active, Santam, Indwe and RMB are the marks of their owners. Images marked "concept" are renders. Independent advice is recommended.</p>
+    <p>This page is an invitation to discuss a private investment and is not an offer to the public in terms of the Companies Act, 2008. Every forward-looking figure, including forecasts, valuations and the marks shown for an investment, is illustrative, based on stated assumptions and partner proposals, and is not a guarantee of return. Investment in an early-stage business carries risk, including the loss of capital. Golfzon, Planet Fitness, Virgin Active, Santam and Indwe are the marks of their owners. Independent advice is recommended.</p>
     <p>Sources: Golfzon, "Get Lucky with GOLFZON" partnership proposal, {esc(gz['proposalDate'])} · National Golf Foundation, The Golf Simulator Opportunity, 2025. Forecast as at {esc(m['asOf'])}.</p>
   </div>
 </footer>
-<div class="dealbar" aria-label="The raise"><span><strong>{rm(nt['amountZAR'])} note now</strong> · {rm(rd['amountZAR'])} in Q1</span><a class="btn btn-lime" href="#deal">The terms</a></div>"""
+<div class="dealbar" aria-label="The raise"><span><strong>{rm(rd['amountZAR'])} round</strong> · {esc(rd['timing'])}</span><a class="btn btn-lime" href="#deal">The terms</a></div>"""
 
 
 def page():
-    desc = (f"Get Lucky Golf sells one insured swing at a hole-in-one, in three places: on course with our app, live in South Africa; "
-            f"on Golfzon's {n(gz['locations'])} simulator locations worldwide; and in our own gym bays in Planet Fitness "
-            f"and Virgin Active clubs. Ernie Els is Founding Ambassador. A {rm(nt['amountZAR'])} convertible note now, {rm(rd['amountZAR'])} in {rd['timing']}.")
+    desc = (f"Get Lucky is the hole-in-one app: one insured swing at a hole-in-one, wherever you play. On course in South Africa, "
+            f"on Golfzon's {n(gz['locations'])} simulator locations worldwide, and next on the driving range. Ernie Els is "
+            f"Founding Ambassador. One round: {rm(rd['amountZAR'])} in {rd['timing']}.")
     body = "".join([nav(), hero(), '<main id="main">', raiseband(), concept(), app_section(), golfzon_section(), gyms_section(),
                     ernie_section(), team_section(), numbers_section(), risk_section(), deal_section(), faq_section(),
                     cta_section(), "</main>", footer()])
@@ -882,11 +774,17 @@ BANNED = [
     (r"(?i)\bregistry\b|\bgames\b|game of chance|icons cup|back an icon|\bbet(s|ting)?\b|bet on yourself|\bjackpot\b|golf gods",
      "retired features and language: games, the registry, betting"),
     (r"(?i)whatsapp|\bunlimited\b|\bpivot\b|old plan|previous plan", "retired framings"),
-    (r"(?i)signed with (golfzon|virgin active|planet fitness)|(virgin active|planet fitness) (has )?signed|planet fitness \(signed\)|exclusive with golfzon|signed for \d+ bays",
+    (r"(?i)signed with (virgin active|planet fitness)|(virgin active|planet fitness) (has )?signed|planet fitness \(signed\)|exclusive with golfzon|signed for \d+ bays",
      "a signature that does not exist"),
+    (r"(?i)convertible note|\bthe note\b|note now|R36m cap|interim raise is", "the withdrawn convertible note (4 Nov 2026)"),
+    (r"(?i)bay company|\b136 (gym )?bays|\b136 bays|RMB (lends|asset|is modelled)|RMB's|payback|preferred return|R119|bay investors|our fee|half the bays|own the local",
+     "the gym numbers: the gyms are an option, not the plan (4 Nov 2026)"),
+    (r"(?i)live today|live in south africa|the app, live|integration (is )?built\b", "the app is built, not launched; the Golfzon integration is a demo"),
     (r"272 bays|172 clubs|\b272\b|200 in talks|Practice bay", "the superseded 272-bay gym plan"),
     (r"4,167", "the simulator break-even before commission"),
 ]
+if not GZ_SIGNED:   # until the deck goes out as the post-signing version, nothing may say Golfzon signed
+    BANNED.append((r"(?i)signed with golfzon|golfzon (has )?signed|now our partner|golfzon partner", "a Golfzon signature"))
 
 
 def main():
@@ -894,13 +792,16 @@ def main():
     text = re.sub(r"<[^>]+>", " ", out)
     fails = [f"{why}: {mo.group(0)!r}" for pat, why in BANNED for mo in re.finditer(pat, text)]
     must = [rm(rev["total"][0]), rm(rev["total"][-1]), x(rd["multiple2029"]), x(rd["hardCaseMultiple2029"]),
-            r0(rd["preMoneyZAR"]), r0(nt["capPreMoneyZAR"]), n(gz["locations"])]
+            r0(rd["preMoneyZAR"]), n(gz["locations"])]
     fails += [f"missing {s!r}" for s in must if s not in out]
     if fails:
         print("build refused:\n  " + "\n  ".join(fails))
         sys.exit(1)
     (ROOT / "index.html").write_text(out)
     print(f"wrote index.html ({len(out) // 1024} KB)")
+    if GZ_SIGNED:
+        print("REMINDER: the page shows Golfzon as signed. Send it only once the agreement is signed "
+              "(GOLFZON_SIGNED in scripts/model.py).")
 
 
 main()
