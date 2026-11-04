@@ -6,12 +6,11 @@ post). One round, no interim raise.
 The story: Get Lucky is the hole-in-one app — on course in South Africa, on
 Golfzon's 15,029 simulator locations worldwide, and next on the driving range —
 presented by Ernie Els, Founding Ambassador. Asset-light: no hardware, no debt.
-Golf bays in Planet Fitness and Virgin Active are an option we hold, not in the
-plan or the numbers.
 
 ```
 python3 scripts/model.py          # forecast -> data/model.json (--dry to print only)
 python3 scripts/build_site.py     # data -> index.html (refuses banned content)
+python3 scripts/build_xlsx.py     # data -> data/get-lucky-model.xlsx, the model to review
 python3 -m http.server 8000       # preview locally (the gate only runs on Vercel)
 ```
 

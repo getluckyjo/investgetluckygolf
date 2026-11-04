@@ -10,12 +10,6 @@ asset-light company - no hardware, no debt:
     2. On course - the app on South Africa's Top 100 courses and the golf days.
     3. Sponsorship.
 
-The gym bays (Planet Fitness, Virgin Active) are out of the plan since 4 Nov
-2026: capex-heavy, slow payback, and not what this round should fund (Willie
-Ross, agreed by the founders). They are an option we hold. The bay engine below
-stays so the option can be costed, but it runs only as an internal case
-(WITH_GYMS) that prints in the build log and never reaches the page.
-
 Every driver lives in a case (PLAN, TARGETS) and run(case) builds the company
 from it, so the plan, the founder's targets and every sensitivity go through
 the same code. Annual, 2027-2032, ZAR ex VAT at the investor FX.
@@ -37,7 +31,7 @@ YEARS = list(range(2027, 2033))
 # One round, no interim raise: the R1m convertible note is withdrawn (4 Nov 2026). Cash
 # carries the business to year end; the Fancourt sit-down is costed on its own (about R100k).
 ROUND_ZAR = 9_000_000         # Q1 2027: the plan uses about R6.3m at its lowest; the rest carries any one risk
-ROUND_PRE_ZAR = 56_000_000    # the founder's price, kept after the gyms came out: R56m pre, R65m post, ~14%
+ROUND_PRE_ZAR = 56_000_000    # the founder's price: R56m pre, R65m post, about 14% for R9m
 OPENING_CASH_2027 = 0         # cash on 1 Jan 2027: conservative, with no note to carry it
 # Golfzon: the deck is built as the post-signing version - the agreement is signed before we
 # raise (the founder, 4 Nov 2026). Off, every status line reads "in talks". The page must not
@@ -106,73 +100,9 @@ AMBASSADOR_EQUITY_PCT = 5
 CASH_WEIGHTS = {2027: [0.10, 0.20, 0.30, 0.40], 2028: [0.19, 0.23, 0.27, 0.31]}
 
 # ============================================================================
-# THE GYM OPTION - not in the plan. The bay company that would own Golfzon TwoVision NX bays in
-# Planet Fitness and Virgin Active, at Golfzon's October 2026 chain quote. Runs only as WITH_GYMS.
-# ============================================================================
-BAY_TYPES = {  # USD hardware: tier 2 = bays 1-40, tier 1 = bay 41 on. Confidential to Golfzon.
-    "Signature": dict(t2=43_000, t1=40_000, yld=520, model="TwoVision NX, motion plate"),
-    "Play":      dict(t2=35_000, t1=32_000, yld=360, model="TwoVision NX, dual plate"),
-    "Practice":  dict(t2=30_000, t1=25_000, yld=240, model="TwoVision NX"),
-}
-TIER2_BAYS = 40
-LANDED = 1.30                 # freight, duty, booth, screen, install on top of hardware
-HOURS_OPEN = 15               # bookable hours a day
-HOURS_PER_BAY = HOURS_OPEN * 360
-SOFTWARE_USD_PM = 99          # Golfzon commercial licence, per bay
-MAINTENANCE = 0.03            # of hardware a year: spares and service after the 1-year warranty
-CARD = 0.025
-BAY_MARKETING = 0.05
-ASSET_INS = 0.01              # of capex
-CONSUMABLES = 24_000          # per bay a year
-LEAGUES_PER_BAY = 40_000      # leagues, events, corporate, at maturity
-SPONSOR_PER_BAY = 25_000      # naming partner per bay a year
-CHALLENGE_PER_HOUR = 50 * 0.625 * (1 - PREMIUM)   # the insured shot inside the bay, net of premium
-ADDON_ZAR_PM = 299            # golf add-on on the member's bill
-ADDON_ADOPTION = 0.015        # of members at clubs with bays, at maturity
-GYM_SHARE = 0.20              # the gym's concession share
-RAMP = {0: 0.55, 1: 0.80}     # of mature use, by bay age in years
-DEBT_PCT = 0.90               # RMB asset finance
-RATE = 0.105 + 0.015          # prime + 1.5%
-IO_M, TERM_M = 12, 60
-DEPR_YEARS = 7
-# The bay company's terms, as proposed before the gyms came out of the plan:
-BAY_FEE = 0.06                # Get Lucky's management fee, of bay company revenue
-BAY_PREF = 0.15               # investors' preferred return a year, compounding, on capital not yet returned
-BAY_SPLIT_GL = 0.50           # Get Lucky's share of what is distributed after capital and the preferred return
-BAY_RESERVE = 3_000_000       # cash the bay company always holds; funded by the investors at the start
-BAY_DIST_DSCR = 1.25          # RMB's lock-up: no distribution in a year bay EBITDA covers debt service less than this
-
-# The best half of each chain's clubs only: 136 bays in 68 clubs, not 272 in 172. We do not
-# overinvest in simulators (the founder, 26 Oct 2026); the smaller clubs are left out.
-CHAINS = {
-    "planetFitness": dict(
-        name="Planet Fitness", status="In, subject to space", members_per_club=3_500,
-        # the bays' own staff, at the cost per bay of the 272-bay plan: 2027 is the same flagship bays
-        people={2027: 2.0e6, 2028: 1.9e6, 2029: 2.2e6}, people_after=2.4e6,
-        central={2027: 1.2e6, 2028: 1.6e6}, central_after=2.0e6,
-        phases=[
-            dict(name="Phase 1", year=2027, live=0.75, units={"Signature": 20}, clubs=10,
-                 note="Q1 2027: two Signature bays in ten Signature and Megaclubs, Sandton first"),
-            dict(name="Phase 2", year=2028, live=0.50, units={"Play": 16}, clubs=8,
-                 note="Two Play bays in eight of the best metro clubs"),
-        ]),
-    "virginActive": dict(
-        name="Virgin Active", status="With the board", members_per_club=623_000 / 136,
-        people={2027: 4.0e6, 2028: 5.5e6, 2029: 5.5e6}, people_after=6.0e6,
-        central={2027: 2.0e6, 2028: 3.0e6}, central_after=4.0e6,
-        phases=[
-            dict(name="Phase 1", year=2027, live=0.50, units={"Signature": 40}, clubs=20,
-                 note="Mid-2027: two Signature bays in twenty flagship clubs"),
-            dict(name="Phase 2", year=2028, live=0.25, units={"Play": 60}, clubs=30,
-                 note="Two Play bays in thirty of the best metro clubs, ordered a quarter after Planet Fitness's phase two"),
-        ]),
-}
-
-# ============================================================================
 # VALUATION
 # ============================================================================
 PLATFORM_MULTIPLE = 3.0      # x Get Lucky's revenue, flat - the multiple the plan has always used
-BAYS_EBITDA_MULTIPLE = 5.0   # x bay company EBITDA, less its net debt
 
 # ============================================================================
 # THE CASES - every driver that differs between the plan and the targets
@@ -187,35 +117,20 @@ PLAN = dict(
     # market by market, so the average starts low.
     gz_ticket={2027: 4.0, 2028: 5.0, 2029: 6.0, 2030: 7.0, 2031: 8.0, 2032: 8.0},
     gz_rounds=GZ_ROUNDS,
-    # Share of the bookable 15 hours a day a mature bay is booked (the gym option only)
-    util={"Signature": 0.30, "Play": 0.25, "Practice": 0.22},
-    # Get Lucky's team, technology and launch. With the gyms out, the team that would have run
-    # the bays goes too: the same step down again as the 272-to-136-bay cut (R0.5m-R7m a year
-    # from 2028), so R16m in 2029 and R31m in 2032 (the founder, 4 Nov 2026).
+    # Get Lucky's team, technology and launch (the founder, 4 Nov 2026).
     central={2027: 9_000_000, 2028: 13_000_000, 2029: 16_000_000,
              2030: 20_000_000, 2031: 26_000_000, 2032: 31_000_000},
     brand_fixed={2027: 3_000_000, 2028: 2_000_000},   # the global launch with Ernie, then the base
-    chains=(),              # no gym bays in the plan: the gyms are an option, not a forecast
-    bay_use=1.0,            # x planned bay use (the gym option only)
-    split=BAY_SPLIT_GL,     # Get Lucky's share of the bay company after the hurdle (the gym option only)
     sim_premium=SIM_SPLIT["insurer"],   # premium on a simulator swing; above 24% comes out of our 46%
 )
 TARGETS = dict(  # the founder's targets: the upside, shown beside the plan, never in place of it
     PLAN, key="targets", label="Our targets",
     gz_attach={2027: 0.001, 2028: 0.004, 2029: 0.009, 2030: 0.018, 2031: 0.028, 2032: 0.040},
     gz_ticket={2027: 5.0, 2028: 7.5, 2029: 9.0, 2030: 10.0, 2031: 10.0, 2032: 10.0},
-    util={"Signature": 0.40, "Play": 0.33, "Practice": 0.30},
-    # the same bay-team cut as the plan, in rand
     central={2027: 10_000_000, 2028: 17_500_000, 2029: 27_000_000,
              2030: 40_000_000, 2031: 54_000_000, 2032: 68_000_000},
     brand_fixed={2027: 4_000_000, 2028: 3_000_000},
 )
-# Internal only: the plan as it stood on 3 Nov 2026, with the 136 gym bays and the team to run
-# them. Printed by the build so the option can be costed; never written for the page.
-WITH_GYMS = dict(PLAN, key="withGyms", label="Internal: the plan with the 136 gym bays",
-                 chains=("planetFitness", "virginActive"),
-                 central={2027: 9_000_000, 2028: 13_500_000, 2029: 19_000_000,
-                          2030: 25_000_000, 2031: 32_000_000, 2032: 38_000_000})
 
 
 def scaled(case, key, label, attach=1.0, ticket=1.0, rounds=GZ_ROUNDS, **over):
@@ -242,200 +157,8 @@ TERM_CASES = [
 ]
 
 # ----------------------------------------------------------------------------
-def annuity(p, r_m, n):
-    return p * r_m / (1 - (1 + r_m) ** -n)
-
-
-def debt_schedule(principal, start_year):
-    r = RATE / 12
-    pmt = annuity(principal, r, TERM_M)
-    bal, month = principal, 0
-    out = {y: dict(interest=0.0, principal=0.0, closing=0.0) for y in YEARS}
-    for y in YEARS:
-        for _ in range(12):
-            if y < start_year or bal <= 1e-6:
-                continue
-            month += 1
-            i = bal * r
-            pr = 0.0 if month <= IO_M else min(pmt - i, bal)
-            bal -= pr
-            out[y]["interest"] += i
-            out[y]["principal"] += pr
-        out[y]["closing"] = bal if y >= start_year else 0.0
-    return out
-
-
-def price_bays():
-    """Hardware per bay by phase, in order placed: the first 40 bays at tier 2."""
-    orders = []
-    for key, c in CHAINS.items():
-        for ph in c["phases"]:
-            orders.append((ph["year"], 0 if key == "planetFitness" else 1, key, ph))
-    orders.sort(key=lambda o: (o[0], o[1]))
-    placed = 0
-    for _, _, key, ph in orders:
-        hw = 0.0
-        for t, n in ph["units"].items():
-            for _ in range(n):
-                tier = "t2" if placed < TIER2_BAYS else "t1"
-                hw += BAY_TYPES[t][tier] * FX
-                placed += 1
-        ph["hardware"] = hw
-        ph["capex"] = hw * LANDED
-        ph["bays"] = sum(ph["units"].values())
-
-
-def run_chain(c, util, util_mult=1.0):
-    """One chain's bays inside the bay company, before Get Lucky's fee."""
-    rows = {y: dict(bays=0, clubs=0, hours=0.0, hire=0.0, addon=0.0, leagues=0.0, challenge=0.0,
-                    sponsorship=0.0, software=0.0, maintenance=0.0, consumables=0.0, asset_ins=0.0,
-                    capex=0.0, depreciation=0.0) for y in YEARS}
-    debts = [debt_schedule(ph["capex"] * DEBT_PCT, ph["year"]) for ph in c["phases"]]
-    for ph in c["phases"]:
-        per_bay_hw = ph["hardware"] / ph["bays"]
-        for y in YEARS:
-            age = y - ph["year"]
-            if age < 0:
-                continue
-            r = rows[y]
-            live = ph["live"] if age == 0 else 1.0
-            f = live * RAMP.get(age, 1.0)
-            if age == 0:
-                r["capex"] += ph["capex"]
-            if age < DEPR_YEARS:
-                r["depreciation"] += ph["capex"] / DEPR_YEARS * live
-            r["bays"] += ph["bays"]
-            r["clubs"] += ph["clubs"]
-            for t, n in ph["units"].items():
-                b = BAY_TYPES[t]
-                hrs = n * HOURS_PER_BAY * util[t] * util_mult * f
-                r["hours"] += hrs
-                r["hire"] += hrs * b["yld"]
-                r["challenge"] += hrs * CHALLENGE_PER_HOUR
-                r["leagues"] += n * LEAGUES_PER_BAY * f
-                r["sponsorship"] += n * SPONSOR_PER_BAY * live
-                r["software"] += n * SOFTWARE_USD_PM * 12 * FX * live
-                r["maintenance"] += n * per_bay_hw * MAINTENANCE * live
-                r["consumables"] += n * CONSUMABLES * live
-            r["asset_ins"] += ph["capex"] * ASSET_INS * live
-            adoption = ADDON_ADOPTION * util_mult * {0: 0.4, 1: 0.75}.get(age, 1.0)
-            r["addon"] += ph["clubs"] * c["members_per_club"] * adoption * ADDON_ZAR_PM * 12 * live
-    for y in YEARS:
-        r = rows[y]
-        shared = r["hire"] + r["addon"] + r["leagues"] + r["challenge"]
-        r["revenue"] = shared + r["sponsorship"]
-        r["fee"] = r["revenue"] * BAY_FEE
-        r["gym_share"] = shared * GYM_SHARE
-        r["card"] = shared * CARD
-        r["marketing"] = r["revenue"] * BAY_MARKETING
-        r["people"] = c["people"].get(y, c["people_after"])
-        r["central"] = c["central"].get(y, c["central_after"])
-        r["opex"] = sum(r[k] for k in ("fee", "gym_share", "card", "marketing", "software", "maintenance",
-                                         "consumables", "asset_ins", "people", "central"))
-        r["ebitda"] = r["revenue"] - r["opex"]
-        r["interest"] = sum(d[y]["interest"] for d in debts)
-        r["principal"] = sum(d[y]["principal"] for d in debts)
-        r["debt_closing"] = sum(d[y]["closing"] for d in debts)
-        r["debt_drawn"] = r["capex"] * DEBT_PCT
-    return rows
-
-
-def unit_economics(t, util):
-    """A mature bay of each type, at tier 1 hardware, after Get Lucky's fee."""
-    b = BAY_TYPES[t]
-    hw = b["t1"] * FX
-    capex = hw * LANDED
-    hrs = HOURS_PER_BAY * util[t]
-    hire = hrs * b["yld"]
-    challenge = hrs * CHALLENGE_PER_HOUR
-    shared = hire + challenge + LEAGUES_PER_BAY
-    revenue = shared + SPONSOR_PER_BAY
-    direct = (shared * (GYM_SHARE + CARD) + revenue * (BAY_MARKETING + BAY_FEE) + SOFTWARE_USD_PM * 12 * FX
-              + hw * MAINTENANCE + CONSUMABLES + capex * ASSET_INS)
-    contribution = revenue - direct
-    debt_service = annuity(capex * DEBT_PCT, RATE / 12, TERM_M) * 12
-    return dict(type=t, model=b["model"], capexZAR=round(capex), utilisationPct=round(util[t] * 100),
-                hoursPerDay=round(hrs / 360, 2), yieldZAR=b["yld"], revenueZAR=round(revenue),
-                gymShareZAR=round(shared * GYM_SHARE), feeZAR=round(revenue * BAY_FEE),
-                contributionZAR=round(contribution), contributionMarginPct=round(contribution / revenue * 100),
-                debtServiceZAR=round(debt_service), paybackYears=round(capex / contribution, 1))
-
-
-def irr(flows):
-    """flows: [(years from 1 Jan 2027, amount)]. Bisection; None if no sign change."""
-    npv = lambda r: sum(a / (1 + r) ** t for t, a in flows)
-    lo, hi = -0.95, 5.0
-    if npv(lo) * npv(hi) > 0:
-        return None
-    for _ in range(200):
-        mid = (lo + hi) / 2
-        if npv(lo) * npv(mid) <= 0:
-            hi = mid
-        else:
-            lo = mid
-    return (lo + hi) / 2
-
-
-# ----------------------------------------------------------------------------
 def run(case):
-    """Get Lucky, 2027-2032, from one case's drivers (and the bay company, when a case has gym bays)."""
-    chains = {k: run_chain(CHAINS[k], case["util"], case["bay_use"]) for k in case["chains"]}
-
-    # ===================== the bay company ===================================
-    bay = {}
-    loss_cf, cash, hurdle = 0.0, 0.0, 0.0
-    for n, y in enumerate(YEARS):
-        b = {k: sum(cr[y][k] for cr in chains.values())
-             for k in ("revenue", "fee", "opex", "ebitda", "depreciation", "interest", "principal",
-                       "debt_closing", "debt_drawn", "capex", "bays", "clubs", "hours", "challenge", "gym_share")}
-        pbt = b["ebitda"] - b["depreciation"] - b["interest"]
-        taxable = pbt - loss_cf
-        b["tax"] = max(taxable, 0) * TAX
-        loss_cf = max(-taxable, 0)
-        b["pbt"], b["netProfit"] = pbt, pbt - b["tax"]
-        service = b["interest"] + b["principal"]
-        b["dscr"] = b["ebitda"] / service if service else None
-        b["opening"] = cash
-        # investors put up the 10% on every bay ordered (and the reserve at the start)
-        calls = b["capex"] * (1 - DEBT_PCT) + (BAY_RESERVE if n == 0 and chains else 0.0)
-        cash += (b["ebitda"] - b["tax"] - service - b["capex"] + b["debt_drawn"]) + calls
-        topup = max(BAY_RESERVE - cash, 0.0) if chains else 0.0   # ...and what the bays need to hold the reserve
-        cash += topup
-        calls += topup
-        dist = 0.0
-        if cash > BAY_RESERVE and (b["dscr"] is None or b["dscr"] >= BAY_DIST_DSCR):
-            dist = cash - BAY_RESERVE
-            cash = BAY_RESERVE
-        # the waterfall: capital and the preferred return first, then the split
-        hurdle = hurdle * (1 + BAY_PREF) + calls * (1 + BAY_PREF) ** 0.5
-        first = min(dist, hurdle)
-        hurdle -= first
-        b["calls"], b["topup"], b["distributed"] = calls, topup, dist
-        b["toInvestors"] = first + (dist - first) * (1 - case["split"])
-        b["toGetLucky"] = (dist - first) * case["split"]
-        b["hurdle"], b["cash"] = hurdle, cash
-        # what the bay company is worth today, and who gets it through the same waterfall
-        value = max(b["ebitda"] * BAYS_EBITDA_MULTIPLE - b["debt_closing"] + cash, 0.0)
-        above = max(value - hurdle, 0.0)
-        b["value"] = value
-        b["valueGetLucky"] = above * case["split"]
-        b["valueInvestors"] = value - b["valueGetLucky"]
-        bay[y] = b
-
-    called = sum(bay[y]["calls"] for y in YEARS)
-    received = sum(bay[y]["toInvestors"] for y in YEARS)
-    flows = ([(y - 2027 + 0.5, -bay[y]["calls"]) for y in YEARS]
-             + [(y - 2027 + 1.0, bay[y]["toInvestors"]) for y in YEARS]
-             + [(6.0, bay[2032]["valueInvestors"])])
-    cum, back = 0.0, None
-    for y in YEARS:
-        cum += bay[y]["toInvestors"]
-        if back is None and called and cum >= sum(bay[x]["calls"] for x in YEARS if x <= y):
-            back = y
-    investors = dict(calledZAR=called, distributedZAR=received, value2032ZAR=bay[2032]["valueInvestors"],
-                     multiple2032=(received + bay[2032]["valueInvestors"]) / called if called else None,
-                     irr=irr(flows) if called else None, capitalBackBy=back)
-
+    """Get Lucky, 2027-2032, from one case's drivers."""
     # ===================== Get Lucky =========================================
     rows = {}
     gz_rounds = lambda y: case["gz_rounds"][y] if isinstance(case["gz_rounds"], dict) else case["gz_rounds"]
@@ -454,34 +177,30 @@ def run(case):
         r["ocRevenue"] = r["ocGross"] * (1 - PREMIUM - COURSE_SHARE)
         r["ocDirect"] = r["ocGross"] * OC_PROCESSING + OC_SWINGS[y] * OC_VERIFY_ZAR
         r["sponsorship"] = SPONSOR_BASE_ZAR + SPONSOR_PER_SWING_ZAR * max(swings + OC_SWINGS[y] - swings_2027, 0)
-        r["bayFee"] = bay[y]["fee"]
         r["productRevenue"] = r["gzRevenue"] + r["ocRevenue"] + r["sponsorship"]
-        r["revenue"] = r["productRevenue"] + r["bayFee"]
+        r["revenue"] = r["productRevenue"]
         r["central"] = case["central"][y]
         r["brandFixed"] = case["brand_fixed"].get(y, 0)
         r["brand"] = r["brandFixed"] + r["productRevenue"] * BRAND_PCT
         r["ebitda"] = r["revenue"] - r["gzDirect"] - r["ocDirect"] - r["central"] - r["brand"]
-        r["bayDistributions"] = bay[y]["toGetLucky"]
-        r["premiumWritten"] = (r["gzPremium"] + r["ocGross"] * PREMIUM
-                               + bay[y]["challenge"] / (1 - PREMIUM) * PREMIUM)
+        r["premiumWritten"] = r["gzPremium"] + r["ocGross"] * PREMIUM
         rows[y] = r
 
     loss_cf, cash = 0.0, OPENING_CASH_2027
     for y in YEARS:
         r = rows[y]
-        taxable = r["ebitda"] - loss_cf            # bay company dividends are exempt income
+        taxable = r["ebitda"] - loss_cf
         r["tax"] = max(taxable, 0) * TAX
         loss_cf = max(-taxable, 0)
-        r["netProfit"] = r["ebitda"] - r["tax"] + r["bayDistributions"]
+        r["netProfit"] = r["ebitda"] - r["tax"]
         r["raise"] = ROUND_ZAR if y == 2027 else 0.0
         r["opening"] = cash
         r["operatingCash"] = r["ebitda"] - r["tax"]
-        cash += r["operatingCash"] + r["bayDistributions"] + r["raise"]
+        cash += r["operatingCash"] + r["raise"]
         r["closing"] = cash
 
     # Quarterly cash: costs run evenly; revenue, and the costs that move with it,
-    # land by CASH_WEIGHTS; the round lands in Q1 2027; tax (and any bay company
-    # distribution, in the gym option) lands in Q4.
+    # land by CASH_WEIGHTS; the round lands in Q1 2027; tax lands in Q4.
     q_cash, q = [], OPENING_CASH_2027
     for y in YEARS:
         r, w = rows[y], CASH_WEIGHTS.get(y, [0.25] * 4)
@@ -490,7 +209,7 @@ def run(case):
         for i in range(4):
             q += variable * w[i] - fixed / 4 + (ROUND_ZAR if (y, i) == (2027, 0) else 0.0)
             if i == 3:
-                q += r["bayDistributions"] - r["tax"]
+                q -= r["tax"]
             q_cash.append((f"Q{i + 1} {y}", q))
     low_label, low = min(q_cash, key=lambda t: t[1])
     short = next((n for n, (_, v) in enumerate(q_cash) if v < 0), None)
@@ -500,12 +219,9 @@ def run(case):
     q1_no_round = OPENING_CASH_2027 + (r27["ebitda"] + fixed27) * w27[0] - fixed27 / 4
 
     # ===================== value =============================================
-    vals = {}
-    for y in YEARS:
-        platform = rows[y]["revenue"] * PLATFORM_MULTIPLE
-        vals[y] = dict(platform=platform, bayShare=bay[y]["valueGetLucky"], total=platform + bay[y]["valueGetLucky"])
+    vals = {y: dict(total=rows[y]["revenue"] * PLATFORM_MULTIPLE) for y in YEARS}
 
-    return dict(case=case, chains=chains, bay=bay, rows=rows, investors=investors, vals=vals,
+    return dict(case=case, rows=rows, vals=vals,
                 q_cash=q_cash, low=(low_label, low), lasts_to=lasts_to, q1_no_round=q1_no_round)
 
 
@@ -538,9 +254,8 @@ def use_of_funds(p):
 
 
 def main():
-    price_bays()
-    runs = {c["key"]: run(c) for c in CASES + TERM_CASES + [WITH_GYMS]}
-    p, t, hard, gyms = runs["plan"], runs["targets"], runs["hard"], runs["withGyms"]
+    runs = {c["key"]: run(c) for c in CASES + TERM_CASES}
+    p, t, hard = runs["plan"], runs["targets"], runs["hard"]
     rows, vals = p["rows"], p["vals"]
 
     # --- the round ---------------------------------------------------------------
@@ -608,8 +323,7 @@ def main():
         "company": old.get("company", {}),
         "structure": {
             "_note": ("One company, asset-light: the round buys into Get Lucky, which owns no hardware and carries "
-                      "no debt. The gym bays are an option, not in the plan; if they go ahead they are funded in "
-                      "their own company, never by this round."),
+                      "no debt."),
             "getLucky": "The hole-in-one app: on course, on Golfzon's network and at golf days; and sponsorship.",
         },
         "deal": {
@@ -649,12 +363,9 @@ def main():
                             {"phase": "Phase 2", "when": "2028", "what": "Featured partner: in the Golfzon app and in-game, broadcast to its global audience"},
                             {"phase": "Phase 3", "when": "2029 on", "what": "Full integration: the challenge built into Golfzon's game settings"},
                         ],
-                        "_pricing": ("Golfzon's chain quote is confidential to Golfzon: it lives in scripts/model.py and "
-                                     "the NDA workbook only, never on the page or in this file.")},
+                        "_pricing": ("Golfzon's chain quote is confidential to Golfzon: it lives in the NDA workbook only, "
+                                     "never on the page or in this repo.")},
             "ernie": {"status": "Onboard", "role": "Founding Ambassador"},
-            "gyms": {"status": "In discussion", "chains": ["Planet Fitness", "Virgin Active"],
-                     "_note": ("An option we hold, not in the plan or the numbers. Both chains are taking golf bays "
-                               "through their boards. If it goes ahead, the bays are funded in their own company.")},
             "santam": {"status": "Underwriter", "fsp": "3416"},
             "indwe": {"status": "Sponsor and broker", "fsp": "3425", "sponsorship2027ZAR": 3_000_000},
         },
@@ -719,7 +430,7 @@ def main():
         },
         "valuation": {
             "method": ("Get Lucky at a flat 3.0x its revenue (Golfzon, on course and sponsorship), the multiple this "
-                       "plan has always used. Nothing for the gym option."),
+                       "plan has always used."),
             "platformMultiple": PLATFORM_MULTIPLE,
             "milestonesZAR": {str(y): {"total": round(vals[y]["total"])} for y in YEARS},
             "entryMultipleOnRevenue2027": round(post / rows[2027]["revenue"], 2),
@@ -759,21 +470,10 @@ def main():
               f"{s_['roundMultiple']:5.2f}x  2032 {s_['roundMultiple2032']:5.2f}x  low R{s_['lowestCashZAR'] / 1e6:5.1f}m {s_['lowestQuarter']}  lasts to {s_['cashLastsTo']}")
     for u in m["deal"]["useOfFunds"]["items"]:
         print(f"  use {u['key']:8} R{u['ZAR'] / 1e6:5.2f}m {u['pct']}%")
-    # internal only: the gym option, costed the way the 3 Nov deck had it
-    g, gb, inv = gyms["rows"], gyms["bay"], gyms["investors"]
-    print(f"\n  INTERNAL, never on the page - {WITH_GYMS['label']}:")
-    print(f"    revenue 2029 R{g[2029]['revenue'] / 1e6:.1f}m (bay fee R{g[2029]['bayFee'] / 1e6:.1f}m), "
-          f"value 2029 R{gyms['vals'][2029]['total'] / 1e6:.0f}m, round {rm(gyms, 2029):.2f}x / 2032 {rm(gyms, 2032):.2f}x")
-    print(f"    bay capex R{sum(gb[y]['capex'] for y in YEARS) / 1e6:.1f}m, peak debt R{max(gb[y]['debt_closing'] for y in YEARS) / 1e6:.1f}m, "
-          f"bay investors called R{inv['calledZAR'] / 1e6:.1f}m, IRR {inv['irr'] * 100:.1f}%, capital back {inv['capitalBackBy']}")
-    for t_ in BAY_TYPES:
-        u = unit_economics(t_, PLAN["util"])
-        print(f"    unit {t_:10} {u['hoursPerDay']}h/day capex R{u['capexZAR'] / 1e6:.2f}m rev R{u['revenueZAR'] / 1e6:.2f}m "
-              f"contrib {u['contributionMarginPct']}% payback {u['paybackYears']}y")
-
     if "--dry" not in sys.argv:
         MODEL.write_text(json.dumps(m, indent=2, ensure_ascii=False) + "\n")
         print(f"\nwrote {MODEL.relative_to(ROOT)}")
 
 
-main()
+if __name__ == "__main__":
+    main()

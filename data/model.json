@@ -22,7 +22,7 @@
     ]
   },
   "structure": {
-    "_note": "One company, asset-light: the round buys into Get Lucky, which owns no hardware and carries no debt. The gym bays are an option, not in the plan; if they go ahead they are funded in their own company, never by this round.",
+    "_note": "One company, asset-light: the round buys into Get Lucky, which owns no hardware and carries no debt.",
     "getLucky": "The hole-in-one app: on course, on Golfzon's network and at golf days; and sponsorship."
   },
   "deal": {
@@ -141,19 +141,11 @@
           "what": "Full integration: the challenge built into Golfzon's game settings"
         }
       ],
-      "_pricing": "Golfzon's chain quote is confidential to Golfzon: it lives in scripts/model.py and the NDA workbook only, never on the page or in this file."
+      "_pricing": "Golfzon's chain quote is confidential to Golfzon: it lives in the NDA workbook only, never on the page or in this repo."
     },
     "ernie": {
       "status": "Onboard",
       "role": "Founding Ambassador"
-    },
-    "gyms": {
-      "status": "In discussion",
-      "chains": [
-        "Planet Fitness",
-        "Virgin Active"
-      ],
-      "_note": "An option we hold, not in the plan or the numbers. Both chains are taking golf bays through their boards. If it goes ahead, the bays are funded in their own company."
     },
     "santam": {
       "status": "Underwriter",
@@ -543,7 +535,7 @@
     "ebitdaPositiveFrom": 2028
   },
   "valuation": {
-    "method": "Get Lucky at a flat 3.0x its revenue (Golfzon, on course and sponsorship), the multiple this plan has always used. Nothing for the gym option.",
+    "method": "Get Lucky at a flat 3.0x its revenue (Golfzon, on course and sponsorship), the multiple this plan has always used.",
     "platformMultiple": 3.0,
     "milestonesZAR": {
       "2027": {

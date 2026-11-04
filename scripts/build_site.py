@@ -8,8 +8,8 @@ updates every sentence that carries it.
     python3 scripts/model.py && python3 scripts/build_site.py
 
 The build fails if the page would carry anything on the banned list
-(Golfzon's chain pricing, superseded rounds, the withdrawn note, the gym
-numbers, retired features) or if a figure the checks expect is missing.
+(Golfzon's chain pricing, superseded rounds, the withdrawn note, the gyms,
+retired features) or if a figure the checks expect is missing.
 """
 import html, json, pathlib, re, sys
 
@@ -85,7 +85,6 @@ ICON = {
     "qr": '<path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3"/><rect x="8.5" y="8.5" width="7" height="7" rx="1"/>',
     "key": '<circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"/>',
     "globe": '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/>',
-    "gym": '<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/>',
     "bank": '<path d="M3 10l9-6 9 6M5 10v8M19 10v8M9.5 10v8M14.5 10v8M3 21h18"/>',
     "scale": '<path d="M12 4v16M6 20h12M5 8h14M7 8l-3 6.5a3 3 0 006 0zM17 8l-3 6.5a3 3 0 006 0z"/>',
     "lock": '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 018 0V11"/>',
@@ -157,8 +156,8 @@ def revenue_chart():
 
 # ------------------------------------------------------------------ sections
 # The story, in the order an investor needs it: what we do and the ask; the
-# hole-in-one app in three places; the app on course; Golfzon; the gyms as an
-# option we hold; Ernie; the people; the numbers; what could go wrong; the terms.
+# hole-in-one app in three places; the app on course; Golfzon; Ernie; the
+# people; the numbers; what could go wrong; the terms.
 
 def nav():
     return """
@@ -384,26 +383,6 @@ def golfzon_section():
 </section>"""
 
 
-def gyms_section():
-    """The gyms: an option we hold, with no numbers. Bays are hardware, and this round doesn't buy it."""
-    card = lambda logo, alt, cls, text: (f'<article class="party reveal"><div class="row"><div class="mark"><img src="assets/logos/{logo}" alt="{alt}"{cls}></div>'
-                                          f'<span class="chip talks">In discussion</span></div><p>{text}</p></article>')
-    return f"""
-<section class="section paper" id="gyms" aria-labelledby="gyms-h">
-  <div class="wrap">
-    <div class="head">
-      <span class="kicker">An option we hold</span>
-      <h2 class="display-lg" id="gyms-h">In the gym. <span class="green">An option, not the plan.</span></h2>
-      <p class="lede"><strong>Planet Fitness and Virgin Active are both taking golf bays through their boards.</strong> It's how we first met Golfzon: as a customer. If we go ahead, the bays get their own company and their own investors. They're never paid for by this round, and they're not in our numbers.</p>
-    </div>
-    <div class="grid c2">
-      {card("planet-fitness.webp", "Planet Fitness", "", "Golf bays in its flagship clubs, booked like a padel court, with a mobile unit where there's no room inside.")}
-      {card("virgin.webp", "Virgin Active", "", "Golf bays beside the padel courts in its flagship clubs, on its own board's timetable.")}
-    </div>
-  </div>
-</section>"""
-
-
 def ernie_section():
     return f"""
 <section class="section on-dark ernie" id="ernie" aria-labelledby="ernie-h">
@@ -472,7 +451,7 @@ def numbers_section():
       <table><thead><tr><th>Get Lucky, R</th><th class="n">2027</th><th class="n hide-sm">2028</th><th class="n">2029</th><th class="n">2032</th></tr></thead><tbody>{pl}</tbody></table>
     </div>
     <p>2029, revenue to EBITDA: {rm(rev['total'][k29])} revenue, less {rm(gz_course_cost)} of Golfzon and course costs (payments, claims handling, launches), {rm(c['central'][k29])} of central team and technology, and {rm(c['brand'][k29])} of brand, leaves {rm(f['ebitdaZAR'][k29])}. Central cost is a budget; the rest moves with revenue.</p>"""
-    value_block = f"""<p>Get Lucky at <strong>{val['platformMultiple']}× its revenue</strong>: our share of every swing on Golfzon and on course, and sponsorship. Nothing for the gym option or the range.</p>
+    value_block = f"""<p>Get Lucky at <strong>{val['platformMultiple']}× its revenue</strong>: our share of every swing on Golfzon and on course, and sponsorship. Nothing for the range.</p>
     <div class="bridge tab">
       <div><span>Get Lucky, {val['platformMultiple']}× {rm(rev['total'][k29])}</span><span>{r0(mv['2029']['total'])}</span></div>
       <div class="total"><span>December 2029</span><span>{r0(mv['2029']['total'])}</span></div>
@@ -671,8 +650,6 @@ def faq_section():
     qa = [
         ("What exactly am I buying?",
          f"Ordinary shares in Get Lucky Golf Club (Pty) Ltd: {rm(rd['amountZAR'])} for {EQ} at {r0(rd['preMoneyZAR'])} pre-money, from {rm(rd['minimumTicketZAR'])}, in {esc(rd['timing'])}. One round, no interim raise, no preference and no ratchet."),
-        ("Why not the gym bays?",
-         "Bays are hardware: they need capex and debt, and they take years to pay back. This round builds the platform, and the swing costs nothing to add to another simulator. Planet Fitness and Virgin Active are still taking golf bays through their boards; if we go ahead, the bays get their own company and their own investors, and you'd hear about it first."),
         ("What does Ernie get?",
          f"{amb['equityPct']}% non-diluting equity as Founding Ambassador, with normal shareholder rights: his {amb['equityPct']}% shares in any profit we pay out and in any sale, like every other share. No fee, no capital, no guarantees, no liability. His {amb['equityPct']}% sits inside the {r0(rd['preMoneyZAR'])} pre-money, top-up included, so the round still buys its full stake. The full terms are available under NDA."),
         ("What if someone wins R1m, or $100,000?",
@@ -712,7 +689,7 @@ def footer():
   <div class="wrap">
     <img src="assets/logos/logo-dark-bg.webp" alt="Get Lucky Golf Club" width="64" height="48">
     <p>Get Lucky Golf Club (Pty) Ltd · Registration 2025/047585/07 · 6 Crescent Road, Wynberg, Cape Town · <a href="mailto:{EMAIL}">{EMAIL}</a> · {PHONE}</p>
-    <p>This page is an invitation to discuss a private investment and is not an offer to the public in terms of the Companies Act, 2008. Every forward-looking figure, including forecasts, valuations and the marks shown for an investment, is illustrative, based on stated assumptions and partner proposals, and is not a guarantee of return. Investment in an early-stage business carries risk, including the loss of capital. Golfzon, Planet Fitness, Virgin Active, Santam and Indwe are the marks of their owners. Independent advice is recommended.</p>
+    <p>This page is an invitation to discuss a private investment and is not an offer to the public in terms of the Companies Act, 2008. Every forward-looking figure, including forecasts, valuations and the marks shown for an investment, is illustrative, based on stated assumptions and partner proposals, and is not a guarantee of return. Investment in an early-stage business carries risk, including the loss of capital. Golfzon, Santam and Indwe are the marks of their owners. Independent advice is recommended.</p>
     <p>Sources: Golfzon, "Get Lucky with GOLFZON" partnership proposal, {esc(gz['proposalDate'])} · National Golf Foundation, The Golf Simulator Opportunity, 2025. Forecast as at {esc(m['asOf'])}.</p>
   </div>
 </footer>
@@ -723,7 +700,7 @@ def page():
     desc = (f"Get Lucky is the hole-in-one app: one insured swing at a hole-in-one, wherever you play. On course in South Africa, "
             f"on Golfzon's {n(gz['locations'])} simulator locations worldwide, and next on the driving range. Ernie Els is "
             f"Founding Ambassador. One round: {rm(rd['amountZAR'])} in {rd['timing']}.")
-    body = "".join([nav(), hero(), '<main id="main">', raiseband(), concept(), app_section(), golfzon_section(), gyms_section(),
+    body = "".join([nav(), hero(), '<main id="main">', raiseband(), concept(), app_section(), golfzon_section(),
                     ernie_section(), team_section(), numbers_section(), risk_section(), deal_section(), faq_section(),
                     cta_section(), "</main>", footer()])
     return f"""<!DOCTYPE html>
@@ -774,11 +751,12 @@ BANNED = [
     (r"(?i)\bregistry\b|\bgames\b|game of chance|icons cup|back an icon|\bbet(s|ting)?\b|bet on yourself|\bjackpot\b|golf gods",
      "retired features and language: games, the registry, betting"),
     (r"(?i)whatsapp|\bunlimited\b|\bpivot\b|old plan|previous plan", "retired framings"),
-    (r"(?i)signed with (virgin active|planet fitness)|(virgin active|planet fitness) (has )?signed|planet fitness \(signed\)|exclusive with golfzon|signed for \d+ bays",
-     "a signature that does not exist"),
+    (r"(?i)exclusive with golfzon|signed for \d+ bays", "a signature that does not exist"),
     (r"(?i)convertible note|\bthe note\b|note now|R36m cap|interim raise is", "the withdrawn convertible note (4 Nov 2026)"),
     (r"(?i)bay company|\b136 (gym )?bays|\b136 bays|RMB (lends|asset|is modelled)|RMB's|payback|preferred return|R119|bay investors|our fee|half the bays|own the local",
-     "the gym numbers: the gyms are an option, not the plan (4 Nov 2026)"),
+     "the gym numbers"),
+    (r"(?i)\bgyms?\b|planet fitness|virgin active|planet golf|virgin golf|padel|vitality|growthpoint",
+     "the gyms: removed from the deck and the model (4 Nov 2026)"),
     (r"(?i)live today|live in south africa|the app, live|integration (is )?built\b", "the app is built, not launched; the Golfzon integration is a demo"),
     (r"272 bays|172 clubs|\b272\b|200 in talks|Practice bay", "the superseded 272-bay gym plan"),
     (r"4,167", "the simulator break-even before commission"),
