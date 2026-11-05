@@ -58,7 +58,7 @@ def esc(s):
 
 
 EMAIL = "johannes@getluckygolfclub.com"
-SITE_URL = "https://investgetluckygolf.vercel.app"   # link previews need absolute URLs
+SITE_URL = "https://invest.getluckygolf.co.za"   # link previews need absolute URLs: the public address
 PHONE, PHONE_TEL = "+27 60 961 5091", "+27609615091"
 gz = pt["golfzon"]
 GZ_SIGNED = gz["signed"]   # the deck is the post-signing version; see scripts/model.py
@@ -239,7 +239,8 @@ def raiseband():
 def concept():
     def facts_(*pairs):
         return '<dl class="tile-facts tab">' + "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in pairs) + "</dl>"
-    gz_chip = '<span class="chip live">Golfzon partner</span>' if GZ_SIGNED else '<span class="chip talks">In talks</span>'
+    gz_chip = ('<span class="chip live">Golfzon partner</span>' if GZ_SIGNED else
+               '<span class="chip talks" style="color:var(--cream);border-color:rgba(245,238,222,.4);background:rgba(12,22,14,.55)">In talks</span>')
     return f"""
 <section class="section paper" aria-labelledby="concept-h">
   <div class="wrap">
@@ -415,7 +416,7 @@ def ernie_section():
 
 def team_section():
     people = [
-        ("team-johannes.webp", "Johannes le Roux", "Founder &amp; Managing Director", "Built The Duchess with AB InBev and RMB: ten million units in five countries. Runs Get Lucky and the Golfzon partnership."),
+        ("team-johannes.webp", "Johannes le Roux", "Founder &amp; Managing Director", f"Built The Duchess with AB InBev and RMB: ten million units in five countries. Runs Get Lucky{' and the Golfzon partnership' if GZ_SIGNED else ', and the talks with Golfzon'}."),
         ("team-andrew.webp", "Andrew Davenport", "Founder &amp; Marketing Director", "Founder of DOPE Drinks, fifteen years in drinks and entertainment brands. Runs partnerships, brand and the golf days."),
         ("team-willie.webp", "Willie Ross", "Investor &amp; Strategic Advisor", "Partner at Bellair Road Investment Partners, R5 billion under management. Harvard MBA. Advises on the numbers and the financing."),
         ("team-ernie.webp", "Ernie Els", "Founding Ambassador", f"{ernie['majors']} majors, {ernie['careerAces']} career aces. The face of our challenge on course, on simulators and on the range, opening doors in Asia, the Middle East and the US. A {amb['equityPct']}% shareholder."),

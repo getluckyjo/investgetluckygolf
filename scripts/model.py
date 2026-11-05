@@ -33,10 +33,10 @@ YEARS = list(range(2027, 2033))
 ROUND_ZAR = 6_200_000         # Q1 2027: exactly 10% (the founder, 5 Nov 2026); the plan uses about R4.3m at its lowest
 ROUND_PRE_ZAR = 55_800_000    # the founder's price: R55.8m pre, R62m post, 10% for R6.2m
 OPENING_CASH_2027 = 0         # cash on 1 Jan 2027: conservative, with no note to carry it
-# Golfzon: the deck is built as the post-signing version - the agreement is signed before we
-# raise (the founder, 4 Nov 2026). Off, every status line reads "in talks". The page must not
-# go out while this is on and the agreement is not yet signed.
-GOLFZON_SIGNED = True
+# Golfzon: the deck can show the post-signing version, but it goes live "in talks" until the
+# agreement is signed (the founder, 5 Nov 2026). Turn this on the day it is signed and rebuild;
+# every status line follows. Never publish with it on before the signature.
+GOLFZON_SIGNED = False
 
 # ============================================================================
 # THE INSURED SWING (the Santam submission, unchanged)

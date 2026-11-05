@@ -14,8 +14,9 @@ python3 scripts/build_xlsx.py     # data -> data/get-lucky-model.xlsx, the model
 python3 -m http.server 8000       # preview locally (the gate only runs on Vercel)
 ```
 
-The page shows Golfzon as signed (`GOLFZON_SIGNED` in `scripts/model.py`): send
-it only once the agreement is signed.
+Live at https://invest.getluckygolf.co.za (production: the default branch). Golfzon
+reads "in talks" until the agreement is signed; then set `GOLFZON_SIGNED` in
+`scripts/model.py` and rebuild.
 
 Deploy: Vercel, static, with `middleware.js` gating every path. Set
 `SITE_PASSWORD` in the project's environment variables (Preview and

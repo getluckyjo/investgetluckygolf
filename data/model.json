@@ -112,8 +112,8 @@
       "fromYear": 2028
     },
     "golfzon": {
-      "signed": true,
-      "status": "Signed partner",
+      "signed": false,
+      "status": "In talks: Golfzon's own three-phase proposal",
       "_status": "The deck is the post-signing version: the agreement is signed before we raise (the founder, 4 Nov 2026). Do not send the page before it is.",
       "locations": 15029,
       "korea": 10802,

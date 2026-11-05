@@ -37,12 +37,14 @@ and the central team R8m (not R9m, hires a little later).
   company are out of the deck and the model completely (the founder, 4 Nov
   2026). The build bans any mention. The gym work lives in the
   simulatorstrategy repo; don't bring it back here unless the founder asks.
-- **Golfzon is shown as signed.** The founder (4 Nov 2026): build the deck as if
-  Golfzon has signed; the agreement is signed before we raise. One switch,
-  `GOLFZON_SIGNED` in `scripts/model.py`, drives every status line; off, the
-  page reads "in talks" and the build bans any Golfzon signature. **Don't send
-  the page while the switch is on and the agreement isn't signed.** The
-  integration is a demo (Golfzon's side simulated): never "integration built".
+- **Golfzon reads "in talks" until it signs.** The founder (5 Nov 2026): the live site
+  goes out with Golfzon "in talks on its own proposal". One switch, `GOLFZON_SIGNED` in
+  `scripts/model.py`, drives every status line; turn it on and rebuild the day the
+  agreement is signed, never before. While it's off the build bans any Golfzon signature.
+  The integration is a demo (Golfzon's side simulated): never "integration built".
+- **Live at https://invest.getluckygolf.co.za**, from the repo's default branch
+  (`claude/relaxed-johnson-bmyhxn`, Vercel production). The `.vercel.app` addresses sit
+  behind Vercel login; investors use the custom domain and `SITE_PASSWORD`.
 - **The app is built, not launched.** It runs at golf days; the public launch
   follows an independent code audit (the founder, 4 Nov 2026). Never "live".
 - **The driving range is "next"** and unnamed until a partner signs (inRange
