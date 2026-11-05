@@ -400,13 +400,12 @@ def golfzon_section():
     </div>
     <div class="beyond reveal">
       <div class="beyond-head"><span class="chip talks">Next conversations</span><h3>Beyond Golfzon</h3>
-        <p>The swing can run on any simulator that measures the shot, and on any driving range that tracks the ball. Golfzon outside Korea is about {(gz['roundsPerYear'] - 94_000_000) / 1e6:.0f} million rounds a year; these networks add more, and none of them is in our plan.</p></div>
+        <p>The same app works on any simulator that measures the shot. None of these is in our plan.</p></div>
       <div class="beyond-grid tab">
-        <div><b>50,000+</b><span>Trackman bays worldwide, behind venues like Five Iron Golf. Our next simulator conversation.</span></div>
-        <div><b>~6 hrs</b><span>a day each Toptracer screen is in use, on driving ranges across the UK and Europe.</span></div>
-        <div><b>180+</b><span>US simulator venues in two chains: 130+ X&#8209;Golf and about 50 Five Iron Golf.</span></div>
+        <div><b>50,000+</b><span>Trackman simulator bays worldwide</span></div>
+        <div><b>~6 hrs</b><span>Daily use of each Toptracer range screen</span></div>
+        <div><b>180+</b><span>US venues: X&#8209;Golf and Five Iron Golf</span></div>
       </div>
-      <p class="note">Trackman's bays track 150 shots a second, mostly practice; we put the rounds at about {pt['trackman']['roundsPerYear'] / 1e6:.0f} million a year. In the stress cases, Golfzon outside Korea plus Trackman from {pt['trackman']['fromYear']} marks the round at {x(sens['outsideKoreaTrackman']['roundMultiple'])} in 2029.</p>
     </div>
     {more("Why an insurer can cover it", insurable)}
     {more("The Golfzon numbers, year by year", ramp)}
