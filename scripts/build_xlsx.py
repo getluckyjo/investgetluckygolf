@@ -10,9 +10,16 @@ workbook shows whether it still ties to scripts/model.py.
 
 Not deployed: data/ is in .vercelignore.
 """
-import importlib.util, pathlib, shutil, subprocess, sys, tempfile
+import importlib.util, io, pathlib, shutil, subprocess, sys, tempfile
 
 from openpyxl import Workbook, load_workbook
+from openpyxl.cell.rich_text import CellRichText, TextBlock
+from openpyxl.cell.text import InlineFont
+from openpyxl.drawing.image import Image as XLImage
+from openpyxl.drawing.spreadsheet_drawing import AnchorMarker, OneCellAnchor
+from openpyxl.drawing.xdr import XDRPositiveSize2D
+from openpyxl.formatting.rule import FormulaRule
+from openpyxl.utils.units import pixels_to_EMU
 from openpyxl.comments import Comment
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter as L
@@ -53,13 +60,24 @@ for _, key, am, tm, drv, late, korea, tman, prem in SCEN:
 
 # ------------------------------------------------------------------ styles
 ARIAL = "Arial"
+# Get Lucky's palette (css/site.css): night and forest for structure, lime for what you can change,
+# paper and cream for quiet fills. Text keeps the modelling convention: blue in, ink calc, green link.
+NIGHT, FOREST, GREEN, GREEN_LIGHT, LIME = "0C160E", "1E3120", "345231", "4A7A3D", "D6FB4B"
+CREAM, PAPER, SURFACE, INK, MUTED, GOLD = "F5EEDE", "F7F8F4", "EBEDEA", "0F1B12", "536157", "C9A94E"
+LIME_TINT = "F1FAD2"
 F = lambda **k: Font(name=ARIAL, size=10, **k)
-INPUT, LINK, CALC = F(color="0000FF"), F(color="008000"), F(color="000000")
-BOLD, TITLE, WHITE = F(bold=True), Font(name=ARIAL, size=14, bold=True, color="0C160E"), F(bold=True, color="FFFFFF")
-HEAD = PatternFill("solid", fgColor="345231")
-KEY = PatternFill("solid", fgColor="FFFF00")
-OUTFILL = PatternFill("solid", fgColor="EEF5D6")
-THIN = Border(top=Side(style="thin", color="999999"))
+INPUT, LINK, CALC = F(color="0000FF"), F(color=GREEN_LIGHT), F(color=INK)
+NOTE, HELPER = F(italic=True, color=MUTED), F(color=MUTED)
+BOLD, TITLE, WHITE = F(bold=True, color=INK), Font(name=ARIAL, size=15, bold=True, color=CREAM), F(bold=True, color=CREAM)
+SUB = F(bold=True, color=GREEN)
+HEAD = PatternFill("solid", fgColor=FOREST)
+BAND = PatternFill("solid", fgColor=NIGHT)
+KEY = PatternFill("solid", fgColor=LIME)
+OUTFILL = PatternFill("solid", fgColor=LIME_TINT)
+TOTALFILL = PatternFill("solid", fgColor=PAPER)
+THIN = Border(top=Side(style="thin", color=GREEN))
+RULE = Border(bottom=Side(style="thin", color=SURFACE))
+UNDER = Border(bottom=Side(style="thin", color=GREEN))
 RM = '"R"#,##0.0,,"m";("R"#,##0.0,,"m");"-"'
 R0 = '"R"#,##0;("R"#,##0);"-"'
 N0 = '#,##0;(#,##0);"-"'
@@ -67,6 +85,7 @@ PCT, PCT2 = '0.0%;(0.0%);"-"', '0.00%;(0.00%);"-"'
 USD = '"$"#,##0.00;("$"#,##0.00);"-"'
 MULT = '0.00"×";(0.00"×");"-"'
 FLAG = '0;-0;"-"'
+DIFF = '[>=0.5]"R"#,##0;[<=-0.5]("R"#,##0);"-"'
 
 wb = Workbook()
 NAMES = {}
@@ -91,21 +110,32 @@ def cell(ws, ref, v, font=CALC, fmt=None, fill=None, note=None, bold=False):
 
 
 def header(ws, row, text, last="H"):
+    """A forest band across the table, the title in cream capitals."""
     for col in range(1, ws[f"{last}1"].column + 1):
         ws.cell(row=row, column=col).fill = HEAD
-    cell(ws, f"A{row}", text, WHITE)
+    x = cell(ws, f"A{row}", text.upper(), WHITE)
+    x.alignment = Alignment(horizontal="left", vertical="center", indent=1)
+    ws.row_dimensions[row].height = 20
 
 
 def years(ws, row, cols=YC, labels=None):
+    """Column heads for a table inside a section: green, ruled underneath."""
+    for c_ in ["A", "B"] + list(cols):
+        ws[f"{c_}{row}"].border = UNDER
     for c_, y in zip(cols, labels or [str(y) for y in Y]):
-        x = cell(ws, f"{c_}{row}", y, BOLD)
+        x = cell(ws, f"{c_}{row}", y, SUB)
         x.alignment = Alignment(horizontal="right")
+
+
+def total_row(ws, row, cols):
+    for c_ in cols:
+        ws[f"{c_}{row}"].border = THIN
+        ws[f"{c_}{row}"].fill = TOTALFILL
 
 
 # ================================================================== Read me
 rd = wb.active
 rd.title = "Read me"
-rd.column_dimensions["A"].width = 110
 lines = [
     ("Get Lucky Golf: the 2027 plan, for review", TITLE),
     ("As at 4 November 2026. Built by scripts/build_xlsx.py from the drivers in scripts/model.py.", CALC),
@@ -115,13 +145,13 @@ lines = [
     ("and sponsorship. One round: R9.0m at R56m pre-money in Q1 2027. No interim raise, no hardware, no debt.", CALC),
     ("", CALC),
     ("How to use it", BOLD),
-    ("1. Pick a case in Model!C2 (yellow). The Model and Round sheets follow it.", CALC),
+    ("1. Pick a case in Model!C2 (lime). The Model and Round sheets follow it.", CALC),
     ("2. Change any blue cell on Assumptions; every number moves with it. Black cells are formulas; green cells link to another sheet.", CALC),
     ("3. Stress cases shows every case side by side, each fully calculated in its own block below the summary.", CALC),
     ("4. Checks compares the workbook with scripts/model.py's own results. It reads TRUE until you change an input, which is expected.", CALC),
     ("", CALC),
     ("Colours", BOLD),
-    ("Blue text: an input you can change. Black: a formula. Green: a link to another sheet. Yellow fill: a key lever.", CALC),
+    ("LEGEND", CALC),
     ("", CALC),
     ("The method, in short", BOLD),
     ("Golfzon: rounds a year x share of rounds with a paid swing (attach) x average swing in USD x FX = gross; Get Lucky keeps", CALC),
@@ -137,8 +167,52 @@ lines = [
     ("rate across every setting. Insurance terms: the Santam submission. Indwe's R3m: the 2027 sponsorship. Trackman: research.json.", CALC),
     ("The round, the central team, the launch budget and the targets: the founder (26 Oct and 4 Nov 2026). Forecast, not a promise.", CALC),
 ]
-for i, (t, f_) in enumerate(lines, 1):
-    cell(rd, f"A{i}", t, f_)
+# The cover: a night band with the logo, a lime rule, then the notes in one clean column.
+for c_, w in zip("ABC", (3, 124, 3)):
+    rd.column_dimensions[c_].width = w
+for c_ in "ABC":
+    rd[f"{c_}1"].fill = BAND
+    rd[f"{c_}2"].fill = KEY
+rd.row_dimensions[1].height = 62
+rd.row_dimensions[2].height = 4
+x = cell(rd, "B1", "INVESTOR MODEL  ·  2027–2032  ·  CONFIDENTIAL", F(bold=True, color=LIME))
+x.alignment = Alignment(horizontal="right", vertical="center")
+from PIL import Image as PILImage
+buf = io.BytesIO()
+PILImage.open(ROOT / "assets/logos/logo-dark-bg.webp").save(buf, format="PNG")
+buf.seek(0)
+logo = XLImage(buf)
+lh = 46
+lw = round(lh * logo.width / logo.height)
+logo.anchor = OneCellAnchor(_from=AnchorMarker(col=1, colOff=0, row=0, rowOff=pixels_to_EMU(8)),
+                            ext=XDRPositiveSize2D(pixels_to_EMU(lw), pixels_to_EMU(lh)))
+rd.add_image(logo)
+IFt = lambda **k: InlineFont(rFont=ARIAL, sz=10, **k)
+legend = CellRichText(
+    TextBlock(IFt(color="0000FF", b=True), "Blue"), TextBlock(IFt(color=INK), " an input you can change      "),
+    TextBlock(IFt(color=INK, b=True), "Black"), TextBlock(IFt(color=INK), " a formula      "),
+    TextBlock(IFt(color=GREEN_LIGHT, b=True), "Green"), TextBlock(IFt(color=INK), " a link to another sheet      "),
+    TextBlock(IFt(color=GREEN, b=True), "Lime fill"), TextBlock(IFt(color=INK), " a key lever      "),
+    TextBlock(IFt(color=MUTED), "Grey: helper rows"))
+row = 4
+for t, f_ in lines:
+    if f_ is TITLE:
+        cell(rd, f"B{row}", t, Font(name=ARIAL, size=20, bold=True, color=FOREST))
+        rd.row_dimensions[row].height = 30
+    elif t == "LEGEND":
+        rd[f"B{row}"].value = legend
+        rd.row_dimensions[row].height = 18
+    elif f_ is BOLD:
+        x = cell(rd, f"B{row}", t.upper(), SUB)
+        x.border = UNDER
+        x.alignment = Alignment(vertical="bottom")
+        rd.row_dimensions[row].height = 24
+    elif not t:
+        rd.row_dimensions[row].height = 8
+    else:
+        cell(rd, f"B{row}", t, NOTE if t.startswith("As at") else CALC)
+        rd.row_dimensions[row].height = 15
+    row += 1
 
 # ================================================================== Assumptions
 A = wb.create_sheet("Assumptions")
@@ -156,7 +230,7 @@ def scalar(label, nm, v, fmt, note, key=False, calc=False):
     global r
     cell(A, f"A{r}", label)
     cell(A, f"B{r}", v, CALC if calc else INPUT, fmt, KEY if key else None)
-    cell(A, f"I{r}", note, F(italic=True, color="555555"))
+    cell(A, f"I{r}", note, NOTE)
     name(nm, A, f"$B${r}")
     r += 1
 
@@ -166,7 +240,7 @@ def per_year(label, key, vals, fmt, note):
     cell(A, f"A{r}", label)
     for c_, v in zip(YC, vals):
         cell(A, f"{c_}{r}", v, INPUT, fmt)
-    cell(A, f"I{r}", note, F(italic=True, color="555555"))
+    cell(A, f"I{r}", note, NOTE)
     ROWS[key] = r
     r += 1
 
@@ -194,7 +268,7 @@ scalar("Golfzon and the venue's share of a swing", "Venue_Share", M.SIM_SPLIT["g
 scalar("Payments, of gross", "GZ_Processing", M.GZ_PROCESSING, PCT, "")
 scalar("Risk, claims and support, USD a swing", "GZ_Ops_USD", M.GZ_OPS_USD, USD, "The bay verifies the ace")
 scalar("Launch marketing, of our share", "GZ_Marketing", M.GZ_MARKETING, PCT, "Launches, in-game media, the Tour")
-years(A, r); cell(A, f"A{r}", "Per year", BOLD); r += 1
+years(A, r); cell(A, f"A{r}", "Per year", SUB); r += 1
 per_year("Attach: share of rounds with a paid swing, plan", "attachPlan", [M.PLAN["gz_attach"][y] for y in Y], PCT2,
          "Phase 1 (2027) on existing features; phase 2 (2028) in the app and in-game; phase 3 (2029 on) in the game settings")
 per_year("Attach, our targets", "attachTargets", [M.TARGETS["gz_attach"][y] for y in Y], PCT2, "The founder's targets: the upside, never the plan")
@@ -202,7 +276,7 @@ per_year("Average swing, USD, plan", "ticketPlan", [M.PLAN["gz_ticket"][y] for y
 per_year("Average swing, USD, our targets", "ticketTargets", [M.TARGETS["gz_ticket"][y] for y in Y], USD, "")
 r += 1
 header(A, r, "ON COURSE: THE APP", "I"); r += 1
-years(A, r); cell(A, f"A{r}", "Per year", BOLD); r += 1
+years(A, r); cell(A, f"A{r}", "Per year", SUB); r += 1
 per_year("Paid swings", "ocSwings", [M.OC_SWINGS[y] for y in Y], N0, "10,000 paid swings in the first year, on the tee, before the app")
 per_year("Average swing, R", "ocAvg", [M.OC_AVG_ZAR[y] for y in Y], R0, "R50 to win R25,000, up to R1,000 to win R1m")
 scalar("Insurer's premium, of every course swing", "OC_Premium", M.PREMIUM, PCT, "The Santam submission")
@@ -215,7 +289,7 @@ scalar("Indwe's sponsorship, R a year", "Sponsor_Base", M.SPONSOR_BASE_ZAR, R0, 
 scalar("Sponsorship per paid swing beyond 2027's, R", "Sponsor_Per_Swing", M.SPONSOR_PER_SWING_ZAR, R0, "About a seventh of what Indwe's R3m pays a swing in 2027")
 r += 1
 header(A, r, "GET LUCKY'S COSTS", "I"); r += 1
-years(A, r); cell(A, f"A{r}", "Per year", BOLD); r += 1
+years(A, r); cell(A, f"A{r}", "Per year", SUB); r += 1
 per_year("Central team and technology, plan, R", "centralPlan", [M.PLAN["central"][y] for y in Y], RM, "The founder, 4 Nov 2026")
 per_year("Central team and technology, our targets, R", "centralTargets", [M.TARGETS["central"][y] for y in Y], RM, "")
 per_year("Launch budget, plan, R", "launchPlan", [M.PLAN["brand_fixed"].get(y, 0) for y in Y], RM, "The global launch with Ernie, then the base")
@@ -230,7 +304,7 @@ for label, key, w in (("2027", "w2027", M.CASH_WEIGHTS[2027]), ("2028", "w2028",
     for c_, v in zip("CDEF", w):
         cell(A, f"{c_}{r}", v, INPUT, PCT)
     cell(A, f"I{r}", "Back-loaded while Golfzon ramps; costs run evenly from day one" if key == "w2027" else "",
-         F(italic=True, color="555555"))
+         NOTE)
     ROWS[key] = r
     r += 1
 r += 1
@@ -245,15 +319,18 @@ r += 1
 header(A, r, "THE CASES (pick one in Model!C2)", "I"); r += 1
 heads = ["Case", "Attach ×", "Ticket ×", "Drivers", "A year late", "Korea in", "Trackman 2028+", "Sim premium"]
 for i, h in enumerate(heads):
-    cell(A, f"{L(1 + i)}{r}", h, BOLD)
-cell(A, f"I{r}", "1 = yes, 0 = no. Drivers: Plan or Targets (attach, ticket, central team, launch budget).", F(italic=True, color="555555"))
+    x = cell(A, f"{L(1 + i)}{r}", h, SUB)
+    x.border = UNDER
+    x.alignment = Alignment(horizontal="left" if i in (0, 3) else "right")
+cell(A, f"I{r}", "1 = yes, 0 = no. Drivers: Plan or Targets (attach, ticket, central team, launch budget).", NOTE)
 r += 1
 s0 = r
 for nm_, key, am, tm, drv, late, korea, tman, prem in SCEN:
     vals = [nm_, am, tm, drv, late, korea, tman, prem]
     fmts = [None, '0.00"×"', '0.00"×"', None, '0', '0', '0', PCT]
     for i, (v, fm) in enumerate(zip(vals, fmts)):
-        cell(A, f"{L(1 + i)}{r}", v, BOLD if i == 0 else INPUT, fm)
+        x = cell(A, f"{L(1 + i)}{r}", v, BOLD if i == 0 else INPUT, fm)
+        x.border = RULE
     r += 1
 s1 = r - 1
 for i, nm_ in enumerate(["Scen_Names", "Scen_Attach", "Scen_Ticket", "Scen_Drivers", "Scen_Late", "Scen_Korea", "Scen_Trackman", "Scen_Premium"]):
@@ -272,14 +349,14 @@ def block(ws, t, case_ref):
               ("Korea in (1 = yes)", "korea", "Scen_Korea", "0"), ("Trackman from 2028 (1 = yes)", "tman", "Scen_Trackman", "0"),
               ("Simulator premium", "prem", "Scen_Premium", PCT)]
     for i, (label, k, col, fm) in enumerate(params, 1):
-        cell(ws, f"A{t + i}", label)
-        cell(ws, f"C{t + i}", look(col), LINK, fm)
+        cell(ws, f"A{t + i}", label, HELPER).alignment = Alignment(horizontal="left", indent=1)
+        cell(ws, f"C{t + i}", look(col), LINK, fm).alignment = Alignment(horizontal="right")
         R[k] = f"$C${t + i}"
     hdr = t + 9
     header(ws, hdr, "Get Lucky, annual", "Z")
     for c_, y in zip(YC, Y):
         x = cell(ws, f"{c_}{hdr}", str(y), WHITE)
-        x.alignment = Alignment(horizontal="right")
+        x.alignment = Alignment(horizontal="right", vertical="center")
     rows = ["rounds", "attachBase", "attach", "ticket", "swings", "gross", "share", "gzRev", "gzPrem", "gzDirect",
             "ocSwings", "ocGross", "ocRev", "ocDirect", "spons", "rev", "central", "launch", "brand", "ebitda", "margin",
             "taxable", "tax", "losscf", "net", "raise", "open", "close", "value", "mark", "premWritten", "pos"]
@@ -340,26 +417,31 @@ def block(ws, t, case_ref):
             "pos": f"=IF({g('ebitda')}>0,1,0)",
         }
         for k in rows:
-            font = LINK if k in ("attachBase", "ticket", "ocSwings", "central", "launch") else CALC
+            font = HELPER if k in ("attachBase", "pos") else LINK if k in ("ticket", "ocSwings", "central", "launch") else CALC
             cell(ws, g(k), f_[k], font, labels[k][1], bold=k in ("rev", "ebitda", "close"))
     for k in rows:
-        cell(ws, f"A{rr[k]}", labels[k][0], bold=k in ("rev", "ebitda", "close"))
+        x = cell(ws, f"A{rr[k]}", labels[k][0], HELPER if k in ("attachBase", "pos") else CALC, bold=k in ("rev", "ebitda", "close"))
         if k in ("rev", "ebitda", "close"):
-            for c_ in ["A", "B"] + YC:
-                ws[f"{c_}{rr[k]}"].border = THIN
+            total_row(ws, rr[k], ["A", "B"] + YC)
+        else:
+            x.alignment = Alignment(horizontal="left", indent=1)
     # --- quarterly cash ---
     q0 = rr["pos"] + 2
     header(ws, q0, "Quarterly cash test", "Z")
     for c_, lb in zip(QC, QL):
         x = cell(ws, f"{c_}{q0}", lb, WHITE)
-        x.alignment = Alignment(horizontal="right")
+        x.alignment = Alignment(horizontal="right", vertical="center")
     qrows = ["w", "ops", "round", "qtax", "qclose", "neg", "cum"]
     qr = {k: q0 + 1 + i for i, k in enumerate(qrows)}
     qlab = {"w": ("Share of the year's revenue", PCT), "ops": ("Operating cash in the quarter", RM), "round": ("The round", RM),
             "qtax": ("Tax, paid in Q4", RM), "qclose": ("Cash at the quarter end", RM), "neg": ("Below zero? (1 = yes)", FLAG),
             "cum": ("Quarters below zero so far", FLAG)}
     for k in qrows:
-        cell(ws, f"A{qr[k]}", qlab[k][0], bold=k == "qclose")
+        x = cell(ws, f"A{qr[k]}", qlab[k][0], HELPER if k in ("neg", "cum") else CALC, bold=k == "qclose")
+        if k == "qclose":
+            total_row(ws, qr[k], ["A", "B"] + QC)
+        else:
+            x.alignment = Alignment(horizontal="left", indent=1)
     for k_, (c_, lb) in enumerate(zip(QC, QL)):
         yc, qi = YC[k_ // 4], k_ % 4
         wrow = ROWS["w2027"] if k_ < 4 else ROWS["w2028"] if k_ < 8 else ROWS["wLater"]
@@ -376,7 +458,7 @@ def block(ws, t, case_ref):
             "cum": f"={c_}{qr['neg']}" if k_ == 0 else f"={prev}{qr['cum']}+{c_}{qr['neg']}",
         }
         for k in qrows:
-            cell(ws, f"{c_}{qr[k]}", qf[k], LINK if k == "w" else CALC, qlab[k][1], bold=k == "qclose")
+            cell(ws, f"{c_}{qr[k]}", qf[k], LINK if k == "w" else HELPER if k in ("neg", "cum") else CALC, qlab[k][1], bold=k == "qclose")
     # --- outputs ---
     o0 = qr["cum"] + 2
     header(ws, o0, "This case in brief", "Z")
@@ -396,8 +478,12 @@ def block(ws, t, case_ref):
     ]
     O = {}
     for i, (k, label, fm_, nf) in enumerate(outs, 1):
-        cell(ws, f"A{o0 + i}", label, bold=True)
-        cell(ws, f"C{o0 + i}", fm_, CALC, nf, OUTFILL, bold=True)
+        x = cell(ws, f"A{o0 + i}", label, bold=True)
+        x.border = RULE
+        ws[f"B{o0 + i}"].border = RULE
+        x = cell(ws, f"C{o0 + i}", fm_, CALC, nf, OUTFILL, bold=True)
+        x.alignment = Alignment(horizontal="right")
+        x.border = RULE
         O[k] = f"$C${o0 + i}"
     return dict(rr=rr, qr=qr, O=O, hdr=hdr, end=o0 + len(outs))
 
@@ -414,12 +500,20 @@ Mo = wb.create_sheet("Model")
 sheet_cols(Mo)
 cell(Mo, "A1", "Get Lucky, 2027-2032: the chosen case (ZAR ex VAT, R m unless stated)", TITLE)
 cell(Mo, "A2", "Case: pick one from the list", BOLD)
-cell(Mo, "C2", "The plan", INPUT, None, KEY, note="Pick a case. Every sheet but Stress cases follows it.")
+cell(Mo, "C2", "The plan", INPUT, None, KEY, note="Pick a case. Every sheet but Stress cases follows it.", bold=True)
 Mo.merge_cells("C2:F2")
+box = Side(style="medium", color=GREEN)
+for c_ in "CDEF":
+    Mo[f"{c_}2"].fill = KEY
+    Mo[f"{c_}2"].border = Border(top=box, bottom=box, left=box if c_ == "C" else None, right=box if c_ == "F" else None)
+Mo["C2"].alignment = Alignment(horizontal="left", vertical="center", indent=1)
+Mo["A2"].alignment = Alignment(vertical="center")
+Mo.row_dimensions[2].height = 22
 dv = DataValidation(type="list", formula1=f"=Assumptions!$A${s0}:$A${s1}", allow_blank=False)
 Mo.add_data_validation(dv)
 dv.add("C2")
 MB = block(Mo, 3, "$C$2")
+cell(Mo, "A3", "CASE LEVERS", SUB)
 Mo.freeze_panes = f"C{MB['hdr'] + 1}"
 
 # ================================================================== Round (the chosen case, and the plan's use of funds)
@@ -428,7 +522,7 @@ Rs.column_dimensions["A"].width = 52
 for c_ in "BCDEFGH":
     Rs.column_dimensions[c_].width = 13
 cell(Rs, "A1", "The round: what R9.0m buys, and what it is marked at", TITLE)
-cell(Rs, "A2", "Marks and the sale follow the case in Model!C2:", F(italic=True, color="555555"))
+cell(Rs, "A2", "Marks and the sale follow the case in Model!C2:", NOTE)
 cell(Rs, "C2", "=Model!C2", LINK)
 rr_ = MB["rr"]
 lines_r = [
@@ -459,6 +553,7 @@ r += 1
 cell(Rs, f"A{r}", "The round's multiple", bold=True)
 for c_ in YC:
     cell(Rs, f"{c_}{r}", f"={c_}{vr}*Round_Stake/Round_ZAR", CALC, MULT, bold=True)
+total_row(Rs, r, ["A", "B"] + YC)
 mr = r; r += 2
 header(Rs, r, "A SALE ON 31 DECEMBER 2032 (ILLUSTRATIVE)"); r += 1
 sale = [
@@ -496,24 +591,33 @@ for i, h in enumerate(cols):
     x.alignment = Alignment(horizontal="right", wrap_text=True)
 header(St, 3, "Case", "K")
 for i, h in enumerate(cols):
-    St[f"{L(3 + i)}3"].value = h
-St.row_dimensions[3].height = 28
+    x = cell(St, f"{L(3 + i)}3", h, WHITE)
+    x.alignment = Alignment(horizontal="right", vertical="center", wrap_text=True)
+St.row_dimensions[3].height = 30
 blocks = {}
 top = 4 + len(SCEN) + 2
 for i, sc in enumerate(SCEN):
     t = top
-    cell(St, f"A{t}", f"=Assumptions!$A${s0 + i}", Font(name=ARIAL, size=12, bold=True, color="345231"))
+    cell(St, f"A{t}", f"=Assumptions!$A${s0 + i}", Font(name=ARIAL, size=13, bold=True, color=GREEN))
+    for c_ in ["A", "B"] + YC:
+        St[f"{c_}{t}"].border = Border(bottom=Side(style="medium", color=LIME))
+    St.row_dimensions[t].height = 22
     b = block(St, t, f"$A${t}")
     blocks[sc[1]] = b
     rr, O = b["rr"], b["O"]
     row = 4 + i
-    cell(St, f"A{row}", f"=A{t}", BOLD)
+    cell(St, f"A{row}", f"=A{t}", BOLD).alignment = Alignment(horizontal="left", indent=1)
     links = [f"=E{rr['rev']}", f"=E{rr['ebitda']}", f"=E{rr['value']}", f"=E{rr['mark']}", f"=H{rr['value']}",
              f"=H{rr['mark']}", f"={O['lowest']}", f"={O['lowQ']}", f"={O['lasts']}"]
     fmts = [RM, RM, RM, MULT, RM, MULT, RM, None, None]
     for j, (fm_, nf) in enumerate(zip(links, fmts)):
         x = cell(St, f"{L(3 + j)}{row}", fm_, CALC, nf, OUTFILL if sc[1] == "plan" else None, bold=sc[1] == "plan")
         x.alignment = Alignment(horizontal="right")
+    for c_ in "ABCDEFGHIJK":
+        St[f"{c_}{row}"].border = RULE
+        if sc[1] == "plan":
+            St[f"{c_}{row}"].fill = OUTFILL
+    St.row_dimensions[row].height = 18
     St.row_dimensions.group(t + 1, b["end"], outline_level=1, hidden=False)
     top = b["end"] + 3
 St.freeze_panes = "C4"
@@ -528,10 +632,12 @@ for c_ in "CDEF":
     Ck.column_dimensions[c_].width = 16
 cell(Ck, "A1", "Checks: the workbook against scripts/model.py", TITLE)
 cell(Ck, "A2", "Python values are scripts/model.py's own results for the inputs shown on Assumptions. Change an input and the "
-     "checks turn FALSE: that's expected.", F(italic=True, color="555555"))
+     "checks turn FALSE: that's expected.", NOTE)
 cell(Ck, "A4", "Everything ties", BOLD)
+header(Ck, 6, "Case", "F")
 for i, h in enumerate(["Case", "Measure", "Workbook", "scripts/model.py", "Difference", "Ties"]):
-    cell(Ck, f"{L(1 + i)}6", h, BOLD)
+    x = cell(Ck, f"{L(1 + i)}6", h.upper() if i == 0 else h, WHITE)
+    x.alignment = Alignment(horizontal="left" if i < 2 else "right", vertical="center", indent=1 if i == 0 else 0)
 r = 7
 runs = {c["key"]: M.run(c) for c in M.CASES + M.TERM_CASES}
 for i, sc in enumerate(SCEN):
@@ -555,7 +661,7 @@ for i, sc in enumerate(SCEN):
             cell(Ck, f"E{r}", "")
             cell(Ck, f"F{r}", f"=C{r}=D{r}")
         else:
-            cell(Ck, f"E{r}", f"=C{r}-D{r}", CALC, R0)
+            cell(Ck, f"E{r}", f"=C{r}-D{r}", CALC, DIFF)
             cell(Ck, f"F{r}", f"=ABS(E{r})<1000")
         r += 1
 plan_uof = M.use_of_funds(runs["plan"])
@@ -568,10 +674,22 @@ for it in plan_uof["items"]:
     cell(Ck, f"B{r}", f"Use of funds: {it['label']}")
     cell(Ck, f"C{r}", uof_wb[it["key"]], LINK, R0)
     cell(Ck, f"D{r}", it["ZAR"], INPUT, R0)
-    cell(Ck, f"E{r}", f"=C{r}-D{r}", CALC, R0)
+    cell(Ck, f"E{r}", f"=C{r}-D{r}", CALC, DIFF)
     cell(Ck, f"F{r}", f"=ABS(E{r})<1000")
     r += 1
-cell(Ck, "C4", f"=AND(F7:F{r - 1})", CALC, None, OUTFILL, bold=True)
+cell(Ck, "C4", f"=AND(F7:F{r - 1})", CALC, None, OUTFILL, bold=True).alignment = Alignment(horizontal="center")
+Ck.row_dimensions[4].height = 22
+for rw in range(7, r):
+    for c_ in "ABCDEF":
+        Ck[f"{c_}{rw}"].border = RULE
+    for c_ in "CDEF":
+        Ck[f"{c_}{rw}"].alignment = Alignment(horizontal="right")
+    Ck[f"A{rw}"].alignment = Alignment(horizontal="left", indent=1)
+ok_font, bad_fill = Font(name=ARIAL, size=10, bold=True, color=GREEN_LIGHT), PatternFill("solid", fgColor="F8D7D3")
+Ck.conditional_formatting.add(f"F7:F{r - 1}", FormulaRule(formula=["F7=TRUE"], font=ok_font))
+Ck.conditional_formatting.add(f"F7:F{r - 1}", FormulaRule(formula=["F7=FALSE"], fill=bad_fill, font=Font(name=ARIAL, size=10, bold=True, color="9C2A1E")))
+Ck.conditional_formatting.add("C4", FormulaRule(formula=["C4=TRUE"], fill=KEY, font=Font(name=ARIAL, size=10, bold=True, color=GREEN)))
+Ck.conditional_formatting.add("C4", FormulaRule(formula=["C4=FALSE"], fill=bad_fill, font=Font(name=ARIAL, size=10, bold=True, color="9C2A1E")))
 Ck.freeze_panes = "A7"
 
 # Use of funds, from the plan, on the Round sheet (the deck's numbers)
@@ -582,14 +700,14 @@ for i, it in enumerate(plan_uof["items"]):
     ref = f"Checks!C{r - len(plan_uof['items']) + i}"
     cell(Rs, f"C{rr0 + i}", f"={ref}", LINK, R0)
     cell(Rs, f"D{rr0 + i}", f"=C{rr0 + i}/Round_ZAR", CALC, PCT)
-    cell(Rs, f"E{rr0 + i}", it["note"], F(italic=True, color="555555"))
+    cell(Rs, f"E{rr0 + i}", it["note"], NOTE)
 n_ = len(plan_uof["items"])
-cell(Rs, f"A{rr0 + n_}", "Revenue already pays the rest of the team in 2027", F(italic=True, color="555555"))
+cell(Rs, f"A{rr0 + n_}", "Revenue already pays the rest of the team in 2027", NOTE)
 cell(Rs, f"C{rr0 + n_}",
      f"=ROUND((1-GZ_Team_Share)*'Stress cases'!C{pb['central']}+'Stress cases'!C{pb['ocDirect']}+('Stress cases'!C{pb['brand']}-'Stress cases'!C{pb['launch']}),-4)",
      LINK, R0)
 cell(Rs, f"D{rr0 + n_}", f"='Stress cases'!C{pb['rev']}", LINK, RM)
-cell(Rs, f"E{rr0 + n_}", "Running cost in 2027 (C), against 2027 revenue (D)", F(italic=True, color="555555"))
+cell(Rs, f"E{rr0 + n_}", "Running cost in 2027 (C), against 2027 revenue (D)", NOTE)
 ir = rr0 + n_ + 2
 header(Rs, ir, "WHY AN INSURER CAN COVER A SIMULATOR ACE"); ir += 1
 for label, fm_, nf in [("Insurer breaks even at one ace in (plan premium)", f"=Prize_Multiple/(Assumptions!$H${s0}*(1-Broker_Commission))", N0),
@@ -599,8 +717,43 @@ for label, fm_, nf in [("Insurer breaks even at one ace in (plan premium)", f"=P
     cell(Rs, f"C{ir}", fm_, CALC, nf)
     ir += 1
 
+# ---- the finish: night title bands with a lime rule, no gridlines, tab colours, print setup
+from openpyxl.worksheet.page import PageMargins
+from openpyxl.worksheet.properties import PageSetupProperties
+from openpyxl.utils import column_index_from_string as CI
+TABS = {"Read me": NIGHT, "Model": LIME, "Round": LIME, "Stress cases": GREEN, "Assumptions": GOLD, "Checks": MUTED}
+BAND_TO = {"Model": "Z", "Stress cases": "Z", "Assumptions": "I", "Round": "H", "Checks": "F"}
 for ws in wb.worksheets:
-    ws.sheet_view.showGridLines = ws.title in ("Model", "Stress cases")
+    ws.sheet_view.showGridLines = False
+    ws.sheet_view.zoomScale = 100
+    ws.sheet_properties.tabColor = TABS[ws.title]
+    ws.page_setup.orientation = "landscape"
+    ws.page_setup.paperSize = ws.PAPERSIZE_A4
+    wide = ws.title in ("Model", "Stress cases")
+    ws.sheet_properties.pageSetUpPr = PageSetupProperties(fitToPage=not wide)
+    ws.page_setup.fitToWidth, ws.page_setup.fitToHeight = 1, 0
+    ws.page_margins = PageMargins(left=0.4, right=0.4, top=0.5, bottom=0.6)
+    ws.oddFooter.left.text = "Get Lucky Golf  ·  Investor model  ·  Confidential  ·  Forecast, not a promise"
+    ws.oddFooter.right.text = "&A  ·  page &P of &N"
+    for part in (ws.oddFooter.left, ws.oddFooter.right):
+        part.size, part.font, part.color = 8, "Arial", MUTED
+    if ws.title == "Read me":
+        ws.page_setup.fitToHeight = 1
+        continue
+    if wide:
+        ws.print_title_cols = "A:B"
+    notes = {"Assumptions": "I", "Round": "E"}.get(ws.title)
+    if notes:
+        for (c_,) in ws.iter_rows(min_col=CI(notes), max_col=CI(notes), min_row=3):
+            if isinstance(c_.value, str) and c_.font.i:   # the italic notes only, not year heads
+                c_.alignment = Alignment(horizontal="left", indent=1)
+    for col in range(1, CI(BAND_TO[ws.title]) + 1):
+        c_ = ws.cell(row=1, column=col)
+        c_.fill = BAND
+        c_.border = Border(bottom=Side(style="medium", color=LIME))
+    ws["A1"].font = TITLE
+    ws["A1"].alignment = Alignment(horizontal="left", vertical="center", indent=1)
+    ws.row_dimensions[1].height = 36
 wb.move_sheet("Assumptions", offset=3)   # Read me, Model, Round, Stress cases, Assumptions, Checks
 OUT.parent.mkdir(exist_ok=True)
 wb.save(OUT)
