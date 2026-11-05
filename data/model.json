@@ -26,37 +26,37 @@
     "getLucky": "The hole-in-one app: on course, on Golfzon's network and at golf days; and sponsorship."
   },
   "deal": {
-    "_note": "One round, into Get Lucky: R9.0m for about 14% at R56m pre in Q1 2027. No interim raise: the R1m convertible note was withdrawn on 4 Nov 2026. The price is the founder's.",
+    "_note": "One round, into Get Lucky: R6.2m for 10% at R55.8m pre (R62m post) in Q1 2027. No interim raise: the R1m convertible note was withdrawn on 4 Nov 2026. The price is the founder's.",
     "round": {
-      "amountZAR": 9000000,
-      "preMoneyZAR": 56000000,
-      "postMoneyZAR": 65000000,
-      "equityPct": 13.85,
+      "amountZAR": 6200000,
+      "preMoneyZAR": 55800000,
+      "postMoneyZAR": 62000000,
+      "equityPct": 10.0,
       "timing": "Q1 2027",
       "minimumTicketZAR": 1000000,
       "value2029ZAR": 126735000,
       "value2032ZAR": 511950000,
-      "multiple2029": 1.95,
-      "multiple2032": 7.88,
+      "multiple2029": 2.04,
+      "multiple2032": 8.26,
       "hardCaseValue2029ZAR": 65917500,
-      "hardCaseMultiple2029": 1.01,
-      "hardCaseMultiple2032": 2.94,
+      "hardCaseMultiple2029": 1.06,
+      "hardCaseMultiple2032": 3.08,
       "targetsValue2029ZAR": 262188000,
-      "targetsMultiple2029": 4.03,
-      "targetsMultiple2032": 17.75,
+      "targetsMultiple2029": 4.23,
+      "targetsMultiple2032": 18.61,
       "exit": {
         "year": 2032,
         "holdYears": 5.75,
         "valueZAR": 511950000,
         "ebitdaMultiple": 5.3,
-        "multiple": 7.88,
-        "aYearPct": 43,
+        "multiple": 8.26,
+        "aYearPct": 44,
         "hardCaseValueZAR": 190965000,
-        "hardCaseMultiple": 2.94,
-        "hardCaseAYearPct": 21,
-        "cashZAR": 171314354,
-        "withCashMultiple": 10.51,
-        "withCashAYearPct": 51,
+        "hardCaseMultiple": 3.08,
+        "hardCaseAYearPct": 22,
+        "cashZAR": 169974354,
+        "withCashMultiple": 11.0,
+        "withCashAYearPct": 52,
         "_basis": "Illustrative: the round's stake sold on 31 December 2032 at the plan's value, held from the end of Q1 2027. withCash adds Get Lucky's closing cash, before any dividend tax."
       },
       "multipleBasis": "Your stake at the round's post-money, marked at the plan's value on 31 December. An unrealised mark on a private holding, not a cash return."
@@ -64,31 +64,31 @@
     "useOfFunds": {
       "_note": "The round pays for what is new in 2027: the Golfzon build (the integration team is 35% of 2027 central cost) and the fixed launch budget. Revenue pays for the rest of the team and the costs that move with it. What is left is the reserve.",
       "revenue2027ZAR": 8270000.0,
-      "runningCost2027ZAR": 6960000.0,
+      "runningCost2027ZAR": 6310000.0,
       "items": [
         {
           "key": "golfzon",
           "label": "Golfzon integration and global launch",
           "short": "Golfzon",
-          "ZAR": 3510000.0,
+          "ZAR": 3160000.0,
           "note": "The integration team, the signed shot record, the ace data the insurer prices on, market launches",
-          "pct": 39
+          "pct": 51
         },
         {
           "key": "launch",
           "label": "The launch with Ernie",
           "short": "Launch",
-          "ZAR": 3000000,
+          "ZAR": 2000000,
           "note": "Launch content with Ernie, leagues and partner activations",
-          "pct": 33
+          "pct": 32
         },
         {
           "key": "reserve",
           "label": "Working capital and reserve",
           "short": "Reserve",
-          "ZAR": 2490000.0,
+          "ZAR": 1040000.0,
           "note": "What carries any one risk without cutting a cost",
-          "pct": 28
+          "pct": 17
         }
       ]
     },
@@ -353,7 +353,7 @@
     },
     "_revenueBasis": "Get Lucky's own revenue. Golfzon and on course are Get Lucky's share only: 46% of a simulator swing after Golfzon and the venue (30%) and the insurer (24%); 66% of a course swing after the club (10%) and the insurer (24%).",
     "ebitdaZAR": [
-      -5206770,
+      -3206770,
       209000,
       16484300,
       42134800,
@@ -361,7 +361,7 @@
       96688800
     ],
     "ebitdaMarginPct": [
-      -63.0,
+      -38.8,
       1.1,
       39.0,
       51.3,
@@ -386,7 +386,7 @@
         2240000
       ],
       "central": [
-        9000000,
+        8000000,
         13000000,
         16000000,
         20000000,
@@ -394,7 +394,7 @@
         31000000
       ],
       "brand": [
-        3661280,
+        2661280,
         3544800,
         3379600,
         6576800,
@@ -405,15 +405,15 @@
     "taxZAR": [
       0,
       0,
-      3101363,
+      3641363,
       11376396,
       19450341,
       26105976
     ],
     "netProfitZAR": [
-      -5206770,
+      -3206770,
       209000,
-      13382937,
+      12842937,
       30758404,
       52587959,
       70582824
@@ -474,7 +474,7 @@
     "_note": "Get Lucky's cash, from R0 on 1 January 2027 (no note). No hardware and no debt. The R9.0m round carries the team, the Golfzon build and the launch until the engines pay for themselves. No further equity round is assumed.",
     "openingZAR": 0,
     "raiseZAR": [
-      9000000,
+      6200000,
       0,
       0,
       0,
@@ -482,54 +482,54 @@
       0
     ],
     "operatingCashZAR": [
-      -5206770,
+      -3206770,
       209000,
-      13382937,
+      12842937,
       30758404,
       52587959,
       70582824
     ],
     "closingZAR": [
-      3793230,
-      4002230,
-      17385167,
-      48143571,
-      100731530,
-      171314354
+      2993230,
+      3202230,
+      16045167,
+      46803571,
+      99391530,
+      169974354
     ],
     "quarterlyClosingZAR": {
-      "Q1 2027": 6679323,
-      "Q2 2027": 5037969,
-      "Q3 2027": 4075938,
-      "Q4 2027": 3793230,
-      "Q1 2028": 2932940,
-      "Q2 2028": 2681010,
-      "Q3 2028": 3037440,
-      "Q4 2028": 4002230,
-      "Q1 2029": 8123305,
-      "Q2 2029": 12244380,
-      "Q3 2029": 16365455,
-      "Q4 2029": 17385167,
-      "Q1 2030": 27918867,
-      "Q2 2030": 38452567,
-      "Q3 2030": 48986267,
-      "Q4 2030": 48143571,
-      "Q1 2031": 66153146,
-      "Q2 2031": 84162721,
-      "Q3 2031": 102172296,
-      "Q4 2031": 100731530,
-      "Q1 2032": 124903730,
-      "Q2 2032": 149075930,
-      "Q3 2032": 173248130,
-      "Q4 2032": 171314354
+      "Q1 2027": 4379323,
+      "Q2 2027": 3237969,
+      "Q3 2027": 2775938,
+      "Q4 2027": 2993230,
+      "Q1 2028": 2132940,
+      "Q2 2028": 1881010,
+      "Q3 2028": 2237440,
+      "Q4 2028": 3202230,
+      "Q1 2029": 7323305,
+      "Q2 2029": 11444380,
+      "Q3 2029": 15565455,
+      "Q4 2029": 16045167,
+      "Q1 2030": 26578867,
+      "Q2 2030": 37112567,
+      "Q3 2030": 47646267,
+      "Q4 2030": 46803571,
+      "Q1 2031": 64813146,
+      "Q2 2031": 82822721,
+      "Q3 2031": 100832296,
+      "Q4 2031": 99391530,
+      "Q1 2032": 123563730,
+      "Q2 2032": 147735930,
+      "Q3 2032": 171908130,
+      "Q4 2032": 169974354
     },
     "lowestQuarter": "Q2 2028",
-    "lowestQuarterZAR": 2681010,
-    "q1WithoutRoundZAR": -2320677,
+    "lowestQuarterZAR": 1881010,
+    "q1WithoutRoundZAR": -1820677,
     "hardCaseLowestQuarter": "Q4 2028",
-    "hardCaseLowestZAR": -1854845,
+    "hardCaseLowestZAR": -2654845,
     "hardCaseCashLastsTo": "Q1 2028",
-    "peakNetSpendZAR": 6318990,
+    "peakNetSpendZAR": 4318990,
     "_peakNetSpend": "How much of the opening cash and the round the plan has used at its lowest quarter-end.",
     "_hardCase": "The hard case holds every cost at plan: no hire is delayed and nothing is cut. cashLastsTo is the last quarter that ends in credit; None means it never runs short.",
     "ebitdaPositiveFrom": 2028
@@ -557,8 +557,8 @@
         "total": 511950000
       }
     },
-    "entryMultipleOnRevenue2027": 7.86,
-    "postAsShareOf2029Value": 0.51,
+    "entryMultipleOnRevenue2027": 7.5,
+    "postAsShareOf2029Value": 0.49,
     "sensitivity2029": [
       {
         "key": "plan",
@@ -566,10 +566,10 @@
         "revenue": 42245000,
         "ebitda": 16484300,
         "value": 126735000,
-        "roundMultiple": 1.95,
+        "roundMultiple": 2.04,
         "value2032": 511950000,
-        "roundMultiple2032": 7.88,
-        "lowestCashZAR": 2681010,
+        "roundMultiple2032": 8.26,
+        "lowestCashZAR": 1881010,
         "lowestQuarter": "Q2 2028",
         "cashLastsTo": null
       },
@@ -579,12 +579,12 @@
         "revenue": 28355000,
         "ebitda": 6301050,
         "value": 85065000,
-        "roundMultiple": 1.31,
+        "roundMultiple": 1.37,
         "value2032": 293085000,
-        "roundMultiple2032": 4.51,
-        "lowestCashZAR": 21055,
+        "roundMultiple2032": 4.73,
+        "lowestCashZAR": -778945,
         "lowestQuarter": "Q4 2028",
-        "cashLastsTo": null
+        "cashLastsTo": "Q1 2028"
       },
       {
         "key": "hard",
@@ -592,10 +592,10 @@
         "revenue": 21972500,
         "ebitda": 1611300,
         "value": 65917500,
-        "roundMultiple": 1.01,
+        "roundMultiple": 1.06,
         "value2032": 190965000,
-        "roundMultiple2032": 2.94,
-        "lowestCashZAR": -1854845,
+        "roundMultiple2032": 3.08,
+        "lowestCashZAR": -2654845,
         "lowestQuarter": "Q4 2028",
         "cashLastsTo": "Q1 2028"
       },
@@ -605,12 +605,12 @@
         "revenue": 25677000,
         "ebitda": 4356400,
         "value": 77031000,
-        "roundMultiple": 1.19,
+        "roundMultiple": 1.24,
         "value2032": 403080000,
-        "roundMultiple2032": 6.2,
-        "lowestCashZAR": -2213120,
+        "roundMultiple2032": 6.5,
+        "lowestCashZAR": -3013120,
         "lowestQuarter": "Q4 2028",
-        "cashLastsTo": "Q1 2028"
+        "cashLastsTo": "Q4 2027"
       },
       {
         "key": "outsideKorea",
@@ -618,12 +618,12 @@
         "revenue": 16131800,
         "ebitda": -2660210,
         "value": 48395400,
-        "roundMultiple": 0.74,
+        "roundMultiple": 0.78,
         "value2032": 100483800,
-        "roundMultiple2032": 1.55,
-        "lowestCashZAR": -15901039,
+        "roundMultiple2032": 1.62,
+        "lowestCashZAR": -16701039,
         "lowestQuarter": "Q4 2032",
-        "cashLastsTo": "Q1 2028"
+        "cashLastsTo": "Q4 2027"
       },
       {
         "key": "outsideKoreaTrackman",
@@ -631,10 +631,10 @@
         "revenue": 22051135,
         "ebitda": 1689329,
         "value": 66153406,
-        "roundMultiple": 1.02,
+        "roundMultiple": 1.07,
         "value2032": 193081380,
-        "roundMultiple2032": 2.97,
-        "lowestCashZAR": -2006663,
+        "roundMultiple2032": 3.11,
+        "lowestCashZAR": -2806663,
         "lowestQuarter": "Q4 2028",
         "cashLastsTo": "Q1 2028"
       },
@@ -644,10 +644,10 @@
         "revenue": 87396000,
         "ebitda": 38614600,
         "value": 262188000,
-        "roundMultiple": 4.03,
+        "roundMultiple": 4.23,
         "value2032": 1153920000,
-        "roundMultiple2032": 17.75,
-        "lowestCashZAR": 3622880,
+        "roundMultiple2032": 18.61,
+        "lowestCashZAR": 822880,
         "lowestQuarter": "Q4 2027",
         "cashLastsTo": null
       }
@@ -657,8 +657,8 @@
         "key": "simPremium30",
         "case": "The insurer prices simulator swings at 30%, not 24%",
         "value2029": 116745000,
-        "roundMultiple": 1.8,
-        "roundMultiple2032": 7.06
+        "roundMultiple": 1.88,
+        "roundMultiple2032": 7.4
       }
     ],
     "cases": {
@@ -682,7 +682,7 @@
           8.0
         ],
         "centralZAR": [
-          9000000,
+          8000000,
           13000000,
           16000000,
           20000000,
@@ -706,7 +706,7 @@
           136160000
         ],
         "ebitdaZAR": [
-          -5206770,
+          -3206770,
           209000,
           16484300,
           42134800,
@@ -721,9 +721,9 @@
           392055000,
           511950000
         ],
-        "roundMultiple2029": 1.95,
-        "roundMultiple2032": 7.88,
-        "lowestCashZAR": 2681010,
+        "roundMultiple2029": 2.04,
+        "roundMultiple2032": 8.26,
+        "lowestCashZAR": 1881010,
         "lowestQuarter": "Q2 2028"
       },
       "targets": {
@@ -785,9 +785,9 @@
           819285000,
           1153920000
         ],
-        "roundMultiple2029": 4.03,
-        "roundMultiple2032": 17.75,
-        "lowestCashZAR": 3622880,
+        "roundMultiple2029": 4.23,
+        "roundMultiple2032": 18.61,
+        "lowestCashZAR": 822880,
         "lowestQuarter": "Q4 2027"
       }
     }

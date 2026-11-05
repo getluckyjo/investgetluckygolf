@@ -58,6 +58,8 @@ for _, key, am, tm, drv, late, korea, tman, prem in SCEN:
         assert abs(c["gz_attach"][y] - a) < 1e-12 and abs(c["gz_ticket"][y] - base["gz_ticket"][y] * tm) < 1e-9, key
         assert abs(case_rounds - rounds) < 1 and c["central"] == base["central"] and c["sim_premium"] == prem, key
 
+ROUND_TXT, PRE_TXT = f"R{M.ROUND_ZAR / 1e6:.1f}m", f"R{M.ROUND_PRE_ZAR / 1e6:.1f}m"   # R6.2m, R55.8m
+
 # ------------------------------------------------------------------ styles
 ARIAL = "Arial"
 # Get Lucky's palette (css/site.css): night and forest for structure, lime for what you can change,
@@ -142,7 +144,8 @@ lines = [
     ("", CALC),
     ("What this is", BOLD),
     ("Get Lucky's forecast, 2027-2032, ZAR ex VAT: our share of every insured swing on Golfzon's simulator network and on course,", CALC),
-    ("and sponsorship. One round: R9.0m at R56m pre-money in Q1 2027. No interim raise, no hardware, no debt.", CALC),
+    (f"and sponsorship. One round: {ROUND_TXT} for {M.ROUND_ZAR / (M.ROUND_ZAR + M.ROUND_PRE_ZAR) * 100:.0f}% at {PRE_TXT} pre-money in Q1 2027. "
+     "No interim raise, no hardware, no debt.", CALC),
     ("", CALC),
     ("How to use it", BOLD),
     ("1. Pick a case in Model!C2 (lime). The Model and Round sheets follow it.", CALC),
@@ -521,7 +524,7 @@ Rs = wb.create_sheet("Round")
 Rs.column_dimensions["A"].width = 52
 for c_ in "BCDEFGH":
     Rs.column_dimensions[c_].width = 13
-cell(Rs, "A1", "The round: what R9.0m buys, and what it is marked at", TITLE)
+cell(Rs, "A1", f"The round: what {ROUND_TXT} buys, and what it is marked at", TITLE)
 cell(Rs, "A2", "Marks and the sale follow the case in Model!C2:", NOTE)
 cell(Rs, "C2", "=Model!C2", LINK)
 rr_ = MB["rr"]
@@ -694,7 +697,7 @@ Ck.freeze_panes = "A7"
 
 # Use of funds, from the plan, on the Round sheet (the deck's numbers)
 rr0 = Rs.max_row + 2
-header(Rs, rr0, "WHAT THE R9.0m PAYS FOR (THE PLAN)"); rr0 += 1
+header(Rs, rr0, f"WHAT THE {ROUND_TXT} PAYS FOR (THE PLAN)"); rr0 += 1
 for i, it in enumerate(plan_uof["items"]):
     cell(Rs, f"A{rr0 + i}", it["label"])
     ref = f"Checks!C{r - len(plan_uof['items']) + i}"

@@ -30,8 +30,8 @@ YEARS = list(range(2027, 2033))
 # ============================================================================
 # One round, no interim raise: the R1m convertible note is withdrawn (4 Nov 2026). Cash
 # carries the business to year end; the Fancourt sit-down is costed on its own (about R100k).
-ROUND_ZAR = 9_000_000         # Q1 2027: the plan uses about R6.3m at its lowest; the rest carries any one risk
-ROUND_PRE_ZAR = 56_000_000    # the founder's price: R56m pre, R65m post, about 14% for R9m
+ROUND_ZAR = 6_200_000         # Q1 2027: exactly 10% (the founder, 5 Nov 2026); the plan uses about R4.3m at its lowest
+ROUND_PRE_ZAR = 55_800_000    # the founder's price: R55.8m pre, R62m post, 10% for R6.2m
 OPENING_CASH_2027 = 0         # cash on 1 Jan 2027: conservative, with no note to carry it
 # Golfzon: the deck is built as the post-signing version - the agreement is signed before we
 # raise (the founder, 4 Nov 2026). Off, every status line reads "in talks". The page must not
@@ -117,10 +117,11 @@ PLAN = dict(
     # market by market, so the average starts low.
     gz_ticket={2027: 4.0, 2028: 5.0, 2029: 6.0, 2030: 7.0, 2031: 8.0, 2032: 8.0},
     gz_rounds=GZ_ROUNDS,
-    # Get Lucky's team, technology and launch (the founder, 4 Nov 2026).
-    central={2027: 9_000_000, 2028: 13_000_000, 2029: 16_000_000,
+    # Get Lucky's team, technology and launch (the founder, 4 Nov 2026). 2027 is trimmed for the smaller
+    # round (5 Nov 2026): hires into the central team land a little later, R8m not R9m.
+    central={2027: 8_000_000, 2028: 13_000_000, 2029: 16_000_000,
              2030: 20_000_000, 2031: 26_000_000, 2032: 31_000_000},
-    brand_fixed={2027: 3_000_000, 2028: 2_000_000},   # the global launch with Ernie, then the base
+    brand_fixed={2027: 2_000_000, 2028: 2_000_000},   # the global launch with Ernie (trimmed from R3m), then the base
     sim_premium=SIM_SPLIT["insurer"],   # premium on a simulator swing; above 24% comes out of our 46%
 )
 TARGETS = dict(  # the founder's targets: the upside, shown beside the plan, never in place of it
@@ -327,7 +328,7 @@ def main():
             "getLucky": "The hole-in-one app: on course, on Golfzon's network and at golf days; and sponsorship.",
         },
         "deal": {
-            "_note": ("One round, into Get Lucky: R9.0m for about 14% at R56m pre in Q1 2027. No interim raise: the "
+            "_note": ("One round, into Get Lucky: R6.2m for 10% at R55.8m pre (R62m post) in Q1 2027. No interim raise: the "
                       "R1m convertible note was withdrawn on 4 Nov 2026. The price is the founder's."),
             "round": {"amountZAR": ROUND_ZAR, "preMoneyZAR": ROUND_PRE_ZAR, "postMoneyZAR": post,
                       "equityPct": round(round_pct * 100, 2), "timing": "Q1 2027", "minimumTicketZAR": 1_000_000,

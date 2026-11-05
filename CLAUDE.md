@@ -24,8 +24,10 @@ reuse the old investgetlucky site.
 
 Willie Ross's review, agreed by the founders: **Get Lucky is the hole-in-one
 app — on course, on simulators, and next on the driving range — presented by
-Ernie Els.** Asset-light: no hardware, no debt. One round, R9.0m for about 14%
-at R56m pre (R65m post), Q1 2027. No interim raise.
+Ernie Els.** Asset-light: no hardware, no debt. One round, R6.2m for exactly 10%
+at R55.8m pre (R62m post), Q1 2027 (the founder, 5 Nov 2026). No interim raise.
+To fit the smaller round, 2027 is trimmed by R2m: the launch budget R2m (not R3m)
+and the central team R8m (not R9m, hires a little later).
 
 ## Rules
 

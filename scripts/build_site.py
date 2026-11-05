@@ -44,6 +44,7 @@ x = lambda v: f"{v:.2f}×"
 n = lambda v: f"{v:,}"
 pc = lambda v, dp=1: f"{neg(v)}{abs(v):.{dp}f}%"
 rand = lambda v: f"R{v:,}"
+price = lambda v: rm(v, 0) if v % 1e6 == 0 else rm(v)   # the round's own figures, exact: R55.8m, R62m, R6.2m
 low_cash = lambda v: f"R{v / 1e3:,.0f}k" if abs(v) < 1e6 else rm(v)   # R40k, not R0.0m
 
 
@@ -220,7 +221,7 @@ def raiseband():
     <div class="step">
       <span class="k">One round · {esc(rd['timing'])}</span>
       <div class="n tab">{rm(rd['amountZAR'])} <small>for {EQ}</small></div>
-      <p>{r0(rd['preMoneyZAR'])} pre-money, {r0(rd['postMoneyZAR'])} post. {rm(rd['minimumTicketZAR'])} minimum. Ordinary shares in Get Lucky.</p>
+      <p>{price(rd['preMoneyZAR'])} pre-money, {price(rd['postMoneyZAR'])} post. {rm(rd['minimumTicketZAR'])} minimum. Ordinary shares in Get Lucky.</p>
     </div>
     <div class="step">
       <span class="k">Asset-light</span>
@@ -469,7 +470,7 @@ def numbers_section():
       <div class="total"><span>December 2029</span><span>{r0(mv['2029']['total'])}</span></div>
       <div class="total"><span>2032, same method</span><span>{r0(mv['2032']['total'])}</span></div>
     </div>
-    <p>The round's price looks forward: {r0(rd['postMoneyZAR'])} is {price_on(2027)} our 2027 revenue, {price_on(2028)} our 2028 revenue and {price_on(2029)} our 2029 revenue. Our yardstick values each year on that year's revenue, so it starts low while we build: {r0(mv['2027']['total'])} in December 2027 and {r0(mv['2028']['total'])} in December 2028.</p>"""
+    <p>The round's price looks forward: {price(rd['postMoneyZAR'])} is {price_on(2027)} our 2027 revenue, {price_on(2028)} our 2028 revenue and {price_on(2029)} our 2029 revenue. Our yardstick values each year on that year's revenue, so it starts low while we build: {r0(mv['2027']['total'])} in December 2027 and {r0(mv['2028']['total'])} in December 2028.</p>"""
     order = ["plan", "halfAttach", "hard", "golfzonLate", "outsideKorea", "outsideKoreaTrackman", "targets"]
     labels = {"hard": "The hard case: half the attach and half the ticket"}
     srows = "".join(
@@ -572,7 +573,7 @@ def use_of_funds_block(items):
     amount = lambda v: f"R{v / 1e3:.0f}k" if v < 1e6 else rm(v)
     bar = "".join(
         f'<div style="flex:{u["pct"]};background:{USE_COLOURS[u["key"]]};color:{"var(--green)" if u["key"] in USE_DARK_TEXT else "var(--cream)"}" title="{esc(u["label"])}, {u["pct"]}%">'
-        + (f'{u["pct"]}%' if u["pct"] >= 10 else "") + (f'<span>{esc(u["short"])}</span>' if u["pct"] >= 20 else "") + "</div>"
+        + (f'{u["pct"]}%' if u["pct"] >= 10 else "") + (f'<span>{esc(u["short"])}</span>' if u["pct"] >= 15 else "") + "</div>"
         for u in items)
     note = lambda u: f"<small>{esc(u['note'])}</small>" if u.get("note") else ""   # what each line buys
     ulist = "".join(f'<li><i style="background:{USE_COLOURS[u["key"]]};{"outline:1px solid var(--line-strong)" if u["key"] == "golfzon" else ""}"></i>'
@@ -601,7 +602,7 @@ def deal_section():
   <div class="wrap" style="position:relative">
     <div class="head">
       <span class="kicker">07 · The raise</span>
-      <h2 class="display-lg" id="deal-h" style="color:var(--cream)">One round. <span class="lime">{r0(rd['amountZAR'])} in {esc(rd['timing'])}.</span></h2>
+      <h2 class="display-lg" id="deal-h" style="color:var(--cream)">One round. <span class="lime">{price(rd['amountZAR'])} in {esc(rd['timing'])}.</span></h2>
       <p class="lede">Into Get Lucky, asset-light: no hardware, no debt, no interim raise. The round funds the Golfzon build and the launch with Ernie; our revenue already pays the team and the day-to-day.</p>
     </div>
     <div class="terms">
@@ -610,7 +611,7 @@ def deal_section():
         <h3>The round</h3>
         <dl class="tab">
           <dt>Raising</dt><dd>{rm(rd['amountZAR'])} for {EQ}<small>≈ {usd(rd['amountZAR'])}</small></dd>
-          <dt>Pre / post</dt><dd>{r0(rd['preMoneyZAR'])} / {r0(rd['postMoneyZAR'])}<small>≈ {usd(rd['preMoneyZAR'])} / {usd(rd['postMoneyZAR'])}</small></dd>
+          <dt>Pre / post</dt><dd>{price(rd['preMoneyZAR'])} / {price(rd['postMoneyZAR'])}<small>≈ {usd(rd['preMoneyZAR'])} / {usd(rd['postMoneyZAR'])}</small></dd>
           <dt>Minimum ticket</dt><dd>{rm(rd['minimumTicketZAR'])}</dd>
           <dt>Ernie Els</dt><dd>{amb['equityPct']}% non-diluting<small>Founding Ambassador, inside the pre-money</small></dd>
           <dt>Marked at December 2029</dt><dd>{x(rd['multiple2029'])}<small>{x(rd['hardCaseMultiple2029'])} in the hard case</small></dd>
@@ -644,10 +645,10 @@ def deal_section():
         <h3>What your ticket becomes</h3>
         <div class="amount tab"><span id="calc-amt">{rand(rd['minimumTicketZAR'])}</span><span class="usd" id="calc-usd">≈ ${rd['minimumTicketZAR'] / FX:,.0f}</span></div>
         <label class="sr-only" for="calc-range">Ticket in rand</label>
-        <input type="range" id="calc-range" min="{rd['minimumTicketZAR']}" max="{rd['amountZAR']}" step="250000" value="{rd['minimumTicketZAR']}">
+        <input type="range" id="calc-range" min="{rd['minimumTicketZAR']}" max="{rd['amountZAR']}" step="100000" value="{rd['minimumTicketZAR']}">
         <table class="tab" aria-live="polite">
           <caption class="sr-only">What the ticket is marked at</caption>
-          <tr><th scope="row">Your stake at {r0(rd['postMoneyZAR'])} post</th><td id="calc-stake">{stake * 100:.2f}%</td></tr>
+          <tr><th scope="row">Your stake at {price(rd['postMoneyZAR'])} post</th><td id="calc-stake">{stake * 100:.2f}%</td></tr>
           <tr><th scope="row">December 2029 ({r0(rd['value2029ZAR'])})</th><td id="calc-2029">R{stake * rd['value2029ZAR'] / 1e6:.2f}m · {x(stake * rd['value2029ZAR'] / rd['minimumTicketZAR'])}</td></tr>
           <tr><th scope="row">The hard case, December 2029 ({r0(rd['hardCaseValue2029ZAR'])})</th><td id="calc-hard">R{stake * rd['hardCaseValue2029ZAR'] / 1e6:.2f}m · {x(stake * rd['hardCaseValue2029ZAR'] / rd['minimumTicketZAR'])}</td></tr>
           <tr><th scope="row">A sale in {ex['year']} ({r0(rd['value2032ZAR'])})</th><td id="calc-2032">R{stake * rd['value2032ZAR'] / 1e6:.2f}m · {x(stake * rd['value2032ZAR'] / rd['minimumTicketZAR'])}</td></tr>
@@ -667,9 +668,9 @@ def deal_section():
 def faq_section():
     qa = [
         ("What exactly am I buying?",
-         f"Ordinary shares in Get Lucky Golf Club (Pty) Ltd: {rm(rd['amountZAR'])} for {EQ} at {r0(rd['preMoneyZAR'])} pre-money, from {rm(rd['minimumTicketZAR'])}, in {esc(rd['timing'])}. One round, no interim raise, no preference and no ratchet."),
+         f"Ordinary shares in Get Lucky Golf Club (Pty) Ltd: {rm(rd['amountZAR'])} for {EQ} at {price(rd['preMoneyZAR'])} pre-money, from {rm(rd['minimumTicketZAR'])}, in {esc(rd['timing'])}. One round, no interim raise, no preference and no ratchet."),
         ("What does Ernie get?",
-         f"{amb['equityPct']}% non-diluting equity as Founding Ambassador, with normal shareholder rights: his {amb['equityPct']}% shares in any profit we pay out and in any sale, like every other share. No fee, no capital, no guarantees, no liability. His {amb['equityPct']}% sits inside the {r0(rd['preMoneyZAR'])} pre-money, top-up included, so the round still buys its full stake. The full terms are available under NDA."),
+         f"{amb['equityPct']}% non-diluting equity as Founding Ambassador, with normal shareholder rights: his {amb['equityPct']}% shares in any profit we pay out and in any sale, like every other share. No fee, no capital, no guarantees, no liability. His {amb['equityPct']}% sits inside the {price(rd['preMoneyZAR'])} pre-money, top-up included, so the round still buys its full stake. The full terms are available under NDA."),
         ("Why no hardware?",
          "Because the swing runs on screens and phones that already exist: Golfzon's bays, ranges that track every ball, and the golfer's own phone on course. We don't buy simulators or screens, so the round builds the platform and the launch, and every new network adds revenue without capex."),
         ("What if someone wins R1m, or $100,000?",
@@ -773,7 +774,7 @@ BANNED = [
      "Golfzon's confidential chain pricing"),
     (r"(?i)equity and a share of profit|ambassador's share of profit|5% of (the company's )?net profit|no profit share",
      "Ernie's terms: ordinary shares with normal shareholder rights, not a separate profit share or a payout every year"),
-    (r"R126m|R140m post|R14\.0m for 10%|R53\.3m|R8\.0m for 15%|R4\.0m for 10%|R70m post|R14\.0m for 20%|R14\.0m in Q1|R14m in Q1|R70m|R66m post|R10\.0m for 15|R10m in Q1|R10\.0m in Q1|R56m / R66m",
+    (r"R9\.0m for|13\.8%|R65m|R56m pre|R9m in Q1|R14\.0m for 10%|R53\.3m|R8\.0m for 15%|R4\.0m for 10%|R70m post|R14\.0m for 20%|R14\.0m in Q1|R14m in Q1|R70m|R66m post|R10\.0m for 15|R10m in Q1|R10\.0m in Q1|R56m / R66m",
      "a superseded round"),
     (r"(?i)\bregistry\b|\bgames\b|game of chance|icons cup|back an icon|\bbet(s|ting)?\b|bet on yourself|\bjackpot\b|golf gods",
      "retired features and language: games, the registry, betting"),
@@ -797,7 +798,7 @@ def main():
     text = re.sub(r"<[^>]+>", " ", out)
     fails = [f"{why}: {mo.group(0)!r}" for pat, why in BANNED for mo in re.finditer(pat, text)]
     must = [rm(rev["total"][0]), rm(rev["total"][-1]), x(rd["multiple2029"]), x(rd["hardCaseMultiple2029"]),
-            r0(rd["preMoneyZAR"]), n(gz["locations"])]
+            price(rd["preMoneyZAR"]), n(gz["locations"])]
     fails += [f"missing {s!r}" for s in must if s not in out]
     if fails:
         print("build refused:\n  " + "\n  ".join(fails))
