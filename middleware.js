@@ -24,7 +24,7 @@ async function cont() {
 
 const COOKIE = 'gl_invest';
 const SHARE_CARD = '/assets/og/share-2027.jpg';
-const DESC = 'One insured swing at a life-changing prize: on course with our app, on Golfzon simulators worldwide, and in the gym. A private briefing for invited investors.';
+const DESC = 'Get Lucky is the hole-in-one app: one insured swing at a life-changing prize, on course, on simulators and next on the driving range. A private briefing for invited investors.';
 const SALT = 'get-lucky-invest-2027:';
 const MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 const OPEN = (p) => p.startsWith('/_vercel/') || p.startsWith('/assets/fonts/') || p.startsWith('/assets/logos/')

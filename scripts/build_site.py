@@ -798,6 +798,9 @@ def main():
     out = page()
     text = re.sub(r"<[^>]+>", " ", out)
     fails = [f"{why}: {mo.group(0)!r}" for pat, why in BANNED for mo in re.finditer(pat, text)]
+    # the password page is what link previews show, so its copy is held to the same list
+    gate = re.sub(r"/\*.*?\*/|^\s*//.*$", "", (ROOT / "middleware.js").read_text(), flags=re.S | re.M)   # code comments aren't shown
+    fails += [f"middleware.js, {why}: {mo.group(0)!r}" for pat, why in BANNED for mo in re.finditer(pat, gate)]
     must = [rm(rev["total"][0]), rm(rev["total"][-1]), x(rd["multiple2029"]), x(rd["hardCaseMultiple2029"]),
             price(rd["preMoneyZAR"]), n(gz["locations"])]
     fails += [f"missing {s!r}" for s in must if s not in out]
