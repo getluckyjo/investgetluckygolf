@@ -144,8 +144,8 @@ lines = [
     ("", CALC),
     ("What this is", BOLD),
     ("Get Lucky's forecast, 2027-2032, ZAR ex VAT: our share of every insured swing on Golfzon's simulator network and on course,", CALC),
-    (f"and sponsorship. One round: {ROUND_TXT} for {M.ROUND_ZAR / (M.ROUND_ZAR + M.ROUND_PRE_ZAR) * 100:.0f}% at {PRE_TXT} pre-money in Q1 2027. "
-     "Asset-light and scalable through golf simulation software; no debt, no interim raise.", CALC),
+    (f"and sponsorship. The round: {ROUND_TXT} for {M.ROUND_ZAR / (M.ROUND_ZAR + M.ROUND_PRE_ZAR) * 100:.0f}% at {PRE_TXT} pre-money in Q1 2027. "
+     "Asset-light and scalable through golf simulation software.", CALC),
     ("", CALC),
     ("How to use it", BOLD),
     ("1. Pick a case in Model!C2 (lime). The Model and Round sheets follow it.", CALC),
@@ -254,7 +254,7 @@ scalar("Pre-money, R", "Pre_ZAR", M.ROUND_PRE_ZAR, R0, "The founder's price; Ern
 scalar("Post-money, R", "Post_ZAR", "=Pre_ZAR+Round_ZAR", R0, "Pre-money plus the round", calc=True)
 scalar("The round's stake", "Round_Stake", "=Round_ZAR/Post_ZAR", PCT2, "Round / post-money", calc=True)
 scalar("Minimum ticket, R", "Min_Ticket", 1_000_000, R0, "")
-scalar("Opening cash, 1 January 2027, R", "Opening_Cash", M.OPENING_CASH_2027, R0, "Conservative: no note, so nothing carried in (4 Nov 2026)", key=True)
+scalar("Opening cash, 1 January 2027, R", "Opening_Cash", M.OPENING_CASH_2027, R0, "Conservative: nothing carried in", key=True)
 scalar("Rand to the US dollar", "FX_ZAR", M.FX, '0.00', "The investor FX")
 r += 1
 header(A, r, "THE GOLFZON NETWORK", "I"); r += 1

@@ -31,6 +31,9 @@ and the central team R8m (not R9m, hires a little later).
 
 ## Rules
 
+- **Pitch the plan as it is.** No backward references to earlier versions: no "no
+  interim raise", "one round", "no debt", "no note" or "trimmed" (the founder, 5 Nov
+  2026). The build bans them.
 - **No convertible note.** The R1m note was withdrawn on 4 Nov 2026; opening
   cash on 1 Jan 2027 is R0. Never bring the note back onto the page.
 - **No gyms, for now.** Planet Fitness, Virgin Active, gym bays and the bay

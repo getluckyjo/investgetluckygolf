@@ -219,14 +219,14 @@ def raiseband():
 <section class="raiseband" id="raise" aria-label="The raise at a glance">
   <div class="wrap row">
     <div class="step">
-      <span class="k">One round · {esc(rd['timing'])}</span>
+      <span class="k">The round · {esc(rd['timing'])}</span>
       <div class="n tab">{rm(rd['amountZAR'])} <small>for {EQ}</small></div>
       <p>{price(rd['preMoneyZAR'])} pre-money, {price(rd['postMoneyZAR'])} post. {rm(rd['minimumTicketZAR'])} minimum. Ordinary shares in Get Lucky.</p>
     </div>
     <div class="step">
       <span class="k">How we scale</span>
       <div class="n tab">Asset-light <small>and scalable</small></div>
-      <p>Via golf simulation software: the swing plugs into simulators that already exist, so every new network adds revenue without hardware or debt.</p>
+      <p>Via golf simulation software: the swing plugs into simulators that already exist, so every new network adds revenue without capex.</p>
     </div>
     <div class="act">
       <a class="btn btn-ink" href="#deal">The terms</a>
@@ -503,7 +503,7 @@ def numbers_section():
       <li><strong>The app, on course:</strong> {n(f['kpis']['onCourseSwings'][0])} paid swings in 2027 ({n(tr['paidSwings'])} in our first year) rising to {n(f['kpis']['onCourseSwings'][-1])} in 2032, at R{f['kpis']['onCourseAvgZAR'][0]} to R{f['kpis']['onCourseAvgZAR'][-1]} a swing.</li>
       <li><strong>Sponsorship grows with reach:</strong> Indwe's R3m is contracted for 2027 and we assume it renews; on top, about R5 for every paid swing beyond 2027's, on course and on Golfzon. {rm(rev['sponsorship'][0])} in 2027 to {rm(rev['sponsorship'][-1])} in 2032.</li>
       <li><strong>Get Lucky:</strong> central team {rm(plan['centralZAR'][0], 0)} in 2027 to {rm(plan['centralZAR'][-1], 0)} in 2032; brand 8% of product revenue plus a launch budget; tax at 27% after the 2027 loss.</li>
-      <li><strong>Cash:</strong> {"R0" if not cash['openingZAR'] else rm(cash['openingZAR'])} on 1 January 2027, with no interim raise; the round lands in Q1 2027. Without it, the first quarter would end at {rm(cash['q1WithoutRoundZAR'])}.</li>
+      <li><strong>Cash:</strong> {"R0" if not cash['openingZAR'] else rm(cash['openingZAR'])} on 1 January 2027; the round lands in Q1 2027. Without it, the first quarter would end at {rm(cash['q1WithoutRoundZAR'])}.</li>
     </ul>"""
     return f"""
 <section class="section white" id="numbers" aria-labelledby="num-h">
@@ -603,8 +603,8 @@ def deal_section():
   <div class="wrap" style="position:relative">
     <div class="head">
       <span class="kicker">07 · The raise</span>
-      <h2 class="display-lg" id="deal-h" style="color:var(--cream)">One round. <span class="lime">{price(rd['amountZAR'])} in {esc(rd['timing'])}.</span></h2>
-      <p class="lede">Into Get Lucky: asset-light and scalable through golf simulation software, with no debt and no interim raise. The round funds the Golfzon build and the launch with Ernie; our revenue already pays the team and the day-to-day.</p>
+      <h2 class="display-lg" id="deal-h" style="color:var(--cream)">{price(rd['amountZAR'])} for {EQ}. <span class="lime">{esc(rd['timing'])}.</span></h2>
+      <p class="lede">Into Get Lucky: asset-light and scalable through golf simulation software. The round funds the Golfzon build and the launch with Ernie; our revenue already pays the team and the day-to-day.</p>
     </div>
     <div class="terms">
       <div class="termcard reveal">
@@ -669,7 +669,7 @@ def deal_section():
 def faq_section():
     qa = [
         ("What exactly am I buying?",
-         f"Ordinary shares in Get Lucky Golf Club (Pty) Ltd: {rm(rd['amountZAR'])} for {EQ} at {price(rd['preMoneyZAR'])} pre-money, from {rm(rd['minimumTicketZAR'])}, in {esc(rd['timing'])}. One round, no interim raise, no preference and no ratchet."),
+         f"Ordinary shares in Get Lucky Golf Club (Pty) Ltd: {rm(rd['amountZAR'])} for {EQ} at {price(rd['preMoneyZAR'])} pre-money, from {rm(rd['minimumTicketZAR'])}, in {esc(rd['timing'])}. No liquidation preference and no ratchet."),
         ("What does Ernie get?",
          f"{amb['equityPct']}% non-diluting equity as Founding Ambassador, with normal shareholder rights: his {amb['equityPct']}% shares in any profit we pay out and in any sale, like every other share. No fee, no capital, no guarantees, no liability. His {amb['equityPct']}% sits inside the {price(rd['preMoneyZAR'])} pre-money, top-up included, so the round still buys its full stake. The full terms are available under NDA."),
         ("Why asset-light?",
@@ -728,7 +728,7 @@ def footer():
 def page():
     desc = (f"Get Lucky is the hole-in-one app: one insured swing at a hole-in-one, wherever you play. On course in South Africa, "
             f"on Golfzon's {n(gz['locations'])} simulator locations worldwide, and next on the driving range. Ernie Els is "
-            f"Founding Ambassador. One round: {rm(rd['amountZAR'])} in {rd['timing']}.")
+            f"Founding Ambassador. Raising {rm(rd['amountZAR'])} for {EQ} in {rd['timing']}.")
     body = "".join([nav(), hero(), '<main id="main">', raiseband(), concept(), app_section(), golfzon_section(),
                     ernie_section(), team_section(), numbers_section(), risk_section(), deal_section(), faq_section(),
                     cta_section(), "</main>", footer()])
@@ -782,6 +782,8 @@ BANNED = [
     (r"(?i)whatsapp|\bunlimited\b|\bpivot\b|old plan|previous plan", "retired framings"),
     (r"(?i)exclusive with golfzon|signed for \d+ bays", "a signature that does not exist"),
     (r"(?i)convertible note|\bthe note\b|note now|R36m cap|interim raise is", "the withdrawn convertible note (4 Nov 2026)"),
+    (r"(?i)interim raise|\bone round\b|\bno debt\b|\bor debt\b|no longer|instead of|\btrimmed\b|no note\b",
+     "a backward reference: pitch the plan as it is, not against an earlier version (5 Nov 2026)"),
     (r"(?i)bay company|\b136 (gym )?bays|\b136 bays|RMB (lends|asset|is modelled)|RMB's|payback|preferred return|R119|bay investors|our fee|half the bays|own the local",
      "the gym numbers"),
     (r"(?i)\bgyms?\b|planet fitness|virgin active|planet golf|virgin golf|padel|vitality|growthpoint",
