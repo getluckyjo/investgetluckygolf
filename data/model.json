@@ -154,7 +154,9 @@
     "indwe": {
       "status": "Sponsor and broker",
       "fsp": "3425",
-      "sponsorship2027ZAR": 3000000
+      "sponsorship2027ZAR": 3000000,
+      "sponsorship2027Status": "Approved",
+      "firstPayment": "1 January 2027"
     }
   },
   "traction": {

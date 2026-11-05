@@ -167,7 +167,7 @@ lines = [
     ("", CALC),
     ("Sources", BOLD),
     ("Golfzon network, rounds and phases: Golfzon's 'Get Lucky with GOLFZON' proposal, October 2026. Ace rate: Golfzon's measured", CALC),
-    ("rate across every setting. Insurance terms: the Santam submission. Indwe's R3m: the 2027 sponsorship. Trackman: research.json.", CALC),
+    ("rate across every setting. Insurance terms: the Santam submission. Indwe's R3m: approved for 2027, first payment 1 January. Trackman: research.json.", CALC),
     ("The round, the central team, the launch budget and the targets: the founder (26 Oct and 4 Nov 2026). Forecast, not a promise.", CALC),
 ]
 # The cover: a night band with the logo, a lime rule, then the notes in one clean column.
@@ -288,7 +288,7 @@ scalar("Payments, of gross", "OC_Processing", M.OC_PROCESSING, PCT, "")
 scalar("Video review and claims, R a swing", "OC_Verify", M.OC_VERIFY_ZAR, R0, "")
 r += 1
 header(A, r, "SPONSORSHIP", "I"); r += 1
-scalar("Indwe's sponsorship, R a year", "Sponsor_Base", M.SPONSOR_BASE_ZAR, R0, "Contracted for 2027; assumed to renew")
+scalar("Indwe's sponsorship, R a year", "Sponsor_Base", M.SPONSOR_BASE_ZAR, R0, "Approved by Indwe for 2027, first payment 1 January; assumed to renew")
 scalar("Sponsorship per paid swing beyond 2027's, R", "Sponsor_Per_Swing", M.SPONSOR_PER_SWING_ZAR, R0, "About a seventh of what Indwe's R3m pays a swing in 2027")
 r += 1
 header(A, r, "GET LUCKY'S COSTS", "I"); r += 1

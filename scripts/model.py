@@ -78,7 +78,8 @@ OC_PROCESSING = 0.03
 OC_VERIFY_ZAR = 8             # video review and claims handling per swing
 
 # ============================================================================
-# 3. SPONSORSHIP - grows with reach. Indwe's R3m is contracted for 2027 and assumed
+# 3. SPONSORSHIP - grows with reach. Indwe has approved R3m for 2027, first payment on 1 January
+# (the founder, 5 Nov 2026), and it is assumed
 # to renew; on top, sponsors pay for the reach we add: about R5 (~$0.27) for every paid
 # swing beyond 2027's, on course and on Golfzon - a seventh of what Indwe's R3m pays a
 # swing in 2027.
@@ -368,7 +369,8 @@ def main():
                                      "never on the page or in this repo.")},
             "ernie": {"status": "Onboard", "role": "Founding Ambassador"},
             "santam": {"status": "Underwriter", "fsp": "3416"},
-            "indwe": {"status": "Sponsor and broker", "fsp": "3425", "sponsorship2027ZAR": 3_000_000},
+            "indwe": {"status": "Sponsor and broker", "fsp": "3425", "sponsorship2027ZAR": SPONSOR_BASE_ZAR,
+                      "sponsorship2027Status": "Approved", "firstPayment": "1 January 2027"},
         },
         "traction": old.get("traction", {}),
         "product": {

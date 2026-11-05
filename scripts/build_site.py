@@ -306,7 +306,7 @@ def app_section():
           <div><div class="n">{n(tr['paidSwings'])}</div><div class="l">Paid swings in our first year</div></div>
           <div><div class="n">{rm(tr['trailingRevenueZAR'])}</div><div class="l">Traded: {rm(tr['sponsorshipZAR'])} sponsorship, {rm(tr['entriesZAR'])} entries</div></div>
           <div><div class="n">{n(tr['golfDaysPerYear'])}</div><div class="l">Golf days a year, {esc(tr['partnerCourses'])} partner courses</div></div>
-          <div><div class="n">{rm(pt['indwe']['sponsorship2027ZAR'], 0)}</div><div class="l">Indwe's sponsorship for 2027</div></div>
+          <div><div class="n">{rm(pt['indwe']['sponsorship2027ZAR'], 0)}</div><div class="l">Indwe's 2027 sponsorship, approved</div></div>
         </div>
       </div>
     </div>
@@ -501,7 +501,7 @@ def numbers_section():
     assumptions = f"""<ul>
       <li><strong>Golfzon:</strong> {gz['roundsPerYear'] / 1e6:.0f} million rounds a year held flat, about 94 million of them in Korea; rounds carrying a swing rise {" → ".join(f"{v}%" for v in plan['golfzonAttachPct'])} from 2027 to 2032, at {" → ".join(f"${v:.0f}" for v in plan['golfzonTicketUSD'][:5])} a swing. We keep {split['getLucky']}%; payments 3%, risk and support $0.05 a swing, launches 12% of our share.</li>
       <li><strong>The app, on course:</strong> {n(f['kpis']['onCourseSwings'][0])} paid swings in 2027 ({n(tr['paidSwings'])} in our first year) rising to {n(f['kpis']['onCourseSwings'][-1])} in 2032, at R{f['kpis']['onCourseAvgZAR'][0]} to R{f['kpis']['onCourseAvgZAR'][-1]} a swing.</li>
-      <li><strong>Sponsorship grows with reach:</strong> Indwe's R3m is contracted for 2027 and we assume it renews; on top, about R5 for every paid swing beyond 2027's, on course and on Golfzon. {rm(rev['sponsorship'][0])} in 2027 to {rm(rev['sponsorship'][-1])} in 2032.</li>
+      <li><strong>Sponsorship grows with reach:</strong> Indwe has approved {rm(pt['indwe']['sponsorship2027ZAR'], 0)} for 2027, with the first payment on {esc(pt['indwe']['firstPayment'].replace(" 2027", ""))}, and we assume it renews; on top, about R5 for every paid swing beyond 2027's, on course and on Golfzon. {rm(rev['sponsorship'][0])} in 2027 to {rm(rev['sponsorship'][-1])} in 2032.</li>
       <li><strong>Get Lucky:</strong> central team {rm(plan['centralZAR'][0], 0)} in 2027 to {rm(plan['centralZAR'][-1], 0)} in 2032; brand 8% of product revenue plus a launch budget; tax at 27% after the 2027 loss.</li>
       <li><strong>Cash:</strong> {"R0" if not cash['openingZAR'] else rm(cash['openingZAR'])} on 1 January 2027; the round lands in Q1 2027. Without it, the first quarter would end at {rm(cash['q1WithoutRoundZAR'])}.</li>
     </ul>"""
