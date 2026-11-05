@@ -44,6 +44,7 @@ x = lambda v: f"{v:.2f}×"
 n = lambda v: f"{v:,}"
 pc = lambda v, dp=1: f"{neg(v)}{abs(v):.{dp}f}%"
 rand = lambda v: f"R{v:,}"
+pct1 = lambda v: f"{v:.1f}".rstrip("0").rstrip(".") + "%"   # 5.5%, 4.5%, 10%
 price = lambda v: rm(v, 0) if v % 1e6 == 0 else rm(v)   # the round's own figures, exact: R55.8m, R62m, R6.2m
 low_cash = lambda v: f"R{v / 1e3:,.0f}k" if abs(v) < 1e6 else rm(v)   # R40k, not R0.0m
 
@@ -222,7 +223,7 @@ def raiseband():
     <div class="step">
       <span class="k">The round · {esc(rd['timing'])}</span>
       <div class="n tab">{rm(rd['amountZAR'])} <small>for {EQ}</small></div>
-      <p>{price(rd['preMoneyZAR'])} pre-money, {price(rd['postMoneyZAR'])} post. {rm(rd['minimumTicketZAR'])} minimum. Ordinary shares in Get Lucky.</p>
+      <p>{price(rd['preMoneyZAR'])} pre-money, {price(rd['postMoneyZAR'])} post, {rm(rd['minimumTicketZAR'])} minimum. A development partner adds {rm(rd['devZAR'])} of build work for {pct1(rd['devPct'])}: {pct1(rd['totalPct'])} in all.</p>
     </div>
     <div class="step">
       <span class="k">How we scale</span>
@@ -522,7 +523,7 @@ def numbers_section():
       <li><strong>The app, on course:</strong> {n(f['kpis']['onCourseSwings'][0])} paid swings in 2027 ({n(tr['paidSwings'])} in our first year) rising to {n(f['kpis']['onCourseSwings'][-1])} in 2032, at R{f['kpis']['onCourseAvgZAR'][0]} to R{f['kpis']['onCourseAvgZAR'][-1]} a swing.</li>
       <li><strong>Sponsorship grows with reach:</strong> Indwe has approved {rm(pt['indwe']['sponsorship2027ZAR'], 0)} for 2027, with the first payment on {esc(pt['indwe']['firstPayment'].replace(" 2027", ""))}, and we assume it renews; on top, about R5 for every paid swing beyond 2027's, on course and on Golfzon. {rm(rev['sponsorship'][0])} in 2027 to {rm(rev['sponsorship'][-1])} in 2032.</li>
       <li><strong>Get Lucky:</strong> central team {rm(plan['centralZAR'][0], 0)} in 2027 to {rm(plan['centralZAR'][-1], 0)} in 2032; brand 8% of product revenue plus a launch budget; tax at 27% after the 2027 loss.</li>
-      <li><strong>Cash:</strong> {"R0" if not cash['openingZAR'] else rm(cash['openingZAR'])} on 1 January 2027; the round lands in Q1 2027. Without it, the first quarter would end at {rm(cash['q1WithoutRoundZAR'])}.</li>
+      <li><strong>Cash:</strong> {"R0" if not cash['openingZAR'] else rm(cash['openingZAR'])} on 1 January 2027; the round lands in Q1 2027, and {rm(rd['devZAR'])} of 2027 development is paid in shares, not cash. Without the round, the first quarter would end at {rm(cash['q1WithoutRoundZAR'])}.</li>
     </ul>"""
     return f"""
 <section class="section white" id="numbers" aria-labelledby="num-h">
@@ -569,6 +570,8 @@ def risk_section():
          f"A year late, the round marks at {x(late['roundMultiple'])} in 2029 and {x(late['roundMultiple2032'])} by 2032, and cash lasts to {late['cashLastsTo']} if we cut nothing. Phase one needs no new Golfzon software, which is why it comes first, and a slow start would show in 2027's numbers, in time to hold the hiring back."),
         ("shield", "Will an insurer cover a simulator ace?",
          f"Santam has agreed in principle. After commission the cover breaks even at one ace in {n(prod['simInsurerBreakEvenOneIn'])}; Golfzon measures about one in {n(prod['simAceMeasuredOneIn'])}. That's why we play the hardest setting, rotate the hole weekly and cap entries. If the premium lands at 30%, not 24%, it comes out of our share and the round marks at {x(terms['simPremium30']['roundMultiple'])}. Indwe both sponsors us and places the cover, so a second carrier joins the panel before the simulator tiers scale."),
+        ("code", "What if the development partner doesn't come in?",
+         f"Then we raise the {rm(rd['devZAR'])} in cash at the same price, {rm(rd['totalZAR'])} for {pct1(rd['totalPct'])} in all, and the plan doesn't change: the work costs the same either way."),
         ("scale", "Isn't this gambling?",
          "No. It's a skill competition with an insured prize: there's no pot, and no golfer's entry funds another golfer's win. We have a written legal opinion for South Africa and clear each market before we sell there."),
     ]
@@ -597,7 +600,8 @@ def use_of_funds_block(items):
         f'<div style="flex:{u["pct"]};background:{USE_COLOURS[u["key"]]};color:{"var(--green)" if u["key"] in USE_DARK_TEXT else "var(--cream)"}" title="{esc(u["label"])}, {u["pct"]}%">'
         + (f'{u["pct"]}%' if u["pct"] >= 10 else "") + (f'<span>{esc(u["short"])}</span>' if u["pct"] >= 15 else "") + "</div>"
         for u in items)
-    note = lambda u: f"<small>{esc(u['note'])}</small>" if u.get("note") else ""   # what each line buys
+    shares = lambda u: f" {rm(u['inSharesZAR'])} of it is development work, paid in shares." if u.get("inSharesZAR") else ""
+    note = lambda u: f"<small>{esc(u['note'])}.{shares(u)}</small>" if u.get("note") else ""   # what each line buys
     ulist = "".join(f'<li><i style="background:{USE_COLOURS[u["key"]]};{"outline:1px solid var(--line-strong)" if u["key"] == "app" else ""}"></i>'
                     f'<span>{esc(u["label"])}{note(u)}</span><b>{amount(u["ZAR"])}</b></li>' for u in items)
     label = esc(", ".join(f"{u['label']} {u['pct']}%" for u in items))
@@ -625,7 +629,7 @@ def deal_section():
     <div class="head">
       <span class="kicker">07 · The raise</span>
       <h2 class="display-lg" id="deal-h" style="color:var(--cream)">{price(rd['amountZAR'])} for {EQ}. <span class="lime">{esc(rd['timing'])}.</span></h2>
-      <p class="lede">Into Get Lucky: asset-light and scalable through golf simulation software. The round funds two opportunities through one app: taking it to every par 3 in the world with Ernie, and simulator integration, Golfzon first. Our revenue already pays the rest of the team and the day-to-day.</p>
+      <p class="lede">Into Get Lucky: asset-light and scalable through golf simulation software. The round funds two opportunities through one app: taking it to every par 3 in the world with Ernie, and simulator integration, Golfzon first. Alongside the cash, a development partner takes {pct1(rd['devPct'])} for {rm(rd['devZAR'])} of build work, at the same price: {pct1(rd['totalPct'])} in all.</p>
     </div>
     <div class="terms">
       <div class="termcard reveal">
@@ -633,13 +637,14 @@ def deal_section():
         <h3>The round</h3>
         <dl class="tab">
           <dt>Raising</dt><dd>{rm(rd['amountZAR'])} for {EQ}<small>≈ {usd(rd['amountZAR'])}</small></dd>
+          <dt>Development partner</dt><dd>{rm(rd['devZAR'])} of work for {pct1(rd['devPct'])}<small>Same price, paid in shares; being agreed</small></dd>
           <dt>Pre / post</dt><dd>{price(rd['preMoneyZAR'])} / {price(rd['postMoneyZAR'])}<small>≈ {usd(rd['preMoneyZAR'])} / {usd(rd['postMoneyZAR'])}</small></dd>
           <dt>Minimum ticket</dt><dd>{rm(rd['minimumTicketZAR'])}</dd>
           <dt>Ernie Els</dt><dd>{amb['equityPct']}% non-diluting<small>Founding Ambassador, inside the pre-money</small></dd>
           <dt>Marked at December 2029</dt><dd>{x(rd['multiple2029'])}<small>{x(rd['hardCaseMultiple2029'])} in the hard case</small></dd>
           <dt>A sale in {ex['year']}</dt><dd>{x(ex['multiple'])}, about {ex['aYearPct']}% a year<small>{x(ex['hardCaseMultiple'])}, about {ex['hardCaseAYearPct']}% a year, in the hard case</small></dd>
         </dl>
-        <p class="uses">Ordinary shares. Ernie's {amb['equityPct']}% sits inside the pre-money, so the round buys its full {EQ}. Term sheet on request.</p>
+        <p class="uses">Ordinary shares. Ernie's {amb['equityPct']}% sits inside the pre-money, so your cash buys its full {EQ}. Term sheet on request.</p>
       </div>
       <div class="termcard reveal">
         <span class="k">Use of funds</span>
@@ -650,13 +655,13 @@ def deal_section():
             <div><b>{rm(cash['lowestQuarterZAR'])}</b><span>Our lowest cash, {cash['lowestQuarter']}, with every cost held at plan</span></div>
           </div>
         </div>
-        <p class="uses">So the round goes into what's new: the software and the launch. The plan needs no further equity round.</p>
+        <p class="uses">{rm(d['useOfFunds']['cashZAR'])} of it is cash and {rm(d['useOfFunds']['inSharesZAR'])} the development partner's work. The plan needs no further equity round.</p>
       </div>
     </div>
 
     <ol class="timeline">
       <li class="key"><time>Dec 2026</time><b>Fancourt</b><span>Golfzon and Ernie's team meet.</span></li>
-      <li class="key"><time>{esc(rd['timing'])}</time><b>The round</b><span>{rm(rd['amountZAR'])} closes.</span></li>
+      <li class="key"><time>{esc(rd['timing'])}</time><b>The round</b><span>{rm(rd['amountZAR'])} closes, with the development partner.</span></li>
       <li><time>Q2 2027</time><b>Golfzon phase one</b><span>Live on Golfzon bays.</span></li>
       <li class="key"><time>2028</time><b>The app worldwide</b><span>First markets with Ernie.</span></li>
       <li><time>2028</time><b>Golfzon phase two</b><span>In Golfzon's app and in-game.</span></li>
@@ -691,7 +696,7 @@ def deal_section():
 def faq_section():
     qa = [
         ("What exactly am I buying?",
-         f"Ordinary shares in Get Lucky Golf Club (Pty) Ltd: {rm(rd['amountZAR'])} for {EQ} at {price(rd['preMoneyZAR'])} pre-money, from {rm(rd['minimumTicketZAR'])}, in {esc(rd['timing'])}. No liquidation preference and no ratchet."),
+         f"Ordinary shares in Get Lucky Golf Club (Pty) Ltd: {rm(rd['amountZAR'])} for {EQ} at {price(rd['preMoneyZAR'])} pre-money, from {rm(rd['minimumTicketZAR'])}, in {esc(rd['timing'])}. Alongside it, a development partner takes {pct1(rd['devPct'])} for {rm(rd['devZAR'])} of build work at the same price, so the round is {pct1(rd['totalPct'])} in all. No liquidation preference and no ratchet."),
         ("What does Ernie get?",
          f"{amb['equityPct']}% non-diluting equity as Founding Ambassador, with normal shareholder rights: his {amb['equityPct']}% shares in any profit we pay out and in any sale, like every other share. No fee, no capital, no guarantees, no liability. His {amb['equityPct']}% sits inside the {price(rd['preMoneyZAR'])} pre-money, top-up included, so the round still buys its full stake. The full terms are available under NDA."),
         ("Why asset-light?",
@@ -750,7 +755,7 @@ def footer():
 def page():
     desc = (f"Get Lucky is the hole-in-one app: one insured swing at a hole-in-one, wherever you play. On course in South Africa, "
             f"on Golfzon's {n(gz['locations'])} simulator locations worldwide, and next on the driving range. Ernie Els is "
-            f"Founding Ambassador. Raising {rm(rd['amountZAR'])} for {EQ} in {rd['timing']}.")
+            f"Founding Ambassador. Raising {rm(rd['totalZAR'])} for {pct1(rd['totalPct'])} in {rd['timing']}: {rm(rd['amountZAR'])} in cash and {rm(rd['devZAR'])} of development work.")
     body = "".join([nav(), hero(), '<main id="main">', raiseband(), concept(), app_section(), golfzon_section(),
                     ernie_section(), team_section(), numbers_section(), risk_section(), deal_section(), faq_section(),
                     cta_section(), "</main>", footer()])
@@ -804,6 +809,7 @@ BANNED = [
     (r"(?i)whatsapp|\bunlimited\b|\bpivot\b|old plan|previous plan", "retired framings"),
     (r"(?i)exclusive with golfzon|signed for \d+ bays", "a signature that does not exist"),
     (r"(?i)convertible note|\bthe note\b|note now|R36m cap|interim raise is", "the withdrawn convertible note (4 Nov 2026)"),
+    (r"(?i)octoco|inrange|in range golf|alpha ?wave", "a partner named before it's agreed (the development partner, the range)"),
     (r"(?i)interim raise|\bone round\b|\bno debt\b|\bor debt\b|no longer|instead of|\btrimmed\b|no note\b",
      "a backward reference: pitch the plan as it is, not against an earlier version (5 Nov 2026)"),
     (r"(?i)bay company|\b136 (gym )?bays|\b136 bays|RMB (lends|asset|is modelled)|RMB's|payback|preferred return|R119|bay investors|our fee|half the bays|own the local",

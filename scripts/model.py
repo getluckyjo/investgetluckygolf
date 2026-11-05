@@ -33,8 +33,14 @@ YEARS = list(range(2027, 2033))
 # ============================================================================
 # One round, no interim raise: the R1m convertible note is withdrawn (4 Nov 2026). Cash
 # carries the business to year end; the Fancourt sit-down is costed on its own (about R100k).
-ROUND_ZAR = 6_200_000         # Q1 2027: exactly 10% (the founder, 5 Nov 2026); the plan uses about R4.3m at its lowest
-ROUND_PRE_ZAR = 55_800_000    # the founder's price: R55.8m pre, R62m post, 10% for R6.2m
+# The round is 10% for R6.2m in all (the founder, 5 Nov 2026): R3.4m in cash for 5.5%, and R2.8m of
+# development work for 4.5% from a development partner at the same price (option A, 5 Nov 2026).
+# The partner is unnamed until the deal is agreed. Its work is the 2027 developers' cost
+# (APP_TEAM_SHARE + SIM_TEAM_SHARE of central): still a cost in the P&L, paid in shares, not cash.
+ROUND_TOTAL_ZAR = 6_200_000   # cash and development together: exactly 10%
+DEV_EQUITY_ZAR = 2_800_000    # development work paid in shares
+ROUND_ZAR = ROUND_TOTAL_ZAR - DEV_EQUITY_ZAR   # the cash round: R3.4m for 5.5%
+ROUND_PRE_ZAR = 55_800_000    # the founder's price: R55.8m pre, R62m post
 OPENING_CASH_2027 = 0         # cash on 1 Jan 2027: conservative, with no note to carry it
 # Golfzon: the deck can show the post-signing version, but it goes live "in talks" until the
 # agreement is signed (the founder, 5 Nov 2026). Turn this on the day it is signed and rebuild;
@@ -218,9 +224,10 @@ def run(case):
         loss_cf = max(-taxable, 0)
         r["netProfit"] = r["ebitda"] - r["tax"]
         r["raise"] = ROUND_ZAR if y == 2027 else 0.0
+        r["devInShares"] = DEV_EQUITY_ZAR if y == 2027 else 0.0   # a P&L cost that never leaves as cash
         r["opening"] = cash
         r["operatingCash"] = r["ebitda"] - r["tax"]
-        cash += r["operatingCash"] + r["raise"]
+        cash += r["operatingCash"] + r["raise"] + r["devInShares"]
         r["closing"] = cash
 
     # Quarterly cash: costs run evenly; revenue, and the costs that move with it,
@@ -231,7 +238,7 @@ def run(case):
         fixed = r["central"] + r["brandFixed"]
         variable = r["ebitda"] + fixed
         for i in range(4):
-            q += variable * w[i] - fixed / 4 + (ROUND_ZAR if (y, i) == (2027, 0) else 0.0)
+            q += variable * w[i] - fixed / 4 + r["devInShares"] / 4 + (ROUND_ZAR if (y, i) == (2027, 0) else 0.0)
             if i == 3:
                 q -= r["tax"]
             q_cash.append((f"Q{i + 1} {y}", q))
@@ -240,7 +247,7 @@ def run(case):
     lasts_to = None if short is None else q_cash[short - 1][0]   # last quarter that ends in credit
     r27, w27 = rows[2027], CASH_WEIGHTS[2027]
     fixed27 = r27["central"] + r27["brandFixed"]
-    q1_no_round = OPENING_CASH_2027 + (r27["ebitda"] + fixed27) * w27[0] - fixed27 / 4
+    q1_no_round = OPENING_CASH_2027 + (r27["ebitda"] + fixed27) * w27[0] - fixed27 / 4 + r27["devInShares"] / 4
 
     # ===================== value =============================================
     vals = {y: dict(total=rows[y]["revenue"] * PLATFORM_MULTIPLE) for y in YEARS}
@@ -259,24 +266,27 @@ def use_of_funds(p):
     worldwide (its developers and the launch with Ernie) and simulator integration (its team and
     Golfzon's running costs). The rest is the reserve."""
     r = p["rows"][2027]
-    app = APP_TEAM_SHARE * r["central"] + r["brandFixed"]
-    sims = SIM_TEAM_SHARE * r["central"] + r["gzDirect"]
+    app_dev, sim_dev = APP_TEAM_SHARE * r["central"], SIM_TEAM_SHARE * r["central"]
+    assert abs(app_dev + sim_dev - DEV_EQUITY_ZAR) < 1, "the development partner's work is the 2027 developers' cost"
+    app = app_dev + r["brandFixed"]
+    sims = sim_dev + r["gzDirect"]
     running = (1 - APP_TEAM_SHARE - SIM_TEAM_SHARE) * r["central"] + r["ocDirect"] + (r["brand"] - r["brandFixed"])
     items = [
-        {"key": "app", "label": "The app, worldwide", "short": "The app", "ZAR": round(app, -4),
+        {"key": "app", "label": "The app, worldwide", "short": "The app", "ZAR": round(app, -4), "inSharesZAR": round(app_dev, -4),
          "note": "Developers to open every par 3 in the world, every currency and every market's cover; the launch with Ernie"},
-        {"key": "sims", "label": "Simulator integration", "short": "Simulators", "ZAR": round(sims, -4),
+        {"key": "sims", "label": "Simulator integration", "short": "Simulators", "ZAR": round(sims, -4), "inSharesZAR": round(sim_dev, -4),
          "note": "Golfzon first, then the next networks: the integration team, the signed shot record, the insurer's ace data"},
     ]
     items.append({"key": "reserve", "label": "Working capital and reserve", "short": "Reserve",
-                  "ZAR": ROUND_ZAR - sum(i["ZAR"] for i in items),
+                  "ZAR": ROUND_TOTAL_ZAR - sum(i["ZAR"] for i in items), "inSharesZAR": 0,
                   "note": "What carries any one risk without cutting a cost"})
     for i in items:
-        i["pct"] = round(i["ZAR"] / ROUND_ZAR * 100)
+        i["pct"] = round(i["ZAR"] / ROUND_TOTAL_ZAR * 100)
     items[-1]["pct"] = 100 - sum(i["pct"] for i in items[:-1])
     return {"_note": ("Two opportunities through one app: the app worldwide (20% of 2027 central cost plus the "
                       "launch budget) and simulator integration (15% of 2027 central cost plus Golfzon's running "
                       "costs). Revenue pays for the rest of the team and the costs that move with it."),
+            "totalZAR": ROUND_TOTAL_ZAR, "cashZAR": ROUND_ZAR, "inSharesZAR": DEV_EQUITY_ZAR,
             "revenue2027ZAR": round(r["revenue"], -4), "runningCost2027ZAR": round(running, -4), "items": items}
 
 
@@ -286,8 +296,8 @@ def main():
     rows, vals = p["rows"], p["vals"]
 
     # --- the round ---------------------------------------------------------------
-    post = ROUND_PRE_ZAR + ROUND_ZAR
-    round_pct = ROUND_ZAR / post
+    post = ROUND_PRE_ZAR + ROUND_TOTAL_ZAR
+    round_pct = ROUND_ZAR / post                     # the cash investors' stake
     rm = lambda run_, y: run_["vals"][y]["total"] * round_pct / ROUND_ZAR
 
     # A sale in 2032 at the same yardstick, for the round: in at the end of Q1 2027, out on
@@ -354,10 +364,14 @@ def main():
             "getLucky": "The hole-in-one app: on course, on Golfzon's network and at golf days; and sponsorship.",
         },
         "deal": {
-            "_note": ("One round, into Get Lucky: R6.2m for 10% at R55.8m pre (R62m post) in Q1 2027. No interim raise: the "
-                      "R1m convertible note was withdrawn on 4 Nov 2026. The price is the founder's."),
+            "_note": ("The round, into Get Lucky: 10% for R6.2m at R55.8m pre (R62m post) in Q1 2027: R3.4m in cash for "
+                      "5.5% and R2.8m of development work for 4.5% from a development partner (being agreed). The price "
+                      "is the founder's."),
             "round": {"amountZAR": ROUND_ZAR, "preMoneyZAR": ROUND_PRE_ZAR, "postMoneyZAR": post,
                       "equityPct": round(round_pct * 100, 2), "timing": "Q1 2027", "minimumTicketZAR": 1_000_000,
+                      "totalZAR": ROUND_TOTAL_ZAR, "totalPct": round(ROUND_TOTAL_ZAR / post * 100, 2),
+                      "devZAR": DEV_EQUITY_ZAR, "devPct": round(DEV_EQUITY_ZAR / post * 100, 2),
+                      "devPartner": "A development partner (being agreed)",
                       "value2029ZAR": round(vals[2029]["total"]), "value2032ZAR": round(vals[2032]["total"]),
                       "multiple2029": round(rm(p, 2029), 2), "multiple2032": round(rm(p, 2032), 2),
                       "hardCaseValue2029ZAR": round(hard["vals"][2029]["total"]),
@@ -447,7 +461,8 @@ def main():
                       "round carries the team, the Golfzon build and the launch until the engines pay for "
                       "themselves. No further equity round is assumed."),
             "openingZAR": OPENING_CASH_2027,
-            "raiseZAR": R("raise"), "operatingCashZAR": R("operatingCash"), "closingZAR": R("closing"),
+            "raiseZAR": R("raise"), "operatingCashZAR": R("operatingCash"), "devInSharesZAR": R("devInShares"),
+            "closingZAR": R("closing"),
             "quarterlyClosingZAR": {k: round(v) for k, v in p["q_cash"]},
             "lowestQuarter": p["low"][0], "lowestQuarterZAR": round(p["low"][1]),
             "q1WithoutRoundZAR": round(p["q1_no_round"]),

@@ -28,8 +28,11 @@ Ernie Els.** The app is the one interface: it takes every entry, on course, on
 simulators and on ranges. The round funds two opportunities through it (Willie, 5 Nov
 2026): **the app worldwide** (every par 3, launched with Ernie in his markets from 2028;
 a conservative worldwide line is in the numbers) and **simulator integration**, Golfzon
-first, so the plan doesn't hang on one partner. Asset-light: no hardware, no debt. One round, R6.2m for exactly 10%
-at R55.8m pre (R62m post), Q1 2027 (the founder, 5 Nov 2026). No interim raise.
+first, so the plan doesn't hang on one partner. Asset-light: no hardware, no debt. The round is 10% at R55.8m pre (R62m post), Q1 2027:
+**R3.4m in cash for 5.5%**, and **R2.8m of development work for 4.5%** from a development
+partner at the same price (the founder, 5 Nov 2026, option A). The work is the 2027
+developers' cost: still in the P&L, paid in shares, so 2027 cash is R2.8m better. If the
+partner doesn't come in, the R2.8m is raised in cash at the same price. No interim raise.
 To fit the smaller round, 2027 is trimmed by R2m: the launch budget R2m (not R3m)
 and the central team R8m (not R9m, hires a little later).
 
@@ -38,6 +41,8 @@ and the central team R8m (not R9m, hires a little later).
 - **Pitch the plan as it is.** No backward references to earlier versions: no "no
   interim raise", "one round", "no debt", "no note" or "trimmed" (the founder, 5 Nov
   2026). The build bans them.
+- **The development partner stays unnamed until agreed** (Willie is pitching it to
+  Octoco). The build bans "Octoco", "inRange" and "Alphawave" on the page.
 - **No convertible note.** The R1m note was withdrawn on 4 Nov 2026; opening
   cash on 1 Jan 2027 is R0. Never bring the note back onto the page.
 - **No gyms, for now.** Planet Fitness, Virgin Active, gym bays and the bay

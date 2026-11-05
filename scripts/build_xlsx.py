@@ -61,7 +61,8 @@ for _, key, am, tm, drv, late, korea, tman, prem, gm in SCEN:
         assert abs(c["gz_attach"][y] - a) < 1e-12 and abs(c["gz_ticket"][y] - base["gz_ticket"][y] * tm) < 1e-9, key
         assert abs(case_rounds - rounds) < 1 and c["central"] == base["central"] and c["sim_premium"] == prem, key
 
-ROUND_TXT, PRE_TXT = f"R{M.ROUND_ZAR / 1e6:.1f}m", f"R{M.ROUND_PRE_ZAR / 1e6:.1f}m"   # R6.2m, R55.8m
+ROUND_TXT, PRE_TXT = f"R{M.ROUND_TOTAL_ZAR / 1e6:.1f}m", f"R{M.ROUND_PRE_ZAR / 1e6:.1f}m"   # R6.2m, R55.8m
+CASH_TXT, DEV_TXT = f"R{M.ROUND_ZAR / 1e6:.1f}m", f"R{M.DEV_EQUITY_ZAR / 1e6:.1f}m"            # R3.4m, R2.8m
 
 # ------------------------------------------------------------------ styles
 ARIAL = "Arial"
@@ -147,7 +148,8 @@ lines = [
     ("", CALC),
     ("What this is", BOLD),
     ("Get Lucky's forecast, 2027-2032, ZAR ex VAT: our share of every insured swing on Golfzon's simulator network and on course,", CALC),
-    (f"and sponsorship. The round: {ROUND_TXT} for {M.ROUND_ZAR / (M.ROUND_ZAR + M.ROUND_PRE_ZAR) * 100:.0f}% at {PRE_TXT} pre-money in Q1 2027. "
+    (f"and sponsorship. The round: {ROUND_TXT} for {M.ROUND_TOTAL_ZAR / (M.ROUND_TOTAL_ZAR + M.ROUND_PRE_ZAR) * 100:.0f}% at {PRE_TXT} pre-money in Q1 2027: "
+     f"{CASH_TXT} in cash and {DEV_TXT} of development work paid in shares. "
      "Asset-light and scalable through golf simulation software.", CALC),
     ("", CALC),
     ("How to use it", BOLD),
@@ -254,10 +256,11 @@ def per_year(label, key, vals, fmt, note):
 
 
 header(A, r, "THE ROUND", "I"); r += 1
-scalar("Round size, R", "Round_ZAR", M.ROUND_ZAR, R0, "The founder's raise, Q1 2027", key=True)
+scalar("Cash round, R", "Round_ZAR", M.ROUND_ZAR, R0, "The founder's raise, Q1 2027: the cash part of the round", key=True)
+scalar("Development work paid in shares, R", "Dev_Equity_ZAR", M.DEV_EQUITY_ZAR, R0, "A development partner's 2027 build work, at the round's price; being agreed", key=True)
 scalar("Pre-money, R", "Pre_ZAR", M.ROUND_PRE_ZAR, R0, "The founder's price; Ernie Els's 5% is topped up inside it", key=True)
-scalar("Post-money, R", "Post_ZAR", "=Pre_ZAR+Round_ZAR", R0, "Pre-money plus the round", calc=True)
-scalar("The round's stake", "Round_Stake", "=Round_ZAR/Post_ZAR", PCT2, "Round / post-money", calc=True)
+scalar("Post-money, R", "Post_ZAR", "=Pre_ZAR+Round_ZAR+Dev_Equity_ZAR", R0, "Pre-money plus the cash and the development shares", calc=True)
+scalar("The cash investors' stake", "Round_Stake", "=Round_ZAR/Post_ZAR", PCT2, "Cash round / post-money", calc=True)
 scalar("Minimum ticket, R", "Min_Ticket", 1_000_000, R0, "")
 scalar("Opening cash, 1 January 2027, R", "Opening_Cash", M.OPENING_CASH_2027, R0, "Conservative: nothing carried in", key=True)
 scalar("Rand to the US dollar", "FX_ZAR", M.FX, '0.00', "The investor FX")
@@ -375,7 +378,7 @@ def block(ws, t, case_ref):
         x.alignment = Alignment(horizontal="right", vertical="center")
     rows = ["rounds", "attachBase", "attach", "ticket", "swings", "gross", "share", "gzRev", "gzPrem", "gzDirect",
             "ocSwings", "ocGross", "ocRev", "ocDirect", "glSwings", "glGross", "glRev", "glDirect", "spons", "rev", "central", "launch", "brand", "ebitda", "margin",
-            "taxable", "tax", "losscf", "net", "raise", "open", "close", "value", "mark", "premWritten", "pos"]
+            "taxable", "tax", "losscf", "net", "raise", "devShares", "open", "close", "value", "mark", "premWritten", "pos"]
     rr = {k: hdr + 1 + i for i, k in enumerate(rows)}
     labels = {
         "rounds": ("Golfzon rounds a year", N0), "attachBase": ("Attach before any delay", PCT2),
@@ -390,7 +393,7 @@ def block(ws, t, case_ref):
         "rev": ("REVENUE", RM), "central": ("Central team and technology", RM), "launch": ("Launch budget", RM),
         "brand": ("Brand: launch budget plus 8% of revenue", RM), "ebitda": ("EBITDA", RM), "margin": ("EBITDA margin", PCT),
         "taxable": ("Taxable, after losses brought forward", RM), "tax": ("Tax", RM), "losscf": ("Losses carried forward", RM),
-        "net": ("Net profit", RM), "raise": ("The round", RM), "open": ("Cash, 1 January", RM), "close": ("Cash, 31 December", RM),
+        "net": ("Net profit", RM), "raise": ("The round, in cash", RM), "devShares": ("Development paid in shares (a cost, not cash)", RM), "open": ("Cash, 1 January", RM), "close": ("Cash, 31 December", RM),
         "value": ("Value: revenue x the multiple", RM), "mark": ("The round marked at, 31 December", MULT),
         "premWritten": ("Premium written for the insurer (volume, not revenue)", RM), "pos": ("EBITDA positive? (1 = yes)", FLAG),
     }
@@ -432,7 +435,8 @@ def block(ws, t, case_ref):
             "net": f"={g('ebitda')}-{g('tax')}",
             "raise": f"=IF(VALUE({c_}${hdr})=2027,Round_ZAR,0)",
             "open": "=Opening_Cash" if i == 0 else f"={p}{rr['close']}",
-            "close": f"={g('open')}+{g('ebitda')}-{g('tax')}+{g('raise')}",
+            "devShares": f"=IF(VALUE({c_}${hdr})=2027,Dev_Equity_ZAR,0)",
+            "close": f"={g('open')}+{g('ebitda')}-{g('tax')}+{g('raise')}+{g('devShares')}",
             "value": f"={g('rev')}*Rev_Multiple",
             "mark": f"={g('value')}*Round_Stake/Round_ZAR",
             "premWritten": f"={g('gzPrem')}+({g('ocGross')}+{g('glGross')})*OC_Premium",
@@ -453,9 +457,9 @@ def block(ws, t, case_ref):
     for c_, lb in zip(QC, QL):
         x = cell(ws, f"{c_}{q0}", lb, WHITE)
         x.alignment = Alignment(horizontal="right", vertical="center")
-    qrows = ["w", "ops", "round", "qtax", "qclose", "neg", "cum"]
+    qrows = ["w", "ops", "round", "qdev", "qtax", "qclose", "neg", "cum"]
     qr = {k: q0 + 1 + i for i, k in enumerate(qrows)}
-    qlab = {"w": ("Share of the year's revenue", PCT), "ops": ("Operating cash in the quarter", RM), "round": ("The round", RM),
+    qlab = {"w": ("Share of the year's revenue", PCT), "ops": ("Operating cash in the quarter", RM), "round": ("The round, in cash", RM), "qdev": ("Development paid in shares", RM),
             "qtax": ("Tax, paid in Q4", RM), "qclose": ("Cash at the quarter end", RM), "neg": ("Below zero? (1 = yes)", FLAG),
             "cum": ("Quarters below zero so far", FLAG)}
     for k in qrows:
@@ -473,9 +477,10 @@ def block(ws, t, case_ref):
             "w": f"=Assumptions!${'CDEF'[qi]}${wrow}",
             "ops": f"=({yc}{rr['ebitda']}+{fixed})*{c_}{qr['w']}-{fixed}/4",
             "round": f'=IF({c_}${q0}="Q1 2027",Round_ZAR,0)',
+            "qdev": f"={yc}{rr['devShares']}/4",
             "qtax": f'=IF(LEFT({c_}${q0},2)="Q4",-{yc}{rr["tax"]},0)',
-            "qclose": (f"=Opening_Cash+{c_}{qr['ops']}+{c_}{qr['round']}+{c_}{qr['qtax']}" if k_ == 0
-                       else f"={prev}{qr['qclose']}+{c_}{qr['ops']}+{c_}{qr['round']}+{c_}{qr['qtax']}"),
+            "qclose": (f"=Opening_Cash+{c_}{qr['ops']}+{c_}{qr['round']}+{c_}{qr['qdev']}+{c_}{qr['qtax']}" if k_ == 0
+                       else f"={prev}{qr['qclose']}+{c_}{qr['ops']}+{c_}{qr['round']}+{c_}{qr['qdev']}+{c_}{qr['qtax']}"),
             "neg": f"=IF({c_}{qr['qclose']}<0,1,0)",
             "cum": f"={c_}{qr['neg']}" if k_ == 0 else f"={prev}{qr['cum']}+{c_}{qr['neg']}",
         }
@@ -493,7 +498,7 @@ def block(ws, t, case_ref):
         ("lasts", "Cash lasts to (last quarter in credit)",
          f'=IF(ISNA({first_neg}),"Never runs short",IF({first_neg}=1,"Short in Q1 2027",INDEX({labs},{first_neg}-1)))', None),
         ("q1nr", "Q1 2027 without the round",
-         f"=Opening_Cash+(C{rr['ebitda']}+C{rr['central']}+C{rr['launch']})*Assumptions!$C${ROWS['w2027']}-(C{rr['central']}+C{rr['launch']})/4", RM),
+         f"=Opening_Cash+(C{rr['ebitda']}+C{rr['central']}+C{rr['launch']})*Assumptions!$C${ROWS['w2027']}-(C{rr['central']}+C{rr['launch']})/4+C{rr['devShares']}/4", RM),
         ("posFrom", "EBITDA positive from",
          f'=IF(ISNA(MATCH(1,$C${rr["pos"]}:$H${rr["pos"]},0)),"Not by 2032",INDEX($C${hdr}:$H${hdr},MATCH(1,$C${rr["pos"]}:$H${rr["pos"]},0)))', None),
         ("peak", "Most of the opening cash and the round in use at once", f"=Opening_Cash+Round_ZAR-C{o0 + 1}", RM),
@@ -548,11 +553,14 @@ cell(Rs, "A2", "Marks and the sale follow the case in Model!C2:", NOTE)
 cell(Rs, "C2", "=Model!C2", LINK)
 rr_ = MB["rr"]
 lines_r = [
-    ("Raising", "=Round_ZAR", R0), ("Pre-money", "=Pre_ZAR", R0), ("Post-money", "=Post_ZAR", R0),
-    ("The round's stake", "=Round_Stake", PCT2), ("Ernie Els, inside the pre-money", 0.05, PCT),
+    ("Raising in cash", "=Round_ZAR", R0), ("Pre-money", "=Pre_ZAR", R0), ("Post-money", "=Post_ZAR", R0),
+    ("The cash investors' stake", "=Round_Stake", PCT2), ("Ernie Els, inside the pre-money", 0.05, PCT),
     ("Post-money on 2027 revenue", f"=Post_ZAR/Model!C{rr_['rev']}", '0.0"×"'),
     ("Post-money on 2028 revenue", f"=Post_ZAR/Model!D{rr_['rev']}", '0.0"×"'),
     ("Post-money on 2029 revenue", f"=Post_ZAR/Model!E{rr_['rev']}", '0.0"×"'),
+    ("Development partner: work paid in shares", "=Dev_Equity_ZAR", R0),
+    ("The development partner's stake (being agreed)", "=Dev_Equity_ZAR/Post_ZAR", PCT2),
+    ("The round in all", "=(Round_ZAR+Dev_Equity_ZAR)/Post_ZAR", PCT2),
 ]
 r = 4
 header(Rs, r - 1, "THE TERMS")
@@ -690,7 +698,7 @@ plan_uof = M.use_of_funds(runs["plan"])
 pb = blocks["plan"]["rr"]
 uof_wb = {"app": f"=ROUND(App_Team_Share*'Stress cases'!C{pb['central']}+'Stress cases'!C{pb['launch']},-4)",
           "sims": f"=ROUND(Sim_Team_Share*'Stress cases'!C{pb['central']}+'Stress cases'!C{pb['gzDirect']},-4)"}
-uof_wb["reserve"] = f"=Round_ZAR-C{r}-C{r + 1}"
+uof_wb["reserve"] = f"=Round_ZAR+Dev_Equity_ZAR-C{r}-C{r + 1}"
 for it in plan_uof["items"]:
     cell(Ck, f"A{r}", "The plan")
     cell(Ck, f"B{r}", f"Use of funds: {it['label']}")
@@ -721,7 +729,7 @@ for i, it in enumerate(plan_uof["items"]):
     cell(Rs, f"A{rr0 + i}", it["label"])
     ref = f"Checks!C{r - len(plan_uof['items']) + i}"
     cell(Rs, f"C{rr0 + i}", f"={ref}", LINK, R0)
-    cell(Rs, f"D{rr0 + i}", f"=C{rr0 + i}/Round_ZAR", CALC, PCT)
+    cell(Rs, f"D{rr0 + i}", f"=C{rr0 + i}/(Round_ZAR+Dev_Equity_ZAR)", CALC, PCT)
     cell(Rs, f"E{rr0 + i}", it["note"], NOTE)
 n_ = len(plan_uof["items"])
 cell(Rs, f"A{rr0 + n_}", "Revenue already pays the rest of the team in 2027", NOTE)
