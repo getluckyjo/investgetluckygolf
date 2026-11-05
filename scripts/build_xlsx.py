@@ -145,7 +145,7 @@ lines = [
     ("What this is", BOLD),
     ("Get Lucky's forecast, 2027-2032, ZAR ex VAT: our share of every insured swing on Golfzon's simulator network and on course,", CALC),
     (f"and sponsorship. One round: {ROUND_TXT} for {M.ROUND_ZAR / (M.ROUND_ZAR + M.ROUND_PRE_ZAR) * 100:.0f}% at {PRE_TXT} pre-money in Q1 2027. "
-     "No interim raise, no hardware, no debt.", CALC),
+     "Asset-light and scalable through golf simulation software; no debt, no interim raise.", CALC),
     ("", CALC),
     ("How to use it", BOLD),
     ("1. Pick a case in Model!C2 (lime). The Model and Round sheets follow it.", CALC),

@@ -511,7 +511,7 @@ def numbers_section():
     <div class="head">
       <span class="kicker">05 · The numbers</span>
       <h2 class="display-lg" id="num-h">{rm(rev['total'][0])} to {rm(rev['total'][-1])}. <span class="green">Our revenue, forecast.</span></h2>
-      <p class="lede"><strong>This is Get Lucky's own revenue:</strong> our share of every swing on course and on Golfzon, and sponsorship. No hardware, no debt. We've planned on about half of what we're aiming for, and it still works.</p>
+      <p class="lede"><strong>This is Get Lucky's own revenue:</strong> our share of every swing on course and on Golfzon, and sponsorship. Asset-light and scalable through golf simulation software. We've planned on about half of what we're aiming for, and it still works.</p>
     </div>
     <div class="chartcard reveal">
       <h3>Revenue by channel, and EBITDA margin</h3>
@@ -604,7 +604,7 @@ def deal_section():
     <div class="head">
       <span class="kicker">07 · The raise</span>
       <h2 class="display-lg" id="deal-h" style="color:var(--cream)">One round. <span class="lime">{price(rd['amountZAR'])} in {esc(rd['timing'])}.</span></h2>
-      <p class="lede">Into Get Lucky, asset-light: no hardware, no debt, no interim raise. The round funds the Golfzon build and the launch with Ernie; our revenue already pays the team and the day-to-day.</p>
+      <p class="lede">Into Get Lucky: asset-light and scalable through golf simulation software, with no debt and no interim raise. The round funds the Golfzon build and the launch with Ernie; our revenue already pays the team and the day-to-day.</p>
     </div>
     <div class="terms">
       <div class="termcard reveal">
@@ -629,7 +629,7 @@ def deal_section():
             <div><b>{rm(cash['lowestQuarterZAR'])}</b><span>Our lowest cash, {cash['lowestQuarter']}, with every cost held at plan</span></div>
           </div>
         </div>
-        <p class="uses">So the round goes into what's new. None of it buys hardware, and the plan needs no further equity round.</p>
+        <p class="uses">So the round goes into what's new: the software and the launch. The plan needs no further equity round.</p>
       </div>
     </div>
 
@@ -672,8 +672,8 @@ def faq_section():
          f"Ordinary shares in Get Lucky Golf Club (Pty) Ltd: {rm(rd['amountZAR'])} for {EQ} at {price(rd['preMoneyZAR'])} pre-money, from {rm(rd['minimumTicketZAR'])}, in {esc(rd['timing'])}. One round, no interim raise, no preference and no ratchet."),
         ("What does Ernie get?",
          f"{amb['equityPct']}% non-diluting equity as Founding Ambassador, with normal shareholder rights: his {amb['equityPct']}% shares in any profit we pay out and in any sale, like every other share. No fee, no capital, no guarantees, no liability. His {amb['equityPct']}% sits inside the {price(rd['preMoneyZAR'])} pre-money, top-up included, so the round still buys its full stake. The full terms are available under NDA."),
-        ("Why no hardware?",
-         "Because the swing runs on screens and phones that already exist: Golfzon's bays, ranges that track every ball, and the golfer's own phone on course. We don't buy simulators or screens, so the round builds the platform and the launch, and every new network adds revenue without capex."),
+        ("Why asset-light?",
+         "Because the swing runs on golf simulation software, on screens and phones that already exist: Golfzon's bays, ranges that track every ball, and the golfer's own phone on course. We don't buy simulators or screens, so the round builds the platform and the launch, and every new network adds revenue without capex."),
         ("What if someone wins R1m, or $100,000?",
          "The insurer pays, and it's the best marketing day of our year. 24% of every entry goes to the insurer as premium, on the same swing that creates the risk."),
     ]
