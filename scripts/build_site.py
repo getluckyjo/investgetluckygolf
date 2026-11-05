@@ -44,6 +44,7 @@ x = lambda v: f"{v:.2f}×"
 n = lambda v: f"{v:,}"
 pc = lambda v, dp=1: f"{neg(v)}{abs(v):.{dp}f}%"
 rand = lambda v: f"R{v:,}"
+low_cash = lambda v: f"R{v / 1e3:,.0f}k" if abs(v) < 1e6 else rm(v)   # R40k, not R0.0m
 
 
 def usd(z):
@@ -105,30 +106,35 @@ def more(summary, body, cls="more"):
 
 
 # ------------------------------------------------------------------ the revenue chart
-def revenue_chart():
+def revenue_svg(compact=False):
+    """Stacked revenue by channel with the EBITDA margin on the right axis. The right axis spans the
+    whole margin range and shares the left axis's gridlines. compact is the phone version: drawn at
+    phone size, so its type stays readable instead of shrinking with a wide chart."""
     series = [("On simulators (Golfzon)", rev["golfzon"], "#d6fb4b"), ("On course (the app)", rev["onCourse"], "#c9a94e"),
               ("Sponsorship", rev["sponsorship"], "rgba(245,238,222,.5)")]
-    W, H, L, R, T, B = 720, 320, 56, 48, 22, 36
-    top = max(rev["total"])
+    W, H, L, R, T, B = (360, 300, 44, 40, 18, 28) if compact else (720, 320, 56, 48, 22, 36)
+    fs, fv = (10, 10.5) if compact else (11, 12)
     step = 50e6
-    ymax = step * (int(top / step) + 1)
+    ymax = step * (int(max(rev["total"]) / step) + 1)
+    ticks = int(ymax / step)
+    margins = f["ebitdaMarginPct"]
+    lo, hi = 50 * ((min(min(margins), 0) // 50)), 50 * -(-max(max(margins), 50) // 50)
     ph, pw = H - T - B, W - L - R
     band = pw / len(Y)
-    bw = band * .56
+    bw = band * (.62 if compact else .56)
     y_ = lambda v: T + ph - v / ymax * ph
-    m_ = lambda pct: T + ph - (pct + 50) / 150 * ph          # right axis: -50% to 100%
-    out = [f'<svg class="chart" viewBox="0 0 {W} {H}" role="img" aria-labelledby="chart-t chart-d">',
-           '<title id="chart-t">Get Lucky\'s forecast revenue by channel, and EBITDA margin, 2027 to 2032</title>',
-           '<desc id="chart-d">' + esc("; ".join(
+    m_ = lambda pct: T + ph - (pct - lo) / (hi - lo) * ph
+    sfx = "-c" if compact else ""
+    out = [f'<svg class="chart{" chart--compact" if compact else " chart--wide"}" viewBox="0 0 {W} {H}" role="img" aria-labelledby="chart-t{sfx} chart-d{sfx}">',
+           f'<title id="chart-t{sfx}">Get Lucky\'s forecast revenue by channel, and EBITDA margin, 2027 to 2032</title>',
+           f'<desc id="chart-d{sfx}">' + esc("; ".join(
                f"{y}: revenue {rm(rev['total'][I[y]])}, EBITDA margin {pc(f['ebitdaMarginPct'][I[y]])}" for y in Y)) + '</desc>']
-    v = 0
-    while v <= ymax + 1:
+    for t in range(ticks + 1):
+        v, pct = t * step, lo + (hi - lo) * t / ticks
         yy = y_(v)
         out.append(f'<line x1="{L}" x2="{W - R}" y1="{yy:.1f}" y2="{yy:.1f}" stroke="rgba(245,238,222,.1)"/>')
-        out.append(f'<text x="{L - 8}" y="{yy + 4:.1f}" text-anchor="end" font-size="11" fill="rgba(245,238,222,.6)">R{v / 1e6:.0f}m</text>')
-        v += step
-    for pct in (-50, 0, 50, 100):
-        out.append(f'<text x="{W - R + 8}" y="{m_(pct) + 4:.1f}" font-size="11" fill="rgba(245,238,222,.6)">{pct}%</text>')
+        out.append(f'<text x="{L - 6}" y="{yy + 4:.1f}" text-anchor="end" font-size="{fs}" fill="rgba(245,238,222,.6)">R{v / 1e6:.0f}m</text>')
+        out.append(f'<text x="{W - R + 6}" y="{yy + 4:.1f}" font-size="{fs}" fill="rgba(245,238,222,.6)">{pct:.0f}%</text>')
     labels = []
     for k, yr in enumerate(Y):
         cx = L + band * k + band / 2
@@ -138,18 +144,24 @@ def revenue_chart():
             out.append(f'<rect x="{cx - bw / 2:.1f}" y="{y_(base + vals[k]):.1f}" width="{bw:.1f}" height="{max(h, 0):.1f}" '
                        f'fill="{col}"><title>{esc(name)} {yr}: {rm(vals[k])}</title></rect>')
             base += vals[k]
-        labels.append(f'<text x="{cx:.1f}" y="{y_(base) - 8:.1f}" text-anchor="middle" font-size="12" font-weight="700" fill="#f5eede" stroke="#0c160e" stroke-width="4" paint-order="stroke">{rm(base)}</text>')
-        out.append(f'<text x="{cx:.1f}" y="{H - 12}" text-anchor="middle" font-size="12" fill="rgba(245,238,222,.7)">{yr}</text>')
-    pts = " ".join(f"{L + band * k + band / 2:.1f},{m_(f['ebitdaMarginPct'][k]):.1f}" for k in range(len(Y)))
+        labels.append(f'<text x="{cx:.1f}" y="{y_(base) - 7:.1f}" text-anchor="middle" font-size="{fv}" font-weight="700" fill="#f5eede" '
+                      f'stroke="#0c160e" stroke-width="4" paint-order="stroke">{rm(base, 0) if compact else rm(base)}</text>')
+        out.append(f'<text x="{cx:.1f}" y="{H - 10}" text-anchor="middle" font-size="{fs + 1}" fill="rgba(245,238,222,.7)">{yr}</text>')
+    pts = " ".join(f"{L + band * k + band / 2:.1f},{m_(margins[k]):.1f}" for k in range(len(Y)))
     out.append(f'<polyline points="{pts}" fill="none" stroke="#f5eede" stroke-width="2" stroke-dasharray="5 4"/>')
     for k in range(len(Y)):
-        out.append(f'<circle cx="{L + band * k + band / 2:.1f}" cy="{m_(f["ebitdaMarginPct"][k]):.1f}" r="3.5" fill="#f5eede">'
-                   f'<title>EBITDA margin {Y[k]}: {pc(f["ebitdaMarginPct"][k])}</title></circle>')
+        out.append(f'<circle cx="{L + band * k + band / 2:.1f}" cy="{m_(margins[k]):.1f}" r="{3 if compact else 3.5}" fill="#f5eede">'
+                   f'<title>EBITDA margin {Y[k]}: {pc(margins[k])}</title></circle>')
     out += labels
     out.append("</svg>")
-    legend = "".join(f'<span><i style="background:{c}"></i>{esc(nm)}</span>' for nm, _, c in series)
+    return "\n".join(out)
+
+
+def revenue_chart():
+    legend = "".join(f'<span><i style="background:{c}"></i>{esc(nm)}</span>' for nm, c in
+                     (("On simulators (Golfzon)", "#d6fb4b"), ("On course (the app)", "#c9a94e"), ("Sponsorship", "rgba(245,238,222,.5)")))
     legend += '<span><i style="background:transparent;border-top:2px dashed #f5eede;height:0;border-radius:0;vertical-align:4px"></i>EBITDA margin (right)</span>'
-    return legend, "\n".join(out)
+    return legend, revenue_svg() + "\n" + revenue_svg(compact=True)
 
 
 
@@ -182,7 +194,7 @@ def hero():
     <div class="copy">
       <span class="chip live"><span class="live-dot"></span>Investor briefing · November 2026</span>
       <h1 class="display-xl">Golf's biggest shot <span class="lime">goes global.</span></h1>
-      <p class="lede"><strong>Get Lucky is the hole-in-one app: one insured swing at a life-changing prize, wherever you play.</strong> On course, built for {app['courses']} South African courses. On simulators, across Golfzon's {n(gz['locations'])} locations worldwide. And next, on the driving range. Presented by Ernie Els.</p>
+      <p class="lede"><strong>Get Lucky is the hole-in-one app: one insured swing at a life-changing prize, wherever you play.</strong> On {app['courses']} South African courses. On Golfzon's {n(gz['locations'])} simulator locations worldwide. And next, on the driving range. Presented by Ernie Els.</p>
       <div class="btns">
         <a class="btn btn-lime" href="#raise">See the raise</a>
         <a class="btn btn-outline" href="{app['url']}" target="_blank" rel="noopener">Preview the app</a>
@@ -192,9 +204,9 @@ def hero():
   </div>
   <div class="wrap">
     <div class="stats tab">
-      <div class="stat"><div class="n">{app['courses']}</div><div class="l">On course: South African courses in the app</div></div>
-      <div class="stat"><div class="n">{n(gz['locations'])}</div><div class="l">On simulators: Golfzon locations worldwide</div></div>
-      <div class="stat"><div class="n">{gz['roundsPerYear'] / 1e6:.0f}M+</div><div class="l">Rounds a year on Golfzon's network</div></div>
+      <div class="stat"><div class="n">{app['courses']}</div><div class="l">South African courses in the app</div></div>
+      <div class="stat"><div class="n">{n(gz['locations'])}</div><div class="l">Golfzon simulator locations</div></div>
+      <div class="stat"><div class="n">{gz['roundsPerYear'] / 1e6:.0f}M+</div><div class="l">Rounds a year on Golfzon</div></div>
       <div class="stat"><div class="n"><span class="lime">{r0(ladder[-1]['prize'])}</span></div><div class="l">Top prize, insured by Santam</div></div>
     </div>
   </div>
@@ -212,7 +224,7 @@ def raiseband():
     </div>
     <div class="step">
       <span class="k">Asset-light</span>
-      <div class="n tab">No hardware <small>no debt</small></div>
+      <div class="n tab">No hardware <small>and no debt</small></div>
       <p>The round builds the platform: the Golfzon roll-out and the launch with Ernie. The swing costs nothing to add to another simulator.</p>
     </div>
     <div class="act">
@@ -226,7 +238,6 @@ def raiseband():
 def concept():
     def facts_(*pairs):
         return '<dl class="tile-facts tab">' + "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in pairs) + "</dl>"
-    dots = "background-image:radial-gradient(rgba(214,251,75,.09) 1px,transparent 1.2px);background-size:22px 22px"
     gz_chip = '<span class="chip live">Golfzon partner</span>' if GZ_SIGNED else '<span class="chip talks">In talks</span>'
     return f"""
 <section class="section paper" aria-labelledby="concept-h">
@@ -234,7 +245,7 @@ def concept():
     <div class="head">
       <span class="kicker">The concept</span>
       <h2 class="display-lg" id="concept-h">One shot. <span class="green">Three places to play.</span></h2>
-      <p class="lede"><strong>Every place sells the same thing: one swing at a hole-in-one, for a prize Santam insures.</strong> One app, wherever you play golf: on course in South Africa, on Golfzon's simulators worldwide, and next on the driving range.</p>
+      <p class="lede"><strong>Wherever you play, it's the same thing: one swing at a hole-in-one, for a prize Santam insures.</strong> One app: on course in South Africa, on Golfzon's simulators worldwide, and next on the driving range.</p>
     </div>
     <div class="channels">
       <a class="tile tile-app reveal" href="#app"><img src="assets/img/app-in-hand.webp" alt="" loading="lazy" width="900" height="1016" style="object-position:38% 0%"><span class="chip live">Built</span>
@@ -243,9 +254,9 @@ def concept():
       <a class="tile reveal" href="#golfzon"><img src="assets/img/golfzon-demo.webp" alt="" loading="lazy" width="1200" height="630">{gz_chip}
         <span class="num">02 · Golfzon · Worldwide</span><h3>On simulators</h3><p>The same swing on the world's biggest simulator network. The bay measures the shot and signs it.</p>
         {facts_(("Golfzon locations", n(gz['locations'])), ("Our revenue, 2029", rm(rev['golfzon'][k29])))}</a>
-      <a class="tile reveal" href="#golfzon" style="{dots}"><span class="chip talks" style="color:var(--cream);border-color:rgba(245,238,222,.4)">Next</span>
-        <span class="num">03 · Driving ranges</span><h3>On the range</h3><p>Ranges that track every ball can carry the same swing, in the same app. Our next conversation, and not in our numbers.</p>
-        {facts_(("One app", "Every place"), ("In our plan", "Not yet"))}</a>
+      <a class="tile reveal" href="#golfzon"><img src="assets/img/range-tracer.svg" alt="" loading="lazy" width="900" height="1000" style="object-position:50% 0%"><span class="chip talks" style="color:var(--cream);border-color:rgba(245,238,222,.4);background:rgba(12,22,14,.55)">Next</span>
+        <span class="num">03 · Driving ranges</span><h3>On the range</h3><p>Ranges that track every ball can carry the same swing, in the same app. Our next conversation.</p>
+        {facts_(("In our numbers", "Not yet"), ("Our revenue, 2029", "Upside"))}</a>
       <a class="tile wide reveal" href="#ernie"><img src="assets/img/ernie-open.webp" alt="" loading="lazy" width="1800" height="1200" style="object-position:30% 28%"><span class="chip">Founding Ambassador</span>
         <span class="num">Across all three</span><h3>Ernie Els</h3><p>{ernie['careerAces']} career aces, and his name behind every swing we sell: on course, on simulators and on the range. He owns {amb['equityPct']}%, so he's in it with us.</p></a>
     </div>
@@ -265,7 +276,7 @@ def app_section():
     track = "".join(f'<li class="reveal">{icon(i)}<span class="no">{k + 1}</span><h3>{t}</h3><p>{d_}</p></li>' for k, (i, t, d_) in enumerate(steps))
     hood = f"""<ul>
       <li><strong>Built to be audited:</strong> about {app['testsApprox']} automated tests, error monitoring, append-only audit logs and fraud rules on every claim.</li>
-      <li><strong>Golf days on their own link:</strong> every sponsored day gets a page, and every player gets a pre-sold swing. Multi-day trips and dollar prizes too. This month: {esc(gd[0])} and {esc(gd[1])}.</li>
+      <li><strong>Golf days on their own link:</strong> every sponsored day gets a page, and every player gets a pre-sold swing. Multi-day trips and dollar prizes too. In October: {esc(gd[0])} and {esc(gd[1])}.</li>
       <li><strong>The traction above</strong> is July 2025 to July 2026, on the tee, before the app.</li>
       <li><strong>Audited before launch:</strong> an independent developer reviews the code, the payments and the claims flow before the public launch.</li>
     </ul>"""
@@ -278,13 +289,13 @@ def app_section():
       <p class="lede"><strong>Pick a par 3, pick a stake, film the swing.</strong> Hole it and Santam pays, never another golfer. Built for {app['courses']} South African courses, it installs from the browser and runs at our golf days. {esc(app['status'])}.</p>
     </div>
     <ol class="track icons">{track}</ol>
-    <div class="split" style="margin-top:28px;align-items:stretch">
+    <div class="split app-split" style="margin-top:28px;align-items:stretch">
       <div class="phones reveal" role="group" aria-label="The live app">
         <figure><img src="assets/img/app-home.webp" alt="The Get Lucky app's home screen: 1 shot, R1 million" width="480" height="943" loading="lazy"><figcaption>The app</figcaption></figure>
         <figure><img src="assets/img/app-courses.webp" alt="Select a course: South African courses by province, with each par 3's length" width="480" height="943" loading="lazy"><figcaption>Pick a par 3</figcaption></figure>
         <figure><img src="assets/img/app-stake.webp" alt="Choose your stake: R50 to win R25,000, R100 to win R60,000, up to R1 million" width="480" height="943" loading="lazy"><figcaption>Pick a stake</figcaption></figure>
       </div>
-      <div style="display:grid;gap:14px;align-content:start">
+      <div class="app-side">
         <div class="card card--dark tryit reveal">
           <div class="qr"><img src="assets/logos/install-qr.svg" alt="QR code to install the Get Lucky app" width="112" height="112"></div>
           <div><h3 style="color:var(--cream);font-size:18px">Preview it yourself</h3><p>Scan to install, or open <a href="{app['url']}" target="_blank" rel="noopener" style="color:var(--lime)">getluckyholeinone.com</a> on your phone.</p></div>
@@ -338,7 +349,7 @@ def golfzon_section():
     <div class="head">
       <span class="kicker">02 · On simulators · Worldwide</span>
       <h2 class="display-lg" id="gz-h">On simulators. <span class="lime">{n(gz['locations'])} Golfzon locations.</span></h2>
-      <p class="lede"><strong>Golfzon is the world's biggest simulator network</strong> and the official simulator of the U.S. Open{", and now our partner" if GZ_SIGNED else ""}. Its bays already measure every shot. We built a working demo of the integration that turns one of those shots into an insured swing at up to ${sim_ladder[-1]['prize']:,}. Take a swing below.</p>
+      <p class="lede"><strong>Golfzon is the world's biggest simulator network</strong>, the official simulator of the U.S. Open{", and now our partner" if GZ_SIGNED else ""}. Its bays already measure every shot. We built a working demo of the integration that turns one of those shots into an insured swing at up to ${sim_ladder[-1]['prize']:,}. Take a swing below.</p>
     </div>
     <figure class="reveal">
       <div class="frame demo-embed" id="demo" data-w="1280" data-h="800">
@@ -357,7 +368,7 @@ def golfzon_section():
       <div class="reveal">
         <h3 class="display-sm" style="color:var(--cream)">What a $10 swing pays</h3>
         <div class="splitbar tab" role="img" aria-label="A ten dollar swing: {split['getLucky'] / 10:.2f} dollars to Get Lucky, {split['golfzonAndVenue'] / 10:.2f} to Golfzon and the venue, {split['insurer'] / 10:.2f} to the insurer">
-          <div class="a" style="flex:{split['getLucky']}">${split['getLucky'] / 10:.2f}<span>Us {split['getLucky']}%</span></div>
+          <div class="a" style="flex:{split['getLucky']}">${split['getLucky'] / 10:.2f}<span>Get Lucky {split['getLucky']}%</span></div>
           <div class="b" style="flex:{split['golfzonAndVenue']}">${split['golfzonAndVenue'] / 10:.2f}<span>Golfzon and venue</span></div>
           <div class="c" style="flex:{split['insurer']}">${split['insurer'] / 10:.2f}<span>Insurer</span></div>
         </div>
@@ -390,7 +401,7 @@ def ernie_section():
   <div class="wrap" style="position:relative">
     <div class="copy">
       <span class="kicker">03 · Ernie Els</span>
-      <h2 class="display-lg" id="ernie-h">He doesn't endorse it. <span class="lime">He owns part of it.</span></h2>
+      <h2 class="display-lg" id="ernie-h">He doesn't endorse&nbsp;it. <span class="lime">He owns part of&nbsp;it.</span></h2>
       <p class="lede"><strong>Ernie is our Founding Ambassador, with {amb['equityPct']}% non-diluting equity.</strong> No fee, no capital, no liability.</p>
       <p>{ernie['careerAces']} career aces, the latest a 5-iron from 193 yards in a senior major this May. Golfzon wants an Ernie Els challenge on its bays, and his businesses open doors in Asia, the Middle East and the US.</p>
       <ul class="honours" aria-label="Ernie Els career honours">
@@ -430,6 +441,7 @@ def team_section():
 
 def numbers_section():
     legend, chart = revenue_chart()
+    targets_a_year = round((rd["targetsMultiple2032"] ** (1 / ex["holdYears"]) - 1) * 100)
     c = f["costZAR"]
 
     def pl_row(label, vals, cls="", note=""):
@@ -463,7 +475,7 @@ def numbers_section():
     srows = "".join(
         f'<tr{" class=\"total\"" if k == "plan" else ""}><td>{esc(labels.get(k, sens[k]["case"]))}</td><td class="n hide-sm">{rm(sens[k]["revenue"])}</td>'
         f'<td class="n">{r0(sens[k]["value"])}</td><td class="n">{x(sens[k]["roundMultiple"])}</td>'
-        f'<td class="n">{("Lasts to " + sens[k]["cashLastsTo"]) if sens[k]["cashLastsTo"] else rm(sens[k]["lowestCashZAR"])}</td></tr>'
+        f'<td class="n">{("Lasts to " + sens[k]["cashLastsTo"]) if sens[k]["cashLastsTo"] else low_cash(sens[k]["lowestCashZAR"])}</td></tr>'
         for k in order)
     stress = f"""<div class="tablewrap" tabindex="0" role="region" aria-label="2029 sensitivity">
       <table class="compact">
@@ -489,7 +501,7 @@ def numbers_section():
       <li><strong>The app, on course:</strong> {n(f['kpis']['onCourseSwings'][0])} paid swings in 2027 ({n(tr['paidSwings'])} in our first year) rising to {n(f['kpis']['onCourseSwings'][-1])} in 2032, at R{f['kpis']['onCourseAvgZAR'][0]} to R{f['kpis']['onCourseAvgZAR'][-1]} a swing.</li>
       <li><strong>Sponsorship grows with reach:</strong> Indwe's R3m is contracted for 2027 and we assume it renews; on top, about R5 for every paid swing beyond 2027's, on course and on Golfzon. {rm(rev['sponsorship'][0])} in 2027 to {rm(rev['sponsorship'][-1])} in 2032.</li>
       <li><strong>Get Lucky:</strong> central team {rm(plan['centralZAR'][0], 0)} in 2027 to {rm(plan['centralZAR'][-1], 0)} in 2032; brand 8% of product revenue plus a launch budget; tax at 27% after the 2027 loss.</li>
-      <li><strong>Cash:</strong> {rm(cash['openingZAR'], 0)} on 1 January 2027, with no interim raise; the round lands in Q1 2027. Without it, the first quarter would end at {rm(cash['q1WithoutRoundZAR'])}.</li>
+      <li><strong>Cash:</strong> {"R0" if not cash['openingZAR'] else rm(cash['openingZAR'])} on 1 January 2027, with no interim raise; the round lands in Q1 2027. Without it, the first quarter would end at {rm(cash['q1WithoutRoundZAR'])}.</li>
     </ul>"""
     return f"""
 <section class="section white" id="numbers" aria-labelledby="num-h">
@@ -506,14 +518,14 @@ def numbers_section():
     </div>
     <div class="kpis tab reveal">
       <div>{icon('chart')}<div><b>{cash['ebitdaPositiveFrom']}</b><span>EBITDA positive</span></div></div>
-      <div>{icon('coins')}<div><b>{rm(f['ebitdaZAR'][k29])}</b><span>EBITDA in 2029, {pc(f['ebitdaMarginPct'][k29])} margin</span></div></div>
+      <div>{icon('coins')}<div><b>{rm(f['ebitdaZAR'][k29])}</b><span>2029 EBITDA, {pc(f['ebitdaMarginPct'][k29], 0)} margin</span></div></div>
       <div>{icon('bank')}<div><b>{rm(cash['lowestQuarterZAR'])}</b><span>Lowest cash, {cash['lowestQuarter']}</span></div></div>
-      <div>{icon('lock')}<div><b>None</b><span>Further equity rounds in the plan</span></div></div>
+      <div>{icon('lock')}<div><b>None</b><span>Further equity rounds</span></div></div>
     </div>
     <div class="cases tab">
       <div class="case reveal"><span class="k">The plan</span><b>{x(rd['multiple2029'])}</b><span class="l">What {rm(rd['amountZAR'])} in the round is marked at, December 2029. Sold in {ex['year']}: {x(ex['multiple'])}, about {ex['aYearPct']}% a year.</span></div>
-      <div class="case hard reveal"><span class="k">The hard case</span><b>{x(rd['hardCaseMultiple2029'])}</b><span class="l">Half the Golfzon attach and half the ticket. Cash lasts to {cash['hardCaseCashLastsTo']} if we cut nothing; we'd see it in 2027 and hold the hiring back. Sold in {ex['year']}: {x(ex['hardCaseMultiple'])}, about {ex['hardCaseAYearPct']}% a year.</span></div>
-      <div class="case up reveal"><span class="k">Our targets</span><b>{x(rd['targetsMultiple2029'])}</b><span class="l">Twice the Golfzon attach at a $10 swing. {x(rd['targetsMultiple2032'])} by 2032.</span></div>
+      <div class="case hard reveal"><span class="k">The hard case</span><b>{x(rd['hardCaseMultiple2029'])}</b><span class="l">Half the Golfzon attach and half the ticket. Sold in {ex['year']}: {x(ex['hardCaseMultiple'])}, about {ex['hardCaseAYearPct']}% a year. Cash lasts to {cash['hardCaseCashLastsTo']} if we cut nothing.</span></div>
+      <div class="case up reveal"><span class="k">Our targets</span><b>{x(rd['targetsMultiple2029'])}</b><span class="l">Twice the Golfzon attach, at a $10 swing, with a bigger team. Sold in {ex['year']}: {x(rd['targetsMultiple2032'])}, about {targets_a_year}% a year.</span></div>
     </div>
     <p class="note" style="margin-top:12px">The round prices Get Lucky at {price_on(2028)} our 2028 revenue and {price_on(2029)} our 2029 revenue. We mark it at {val['platformMultiple']}× each year's revenue. Unrealised marks on a private holding, not cash returns.</p>
     {more("The full P&amp;L", pl_block)}
@@ -562,8 +574,9 @@ def use_of_funds_block(items):
         f'<div style="flex:{u["pct"]};background:{USE_COLOURS[u["key"]]};color:{"var(--green)" if u["key"] in USE_DARK_TEXT else "var(--cream)"}" title="{esc(u["label"])}, {u["pct"]}%">'
         + (f'{u["pct"]}%' if u["pct"] >= 10 else "") + (f'<span>{esc(u["short"])}</span>' if u["pct"] >= 20 else "") + "</div>"
         for u in items)
+    note = lambda u: f"<small>{esc(u['note'])}</small>" if u.get("note") else ""   # what each line buys
     ulist = "".join(f'<li><i style="background:{USE_COLOURS[u["key"]]};{"outline:1px solid var(--line-strong)" if u["key"] == "golfzon" else ""}"></i>'
-                    f'<span>{esc(u["label"])}</span><b>{amount(u["ZAR"])}</b></li>' for u in items)
+                    f'<span>{esc(u["label"])}{note(u)}</span><b>{amount(u["ZAR"])}</b></li>' for u in items)
     label = esc(", ".join(f"{u['label']} {u['pct']}%" for u in items))
     return (f'<div class="usebar tab" role="img" aria-label="Use of funds: {label}">{bar}</div>'
             f'<ul class="uselist tab">{ulist}</ul>')
@@ -608,13 +621,18 @@ def deal_section():
       <div class="termcard reveal">
         <span class="k">Use of funds</span>
         <h3>What it pays for</h3>
-        <div style="display:grid;gap:12px;align-self:start">{use_of_funds_block(uof)}
-          <p class="uses" style="margin-top:6px">Our revenue already pays for the team and the day-to-day: {rm(uof_running)} in 2027, against {rm(uof_revenue)} of revenue. So the round goes into what's new. At our lowest point, {cash['lowestQuarter']}, we still hold {rm(cash['lowestQuarterZAR'])}. None of it buys hardware.</p></div>
+        <div class="usefill">{use_of_funds_block(uof)}
+          <div class="usestats tab">
+            <div><b>{rm(uof_revenue)}</b><span>Our 2027 revenue, which already pays {rm(uof_running)} of the team and the day-to-day</span></div>
+            <div><b>{rm(cash['lowestQuarterZAR'])}</b><span>Our lowest cash, {cash['lowestQuarter']}, with every cost held at plan</span></div>
+          </div>
+        </div>
+        <p class="uses">So the round goes into what's new. None of it buys hardware, and the plan needs no further equity round.</p>
       </div>
     </div>
 
     <ol class="timeline">
-      <li class="key"><time>Dec 2026</time><b>Fancourt</b><span>Golfzon and Ernie's team, at one table.</span></li>
+      <li class="key"><time>Dec 2026</time><b>Fancourt</b><span>Golfzon and Ernie's team meet.</span></li>
       <li class="key"><time>{esc(rd['timing'])}</time><b>The round</b><span>{rm(rd['amountZAR'])} closes.</span></li>
       <li><time>Q2 2027</time><b>Golfzon phase one</b><span>Live on Golfzon bays.</span></li>
       <li><time>2028</time><b>Golfzon phase two</b><span>In Golfzon's app and in-game.</span></li>
@@ -652,6 +670,8 @@ def faq_section():
          f"Ordinary shares in Get Lucky Golf Club (Pty) Ltd: {rm(rd['amountZAR'])} for {EQ} at {r0(rd['preMoneyZAR'])} pre-money, from {rm(rd['minimumTicketZAR'])}, in {esc(rd['timing'])}. One round, no interim raise, no preference and no ratchet."),
         ("What does Ernie get?",
          f"{amb['equityPct']}% non-diluting equity as Founding Ambassador, with normal shareholder rights: his {amb['equityPct']}% shares in any profit we pay out and in any sale, like every other share. No fee, no capital, no guarantees, no liability. His {amb['equityPct']}% sits inside the {r0(rd['preMoneyZAR'])} pre-money, top-up included, so the round still buys its full stake. The full terms are available under NDA."),
+        ("Why no hardware?",
+         "Because the swing runs on screens and phones that already exist: Golfzon's bays, ranges that track every ball, and the golfer's own phone on course. We don't buy simulators or screens, so the round builds the platform and the launch, and every new network adds revenue without capex."),
         ("What if someone wins R1m, or $100,000?",
          "The insurer pays, and it's the best marketing day of our year. 24% of every entry goes to the insurer as premium, on the same swing that creates the risk."),
     ]
@@ -659,8 +679,11 @@ def faq_section():
     return f"""
 <section class="section white" id="faq" aria-labelledby="faq-h">
   <div class="wrap">
-    <div class="head"><span class="kicker">Straight answers</span><h2 class="display-lg" id="faq-h">Investor FAQ</h2></div>
-    <div class="faq">{items}</div>
+    <div class="split faq-split">
+      <div class="head"><span class="kicker">Straight answers</span><h2 class="display-lg" id="faq-h">Investor FAQ</h2>
+        <p class="lede">The questions investors ask first. Anything else, ask me on a call.</p></div>
+      <div class="faq">{items}</div>
+    </div>
   </div>
 </section>"""
 
@@ -669,7 +692,8 @@ def cta_section():
     return f"""
 <section class="section paper" id="contact" aria-labelledby="cta-h">
   <div class="wrap">
-    <div class="cta">
+    <div class="cta cta--split">
+      <div class="cta-copy">
       <span class="kicker" style="color:var(--green)">Next step</span>
       <h2 class="display-lg" id="cta-h">Let's talk.</h2>
       <p><strong>The round opens in {esc(rd['timing'])}.</strong> I'll take you through the model, the Golfzon demo and the app, and answer anything this page doesn't.</p>
@@ -678,6 +702,9 @@ def cta_section():
         <a class="btn btn-outline" href="{app['url']}" target="_blank" rel="noopener" style="border-color:rgba(52,82,49,.4);color:var(--green)">Preview the app</a>
       </div>
       <div class="contact"><a href="mailto:{EMAIL}">{EMAIL}</a><a href="tel:{PHONE_TEL}">{PHONE}</a></div>
+      </div>
+      <figure class="cta-person"><img src="assets/img/team-johannes.webp" alt="Johannes le Roux" width="200" height="200" loading="lazy">
+        <figcaption><b>Johannes le Roux</b><span>Founder &amp; Managing Director</span></figcaption></figure>
     </div>
   </div>
 </section>"""

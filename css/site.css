@@ -164,7 +164,7 @@ figure { margin: 0; }
 /* ---------- the raise band ---------- */
 .raiseband { background: var(--white); border-bottom: 1px solid var(--line); }
 .raiseband .row { display: grid; gap: 14px; padding-block: 28px; align-items: stretch; }
-@media (min-width: 900px) { .raiseband .row { grid-template-columns: 1fr 1fr auto; align-items: center; } }
+@media (min-width: 900px) { .raiseband .row { grid-template-columns: 1fr 1fr auto; align-items: stretch; } .raiseband .act { align-self: center; } }
 .step { display: grid; gap: 6px; padding: 20px 22px; border-radius: var(--r); background: var(--paper); border: 1px solid var(--line); }
 .step .k { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--green-light); }
 .step .n { font-family: var(--display); font-size: clamp(1.9rem, 3vw, 2.4rem); line-height: 1; text-transform: uppercase; }
@@ -329,16 +329,16 @@ details.more .body strong { color: var(--ink); }
 .termcard .uses strong { color: var(--ink); }
 @media (min-width: 900px) {
   /* the two cards share rows, so they end level and their use-of-funds blocks line up */
-  .terms { grid-template-rows: repeat(7, auto); row-gap: 14px; }
-  .termcard { display: grid; grid-template-rows: subgrid; grid-row: span 7; }
+  .terms { grid-template-rows: repeat(4, auto); row-gap: 14px; }
+  .termcard { display: grid; grid-template-rows: subgrid; grid-row: span 4; }
   .termcard dl, .termcard .uselist { align-self: start; }
 }
 .usebar { display: flex; height: 46px; border-radius: 12px; overflow: hidden; margin-top: 4px; }
 .usebar div { display: flex; flex-direction: column; justify-content: center; padding: 0 10px; font-size: 13px; font-weight: 700; min-width: 0; overflow: hidden; white-space: nowrap; }
 .usebar div span { font-size: 10.5px; font-weight: 600; opacity: .85; overflow: hidden; text-overflow: ellipsis; }
 .uselist { list-style: none; display: grid; gap: 8px; font-size: 14px; }
-.uselist li { display: flex; align-items: center; gap: 10px; }
-.uselist i { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+.uselist li { display: flex; align-items: flex-start; gap: 10px; }
+.uselist i { width: 11px; height: 11px; border-radius: 3px; flex: none; margin-top: 4px; }
 .uselist span { flex: 1; color: var(--muted); }
 .uselist b { font-variant-numeric: tabular-nums; color: var(--ink); }
 .termcard strong { color: var(--ink); }
@@ -375,12 +375,12 @@ details.more .body strong { color: var(--ink); }
 .person b { display: block; font-size: 17px; }
 .person .role { font-size: 13px; color: var(--green-light); font-weight: 600; }
 .person p { font-size: 14.5px; color: var(--muted); }
-.marks { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 22px 44px; margin-top: 40px; padding: 26px; border-radius: 24px; background: var(--night); }
+.marks { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-evenly; gap: 22px 44px; margin-top: 40px; padding: 26px; border-radius: 24px; background: var(--night); }
 .marks img { height: 30px; width: auto; opacity: .92; }
 .marks img.tall { height: 40px; }
 
 /* ---------- FAQ ---------- */
-.faq { display: grid; gap: 10px; max-width: 52rem; }
+.faq { display: grid; gap: 10px; align-content: start; }
 .faq details { background: var(--white); border: 1px solid var(--line); border-radius: 18px; padding: 0 22px; }
 .faq summary { cursor: pointer; list-style: none; padding: 18px 0; font-weight: 600; font-size: 16px; display: flex; justify-content: space-between; gap: 16px; }
 .faq summary::-webkit-details-marker { display: none; }
@@ -491,7 +491,7 @@ footer a { color: rgba(245, 238, 222, .8); }
 .case.up .l { color: var(--forest); }
 
 /* ---------- the risks: one question per row, the answer one click away ---------- */
-.qa-list { display: grid; gap: 10px; max-width: 58rem; }
+.qa-list { display: grid; gap: 10px; }
 .qa-item { border-radius: 18px; background: rgba(245, 238, 222, .05); border: 1px solid rgba(245, 238, 222, .12); padding: 0 20px; }
 .qa-item summary { cursor: pointer; list-style: none; padding: 16px 0; display: flex; align-items: center; gap: 14px; font-weight: 600; font-size: 16px; color: var(--cream); }
 .qa-item summary::-webkit-details-marker { display: none; }
@@ -556,3 +556,38 @@ h3, h4 { text-wrap: balance; }
 .photo-side { aspect-ratio: 16 / 9; }
 @media (min-width: 960px) { .photo-side { aspect-ratio: auto; min-height: 320px; } }
 @media (max-width: 520px) { .photo figcaption { font-size: 10px; letter-spacing: .04em; left: 12px; right: 12px; bottom: 10px; } }
+
+/* ---------- review pass, 5 Nov 2026: matching heights, no empty panels ---------- */
+/* the app: phones and the two cards beside them end level */
+.app-side { display: grid; gap: 14px; grid-template-rows: auto 1fr; }
+.app-side .proof { align-content: space-between; }
+@media (min-width: 960px) { .split.app-split { grid-template-columns: 1.2fr .8fr; } .app-split .tryit .qr { width: 104px; height: 104px; } }
+/* the revenue chart: a phone gets its own drawing, so the type stays readable */
+.chart--compact { display: none; }
+@media (max-width: 640px) { .chart--wide { display: none; } .chart--compact { display: block; } }
+/* risks: the answers keep a readable measure on a full-width list */
+.qa-item .a p { max-width: 62rem; }
+/* the FAQ: heading beside the answers */
+@media (min-width: 960px) { .split.faq-split { grid-template-columns: .8fr 1.2fr; align-items: start; } .faq-split .head { margin: 0; position: sticky; top: 110px; } }
+/* use of funds: what each line buys, and the two figures behind it */
+.usefill { display: grid; gap: 14px; align-self: start; }
+.uselist small { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.45; color: var(--muted); opacity: .85; }
+.uselist span { line-height: 1.4; }
+.usestats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.usestats div { padding: 14px 16px; border-radius: 14px; background: var(--paper); border: 1px solid var(--line); }
+.usestats b { display: block; font-family: var(--display); font-size: 1.6rem; line-height: 1; color: var(--green); }
+.usestats span { display: block; margin-top: 6px; font-size: 12.5px; line-height: 1.45; color: var(--muted); }
+/* the ask: the person you'll talk to */
+.cta-copy { display: grid; gap: 22px; }
+.cta-person { margin: 0; display: grid; justify-items: center; gap: 12px; text-align: center; }
+.cta-person img { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 6px solid var(--green); }
+.cta-person b { display: block; font-size: 17px; color: var(--green); }
+.cta-person span { display: block; font-size: 13px; color: var(--forest); margin-top: 2px; }
+@media (min-width: 900px) { .cta--split { grid-template-columns: 1fr auto; align-items: center; column-gap: 56px; } }
+@media (max-width: 899px) { .cta-person { justify-items: start; text-align: left; grid-template-columns: auto 1fr; align-items: center; } .cta-person img { width: 88px; height: 88px; border-width: 4px; } }
+.faq-split .head { margin-bottom: 0; }
+@media (max-width: 520px) { .usestats { grid-template-columns: 1fr; } }
+/* the smallest phones: the QR card's long link may break, and the QR gives up some room */
+.tryit p a { overflow-wrap: anywhere; }
+@media (max-width: 400px) { .tryit { gap: 14px; } .tryit .qr { width: 92px; height: 92px; padding: 6px; } }
+@media (max-width: 380px) { .phases.compact { gap: 6px; } .phases.compact .phase { padding: 12px 10px; } .phases.compact .phase h3 { font-size: 1rem; } .phases.compact .phase .k { letter-spacing: .06em; } }
