@@ -8,7 +8,10 @@ asset-light company - no hardware, no debt:
        network (15,029 locations, 100m+ rounds a year), revenue shared
        46 / 30 / 24 with Golfzon and the venue, and the insurer.
     2. On course - the app on South Africa's Top 100 courses and the golf days.
-    3. Sponsorship.
+    3. On course, worldwide - the same app on every par 3 in the world, launched with Ernie.
+    4. Sponsorship.
+The app is the one interface: it takes every entry, on course, on simulators and on ranges.
+The round funds two opportunities: the app worldwide, and simulator integration (Golfzon first).
 
 Every driver lives in a case (PLAN, TARGETS) and run(case) builds the company
 from it, so the plan, the founder's targets and every sensitivity go through
@@ -76,6 +79,17 @@ OC_SWINGS = {2027: 36_000, 2028: 60_000, 2029: 85_000, 2030: 110_000, 2031: 135_
 OC_AVG_ZAR = {2027: 150, 2028: 175, 2029: 200, 2030: 200, 2031: 200, 2032: 200}
 OC_PROCESSING = 0.03
 OC_VERIFY_ZAR = 8             # video review and claims handling per swing
+
+# ============================================================================
+# 2b. ON COURSE, WORLDWIDE - the same app on every par 3 in the world, launched with Ernie in
+# his markets from 2028 (2027 builds the course data, payments and cover). Conservative: by
+# 2032 about twice South Africa's paid swings, from a golfer base hundreds of times larger.
+# The founder's proposal to plan on, 5 Nov 2026.
+# ============================================================================
+GL_SWINGS = {2027: 0, 2028: 25_000, 2029: 75_000, 2030: 150_000, 2031: 250_000, 2032: 350_000}
+GL_TICKET_USD = 10.0          # average swing outside South Africa
+GL_MARKETING = 0.12           # of our share: market launches with Ernie
+GL_MARKET_COST = 1_000_000    # a year from the first market: legal clearance and insurer onboarding
 
 # ============================================================================
 # 3. SPONSORSHIP - grows with reach. Indwe has approved R3m for 2027, first payment on 1 January
@@ -148,6 +162,8 @@ CASES = [
     # Golfzon's roll-out a year behind plan: no swings in 2027, each later year at the year before's attach
     dict(PLAN, key="golfzonLate", label="Golfzon a year late",
          gz_attach={y: PLAN["gz_attach"].get(y - 1, 0.0) for y in YEARS}),
+    dict(PLAN, key="noGolfzon", label="No Golfzon at all", gz_attach={y: 0.0 for y in YEARS}),
+    dict(PLAN, key="globalHalf", label="The app worldwide at half the swings", gl_mult=0.5),
     scaled(PLAN, "outsideKorea", "Golfzon outside Korea only", rounds=GZ_ROUNDS - GZ_KOREA_ROUNDS),
     scaled(PLAN, "outsideKoreaTrackman", "Golfzon outside Korea, plus Trackman from 2028",
            rounds={y: GZ_ROUNDS - GZ_KOREA_ROUNDS + (TRACKMAN_ROUNDS if y >= 2028 else 0) for y in YEARS}),
@@ -164,7 +180,8 @@ def run(case):
     # ===================== Get Lucky =========================================
     rows = {}
     gz_rounds = lambda y: case["gz_rounds"][y] if isinstance(case["gz_rounds"], dict) else case["gz_rounds"]
-    swings_2027 = gz_rounds(2027) * case["gz_attach"][2027] + OC_SWINGS[2027]   # the reach Indwe's R3m buys
+    gl = lambda y: GL_SWINGS[y] * case.get("gl_mult", 1.0)                       # paid swings outside South Africa
+    swings_2027 = gz_rounds(2027) * case["gz_attach"][2027] + OC_SWINGS[2027] + gl(2027)   # the reach Indwe's R3m buys
     for y in YEARS:
         r = {}
         swings = gz_rounds(y) * case["gz_attach"][y]
@@ -178,14 +195,19 @@ def run(case):
         r["ocGross"] = OC_SWINGS[y] * OC_AVG_ZAR[y]
         r["ocRevenue"] = r["ocGross"] * (1 - PREMIUM - COURSE_SHARE)
         r["ocDirect"] = r["ocGross"] * OC_PROCESSING + OC_SWINGS[y] * OC_VERIFY_ZAR
-        r["sponsorship"] = SPONSOR_BASE_ZAR + SPONSOR_PER_SWING_ZAR * max(swings + OC_SWINGS[y] - swings_2027, 0)
-        r["productRevenue"] = r["gzRevenue"] + r["ocRevenue"] + r["sponsorship"]
+        r["glSwings"] = gl(y)
+        r["glGross"] = gl(y) * GL_TICKET_USD * FX
+        r["glRevenue"] = r["glGross"] * (1 - PREMIUM - COURSE_SHARE)
+        r["glDirect"] = (r["glGross"] * OC_PROCESSING + gl(y) * OC_VERIFY_ZAR + r["glRevenue"] * GL_MARKETING
+                         + (GL_MARKET_COST if gl(y) else 0.0))
+        r["sponsorship"] = SPONSOR_BASE_ZAR + SPONSOR_PER_SWING_ZAR * max(swings + OC_SWINGS[y] + gl(y) - swings_2027, 0)
+        r["productRevenue"] = r["gzRevenue"] + r["ocRevenue"] + r["glRevenue"] + r["sponsorship"]
         r["revenue"] = r["productRevenue"]
         r["central"] = case["central"][y]
         r["brandFixed"] = case["brand_fixed"].get(y, 0)
         r["brand"] = r["brandFixed"] + r["productRevenue"] * BRAND_PCT
-        r["ebitda"] = r["revenue"] - r["gzDirect"] - r["ocDirect"] - r["central"] - r["brand"]
-        r["premiumWritten"] = r["gzPremium"] + r["ocGross"] * PREMIUM
+        r["ebitda"] = r["revenue"] - r["gzDirect"] - r["ocDirect"] - r["glDirect"] - r["central"] - r["brand"]
+        r["premiumWritten"] = r["gzPremium"] + (r["ocGross"] + r["glGross"]) * PREMIUM
         rows[y] = r
 
     loss_cf, cash = 0.0, OPENING_CASH_2027
@@ -227,21 +249,24 @@ def run(case):
                 q_cash=q_cash, low=(low_label, low), lasts_to=lasts_to, q1_no_round=q1_no_round)
 
 
+APP_TEAM_SHARE = 0.20   # of 2027 central: the developers taking the app to every par 3 in the world
+SIM_TEAM_SHARE = 0.15   # of 2027 central: the simulator integration team, Golfzon first
+
+
 def use_of_funds(p):
-    """What the round pays for. In 2027 revenue already pays for the team and the
-    day-to-day (the core team, and the costs that move with revenue), so the round
-    goes into what is new: the Golfzon build and the launch with Ernie. The rest is
-    the reserve. None of it buys hardware."""
+    """What the round pays for: two opportunities, through one app. In 2027 revenue already pays
+    for the rest of the team and the day-to-day, so the round goes into what is new: the app
+    worldwide (its developers and the launch with Ernie) and simulator integration (its team and
+    Golfzon's running costs). The rest is the reserve."""
     r = p["rows"][2027]
-    golfzon = r["gzDirect"] + 0.35 * r["central"]          # the integration team: 35% of 2027 central
-    launch = r["brandFixed"]                               # the fixed launch budget, on top of brand at 8%
-    running = 0.65 * r["central"] + r["ocDirect"] + (r["brand"] - r["brandFixed"])
+    app = APP_TEAM_SHARE * r["central"] + r["brandFixed"]
+    sims = SIM_TEAM_SHARE * r["central"] + r["gzDirect"]
+    running = (1 - APP_TEAM_SHARE - SIM_TEAM_SHARE) * r["central"] + r["ocDirect"] + (r["brand"] - r["brandFixed"])
     items = [
-        {"key": "golfzon", "label": "Golfzon integration and global launch", "short": "Golfzon",
-         "ZAR": round(golfzon, -4),
-         "note": "The integration team, the signed shot record, the ace data the insurer prices on, market launches"},
-        {"key": "launch", "label": "The launch with Ernie", "short": "Launch", "ZAR": round(launch, -4),
-         "note": "Launch content with Ernie, leagues and partner activations"},
+        {"key": "app", "label": "The app, worldwide", "short": "The app", "ZAR": round(app, -4),
+         "note": "Developers to open every par 3 in the world, every currency and every market's cover; the launch with Ernie"},
+        {"key": "sims", "label": "Simulator integration", "short": "Simulators", "ZAR": round(sims, -4),
+         "note": "Golfzon first, then the next networks: the integration team, the signed shot record, the insurer's ace data"},
     ]
     items.append({"key": "reserve", "label": "Working capital and reserve", "short": "Reserve",
                   "ZAR": ROUND_ZAR - sum(i["ZAR"] for i in items),
@@ -249,9 +274,9 @@ def use_of_funds(p):
     for i in items:
         i["pct"] = round(i["ZAR"] / ROUND_ZAR * 100)
     items[-1]["pct"] = 100 - sum(i["pct"] for i in items[:-1])
-    return {"_note": ("The round pays for what is new in 2027: the Golfzon build (the integration team is 35% of "
-                      "2027 central cost) and the fixed launch budget. Revenue pays for the rest of the team and "
-                      "the costs that move with it. What is left is the reserve."),
+    return {"_note": ("Two opportunities through one app: the app worldwide (20% of 2027 central cost plus the "
+                      "launch budget) and simulator integration (15% of 2027 central cost plus Golfzon's running "
+                      "costs). Revenue pays for the rest of the team and the costs that move with it."),
             "revenue2027ZAR": round(r["revenue"], -4), "runningCost2027ZAR": round(running, -4), "items": items}
 
 
@@ -393,15 +418,16 @@ def main():
             "revenueZAR": {
                 "golfzon": R("gzRevenue"),
                 "onCourse": R("ocRevenue"),
+                "global": R("glRevenue"),
                 "sponsorship": R("sponsorship"),
                 "total": R("revenue"),
             },
             "_revenueBasis": ("Get Lucky's own revenue. Golfzon and on course are Get Lucky's share only: 46% of a "
                               "simulator swing after Golfzon and the venue (30%) and the insurer (24%); 66% of a "
-                              "course swing after the club (10%) and the insurer (24%)."),
+                              "course swing after the club (10%) and the insurer (24%), in South Africa and worldwide."),
             "ebitdaZAR": R("ebitda"),
             "ebitdaMarginPct": [round(rows[y]["ebitda"] / rows[y]["revenue"] * 100, 1) for y in YEARS],
-            "costZAR": {"golfzonDirect": R("gzDirect"), "onCourseDirect": R("ocDirect"),
+            "costZAR": {"golfzonDirect": R("gzDirect"), "onCourseDirect": R("ocDirect"), "globalDirect": R("glDirect"),
                         "central": R("central"), "brand": R("brand")},
             "taxZAR": R("tax"), "netProfitZAR": R("netProfit"),
             "kpis": {
@@ -409,6 +435,8 @@ def main():
                 "golfzonTicketUSD": [PLAN["gz_ticket"][y] for y in YEARS],
                 "golfzonSwings": R("gzSwings"),
                 "onCourseSwings": R("ocSwings"), "onCourseAvgZAR": [OC_AVG_ZAR[y] for y in YEARS],
+                "globalSwings": R("glSwings"), "globalTicketUSD": GL_TICKET_USD,
+                "globalMarketCostZAR": GL_MARKET_COST, "globalMarketingPct": round(GL_MARKETING * 100),
                 "premiumWrittenZAR": R("premiumWritten"),
             },
             "_premiumNote": ("Premium written is a volume metric, not revenue: the premium the platform "
@@ -453,7 +481,8 @@ def main():
     line = lambda label, vals_: print(f"  {label:30}" + "".join(f"{v:>10}" for v in vals_))
     print(f"{'GET LUCKY':32}" + "".join(f"{y:>10}" for y in YEARS))
     line("Golfzon swings (m)", [f"{rows[y]['gzSwings'] / 1e6:.2f}" for y in YEARS])
-    for label, k in (("Golfzon (GL share)", "gzRevenue"), ("On course", "ocRevenue"), ("Sponsorship", "sponsorship"),
+    for label, k in (("Golfzon (GL share)", "gzRevenue"), ("On course", "ocRevenue"), ("On course, worldwide", "glRevenue"),
+                     ("Sponsorship", "sponsorship"),
                      ("REVENUE", "revenue"), ("central", "central"), ("brand", "brand"),
                      ("EBITDA", "ebitda"), ("tax", "tax"), ("net profit", "netProfit"), ("cash closing", "closing")):
         line(label, [mm(rows[y][k]) for y in YEARS])

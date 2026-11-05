@@ -5,7 +5,8 @@ post). One round, no interim raise.
 
 The story: Get Lucky is the hole-in-one app — on course in South Africa, on
 Golfzon's 15,029 simulator locations worldwide, and next on the driving range —
-presented by Ernie Els, Founding Ambassador. Asset-light: no hardware, no debt.
+presented by Ernie Els, Founding Ambassador. One app takes every entry; the round
+funds the app worldwide and simulator integration, Golfzon first.
 
 ```
 python3 scripts/model.py          # forecast -> data/model.json (--dry to print only)

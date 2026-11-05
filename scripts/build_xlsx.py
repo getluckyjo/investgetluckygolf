@@ -38,18 +38,21 @@ QL = [f"Q{q + 1} {y}" for y in Y for q in range(4)]
 
 # The cases, as levers on the plan's drivers. Each row must rebuild the case in model.py exactly
 # (checked below), so the workbook and the Python model can't drift apart quietly.
-SCEN = [  # name, key, attach x, ticket x, drivers, a year late, Korea in, Trackman from 2028, simulator premium
-    ("The plan", "plan", 1, 1, "Plan", 0, 1, 0, M.SIM_SPLIT["insurer"]),
-    ("Golfzon at half the attach", "halfAttach", 0.5, 1, "Plan", 0, 1, 0, M.SIM_SPLIT["insurer"]),
-    ("The hard case: half the attach and half the ticket", "hard", 0.5, 0.5, "Plan", 0, 1, 0, M.SIM_SPLIT["insurer"]),
-    ("Golfzon a year late", "golfzonLate", 1, 1, "Plan", 1, 1, 0, M.SIM_SPLIT["insurer"]),
-    ("Golfzon outside Korea only", "outsideKorea", 1, 1, "Plan", 0, 0, 0, M.SIM_SPLIT["insurer"]),
-    ("Golfzon outside Korea, plus Trackman from 2028", "outsideKoreaTrackman", 1, 1, "Plan", 0, 0, 1, M.SIM_SPLIT["insurer"]),
-    ("Our targets", "targets", 1, 1, "Targets", 0, 1, 0, M.SIM_SPLIT["insurer"]),
-    ("The insurer prices simulator swings at 30%", "simPremium30", 1, 1, "Plan", 0, 1, 0, 0.30),
+SCEN = [  # name, key, attach x, ticket x, drivers, a year late, Korea in, Trackman from 2028, simulator premium, worldwide app x
+    ("The plan", "plan", 1, 1, "Plan", 0, 1, 0, M.SIM_SPLIT["insurer"], 1),
+    ("The app worldwide at half the swings", "globalHalf", 1, 1, "Plan", 0, 1, 0, M.SIM_SPLIT["insurer"], 0.5),
+    ("Golfzon at half the attach", "halfAttach", 0.5, 1, "Plan", 0, 1, 0, M.SIM_SPLIT["insurer"], 1),
+    ("The hard case: half the attach and half the ticket", "hard", 0.5, 0.5, "Plan", 0, 1, 0, M.SIM_SPLIT["insurer"], 1),
+    ("Golfzon a year late", "golfzonLate", 1, 1, "Plan", 1, 1, 0, M.SIM_SPLIT["insurer"], 1),
+    ("No Golfzon at all", "noGolfzon", 0, 1, "Plan", 0, 1, 0, M.SIM_SPLIT["insurer"], 1),
+    ("Golfzon outside Korea only", "outsideKorea", 1, 1, "Plan", 0, 0, 0, M.SIM_SPLIT["insurer"], 1),
+    ("Golfzon outside Korea, plus Trackman from 2028", "outsideKoreaTrackman", 1, 1, "Plan", 0, 0, 1, M.SIM_SPLIT["insurer"], 1),
+    ("Our targets", "targets", 1, 1, "Targets", 0, 1, 0, M.SIM_SPLIT["insurer"], 1),
+    ("The insurer prices simulator swings at 30%", "simPremium30", 1, 1, "Plan", 0, 1, 0, 0.30, 1),
 ]
 CASE = {c["key"]: c for c in M.CASES + M.TERM_CASES}
-for _, key, am, tm, drv, late, korea, tman, prem in SCEN:
+for _, key, am, tm, drv, late, korea, tman, prem, gm in SCEN:
+    assert CASE[key].get("gl_mult", 1.0) == gm, key
     c, base = CASE[key], (M.TARGETS if drv == "Targets" else M.PLAN)
     for i, y in enumerate(Y):
         a = (base["gz_attach"].get(y - 1, 0.0) if late else base["gz_attach"][y]) * am
@@ -159,8 +162,10 @@ lines = [
     ("The method, in short", BOLD),
     ("Golfzon: rounds a year x share of rounds with a paid swing (attach) x average swing in USD x FX = gross; Get Lucky keeps", CALC),
     ("46% after Golfzon and the venue (30%) and the insurer (24%). On course: paid swings x average swing; we keep 66% after the", CALC),
-    ("club (10%) and the insurer (24%). Sponsorship: Indwe's R3m, plus R5 for every paid swing beyond 2027's.", CALC),
-    ("Costs: Golfzon payments, claims and launches; on-course payments and verification; the central team; brand at 8% plus a", CALC),
+    ("club (10%) and the insurer (24%). Worldwide: paid swings outside South Africa x $10 x FX, on the same 66%, from 2028.", CALC),
+    ("Sponsorship: Indwe's R3m, plus R5 for every paid swing beyond 2027's. The app takes every entry: on course, on simulators, on ranges.", CALC),
+    ("Costs: Golfzon payments, claims and launches; on-course payments and verification, at home and worldwide, with market launches and", CALC),
+    ("cover; the central team; brand at 8% plus a", CALC),
     ("launch budget. Tax at 27% after losses carried forward. Value: 3.0x each year's revenue. The round's mark = value x its stake.", CALC),
     ("Quarterly cash: revenue (and the costs that move with it) lands by the weights on Assumptions; fixed costs run evenly; the", CALC),
     ("round lands in Q1 2027; tax lands in Q4.", CALC),
@@ -287,6 +292,13 @@ scalar("The club's share", "Club_Share", M.COURSE_SHARE, PCT, "")
 scalar("Payments, of gross", "OC_Processing", M.OC_PROCESSING, PCT, "")
 scalar("Video review and claims, R a swing", "OC_Verify", M.OC_VERIFY_ZAR, R0, "")
 r += 1
+header(A, r, "ON COURSE, WORLDWIDE: THE APP WITH ERNIE", "I"); r += 1
+years(A, r); cell(A, f"A{r}", "Per year", SUB); r += 1
+per_year("Paid swings outside South Africa", "glSwings", [M.GL_SWINGS[y] for y in Y], N0, "Ernie's markets from 2028; 2027 builds the course data, payments and cover")
+scalar("Average swing, USD", "GL_Ticket_USD", M.GL_TICKET_USD, USD, "Our share is 66%, as in South Africa: the course 10%, the insurer 24%")
+scalar("Market launches, of our share", "GL_Marketing", M.GL_MARKETING, PCT, "Launches with Ernie")
+scalar("Legal clearance and cover, R a year from the first market", "GL_Market_Cost", M.GL_MARKET_COST, R0, "A legal opinion and an insurer in each market")
+r += 1
 header(A, r, "SPONSORSHIP", "I"); r += 1
 scalar("Indwe's sponsorship, R a year", "Sponsor_Base", M.SPONSOR_BASE_ZAR, R0, "Approved by Indwe for 2027, first payment 1 January; assumed to renew")
 scalar("Sponsorship per paid swing beyond 2027's, R", "Sponsor_Per_Swing", M.SPONSOR_PER_SWING_ZAR, R0, "About a seventh of what Indwe's R3m pays a swing in 2027")
@@ -314,13 +326,14 @@ r += 1
 header(A, r, "VALUE, RETURNS AND INSURANCE", "I"); r += 1
 scalar("Value: multiple of each year's revenue", "Rev_Multiple", M.PLATFORM_MULTIPLE, '0.0"×"', "The multiple this plan has always used")
 scalar("Held to a sale, years (end Q1 2027 to 31 Dec 2032)", "Hold_Years", 5.75, '0.00', "Illustrative")
-scalar("Golfzon integration team, share of 2027 central cost", "GZ_Team_Share", 0.35, PCT, "For the use of funds")
+scalar("The app's developers, share of 2027 central cost", "App_Team_Share", M.APP_TEAM_SHARE, PCT, "Use of funds: the app worldwide")
+scalar("Simulator integration team, share of 2027 central cost", "Sim_Team_Share", M.SIM_TEAM_SHARE, PCT, "Use of funds: simulator integration")
 scalar("Simulator prize, times the swing", "Prize_Multiple", M.SIM_PAYOUT, N0, "Every tier pays 1,000x")
 scalar("Broker's commission, of premium", "Broker_Commission", M.BROKER_COMMISSION, PCT, "Indwe, the Santam submission")
 scalar("Measured simulator ace rate: one in", "Ace_Measured", M.SIM_ACE_MEASURED, N0, "Golfzon, par-3 tee shots across every setting")
 r += 1
 header(A, r, "THE CASES (pick one in Model!C2)", "I"); r += 1
-heads = ["Case", "Attach ×", "Ticket ×", "Drivers", "A year late", "Korea in", "Trackman 2028+", "Sim premium"]
+heads = ["Case", "Attach ×", "Ticket ×", "Drivers", "A year late", "Korea in", "Trackman 2028+", "Sim premium", "Worldwide ×"]
 for i, h in enumerate(heads):
     x = cell(A, f"{L(1 + i)}{r}", h, SUB)
     x.border = UNDER
@@ -328,15 +341,15 @@ for i, h in enumerate(heads):
 cell(A, f"I{r}", "1 = yes, 0 = no. Drivers: Plan or Targets (attach, ticket, central team, launch budget).", NOTE)
 r += 1
 s0 = r
-for nm_, key, am, tm, drv, late, korea, tman, prem in SCEN:
-    vals = [nm_, am, tm, drv, late, korea, tman, prem]
-    fmts = [None, '0.00"×"', '0.00"×"', None, '0', '0', '0', PCT]
+for nm_, key, am, tm, drv, late, korea, tman, prem, gm in SCEN:
+    vals = [nm_, am, tm, drv, late, korea, tman, prem, gm]
+    fmts = [None, '0.00"×"', '0.00"×"', None, '0', '0', '0', PCT, '0.00"×"']
     for i, (v, fm) in enumerate(zip(vals, fmts)):
         x = cell(A, f"{L(1 + i)}{r}", v, BOLD if i == 0 else INPUT, fm)
         x.border = RULE
     r += 1
 s1 = r - 1
-for i, nm_ in enumerate(["Scen_Names", "Scen_Attach", "Scen_Ticket", "Scen_Drivers", "Scen_Late", "Scen_Korea", "Scen_Trackman", "Scen_Premium"]):
+for i, nm_ in enumerate(["Scen_Names", "Scen_Attach", "Scen_Ticket", "Scen_Drivers", "Scen_Late", "Scen_Korea", "Scen_Trackman", "Scen_Premium", "Scen_Global"]):
     name(nm_, A, f"${L(1 + i)}${s0}:${L(1 + i)}${s1}")
 A.freeze_panes = "B3"
 
@@ -350,18 +363,18 @@ def block(ws, t, case_ref):
     params = [("Attach multiplier", "am", "Scen_Attach", '0.00"×"'), ("Ticket multiplier", "tm", "Scen_Ticket", '0.00"×"'),
               ("Drivers", "drv", "Scen_Drivers", None), ("Golfzon a year late (1 = yes)", "late", "Scen_Late", "0"),
               ("Korea in (1 = yes)", "korea", "Scen_Korea", "0"), ("Trackman from 2028 (1 = yes)", "tman", "Scen_Trackman", "0"),
-              ("Simulator premium", "prem", "Scen_Premium", PCT)]
+              ("Simulator premium", "prem", "Scen_Premium", PCT), ("Worldwide app multiplier", "gm", "Scen_Global", '0.00"×"')]
     for i, (label, k, col, fm) in enumerate(params, 1):
         cell(ws, f"A{t + i}", label, HELPER).alignment = Alignment(horizontal="left", indent=1)
         cell(ws, f"C{t + i}", look(col), LINK, fm).alignment = Alignment(horizontal="right")
         R[k] = f"$C${t + i}"
-    hdr = t + 9
+    hdr = t + 10
     header(ws, hdr, "Get Lucky, annual", "Z")
     for c_, y in zip(YC, Y):
         x = cell(ws, f"{c_}{hdr}", str(y), WHITE)
         x.alignment = Alignment(horizontal="right", vertical="center")
     rows = ["rounds", "attachBase", "attach", "ticket", "swings", "gross", "share", "gzRev", "gzPrem", "gzDirect",
-            "ocSwings", "ocGross", "ocRev", "ocDirect", "spons", "rev", "central", "launch", "brand", "ebitda", "margin",
+            "ocSwings", "ocGross", "ocRev", "ocDirect", "glSwings", "glGross", "glRev", "glDirect", "spons", "rev", "central", "launch", "brand", "ebitda", "margin",
             "taxable", "tax", "losscf", "net", "raise", "open", "close", "value", "mark", "premWritten", "pos"]
     rr = {k: hdr + 1 + i for i, k in enumerate(rows)}
     labels = {
@@ -371,7 +384,9 @@ def block(ws, t, case_ref):
         "share": ("Get Lucky's share of a simulator swing", PCT), "gzRev": ("Revenue: Golfzon, our share", RM),
         "gzPrem": ("Premium to the insurer, simulators", RM), "gzDirect": ("Golfzon costs: payments, claims, launches", RM),
         "ocSwings": ("On course paid swings", N0), "ocGross": ("On course gross", RM), "ocRev": ("Revenue: on course, our share", RM),
-        "ocDirect": ("On course costs: payments, verification", RM), "spons": ("Revenue: sponsorship", RM),
+        "ocDirect": ("On course costs: payments, verification", RM),
+        "glSwings": ("Worldwide: paid swings outside South Africa", N0), "glGross": ("Worldwide gross", RM),
+        "glRev": ("Revenue: on course worldwide, our share", RM), "glDirect": ("Worldwide costs: payments, verification, launches, cover", RM), "spons": ("Revenue: sponsorship", RM),
         "rev": ("REVENUE", RM), "central": ("Central team and technology", RM), "launch": ("Launch budget", RM),
         "brand": ("Brand: launch budget plus 8% of revenue", RM), "ebitda": ("EBITDA", RM), "margin": ("EBITDA margin", PCT),
         "taxable": ("Taxable, after losses brought forward", RM), "tax": ("Tax", RM), "losscf": ("Losses carried forward", RM),
@@ -400,12 +415,16 @@ def block(ws, t, case_ref):
             "ocGross": f"={g('ocSwings')}*{a_('ocAvg')}",
             "ocRev": f"={g('ocGross')}*(1-OC_Premium-Club_Share)",
             "ocDirect": f"={g('ocGross')}*OC_Processing+{g('ocSwings')}*OC_Verify",
-            "spons": f"=Sponsor_Base+Sponsor_Per_Swing*MAX({g('swings')}+{g('ocSwings')}-($C{rr['swings']}+$C{rr['ocSwings']}),0)",
-            "rev": f"={g('gzRev')}+{g('ocRev')}+{g('spons')}",
+            "glSwings": f"={a_('glSwings')}*{R['gm']}",
+            "glGross": f"={g('glSwings')}*GL_Ticket_USD*FX_ZAR",
+            "glRev": f"={g('glGross')}*(1-OC_Premium-Club_Share)",
+            "glDirect": f"={g('glGross')}*OC_Processing+{g('glSwings')}*OC_Verify+{g('glRev')}*GL_Marketing+IF({g('glSwings')}>0,GL_Market_Cost,0)",
+            "spons": f"=Sponsor_Base+Sponsor_Per_Swing*MAX({g('swings')}+{g('ocSwings')}+{g('glSwings')}-($C{rr['swings']}+$C{rr['ocSwings']}+$C{rr['glSwings']}),0)",
+            "rev": f"={g('gzRev')}+{g('ocRev')}+{g('glRev')}+{g('spons')}",
             "central": f"={pick('centralPlan', 'centralTargets')}",
             "launch": f"={pick('launchPlan', 'launchTargets')}",
             "brand": f"={g('launch')}+{g('rev')}*Brand_Pct",
-            "ebitda": f"={g('rev')}-{g('gzDirect')}-{g('ocDirect')}-{g('central')}-{g('brand')}",
+            "ebitda": f"={g('rev')}-{g('gzDirect')}-{g('ocDirect')}-{g('glDirect')}-{g('central')}-{g('brand')}",
             "margin": f"=IF({g('rev')}=0,0,{g('ebitda')}/{g('rev')})",
             "taxable": f"={g('ebitda')}" if i == 0 else f"={g('ebitda')}-{p}{rr['losscf']}",
             "tax": f"=MAX({g('taxable')},0)*Tax_Rate",
@@ -416,7 +435,7 @@ def block(ws, t, case_ref):
             "close": f"={g('open')}+{g('ebitda')}-{g('tax')}+{g('raise')}",
             "value": f"={g('rev')}*Rev_Multiple",
             "mark": f"={g('value')}*Round_Stake/Round_ZAR",
-            "premWritten": f"={g('gzPrem')}+{g('ocGross')}*OC_Premium",
+            "premWritten": f"={g('gzPrem')}+({g('ocGross')}+{g('glGross')})*OC_Premium",
             "pos": f"=IF({g('ebitda')}>0,1,0)",
         }
         for k in rows:
@@ -669,8 +688,8 @@ for i, sc in enumerate(SCEN):
         r += 1
 plan_uof = M.use_of_funds(runs["plan"])
 pb = blocks["plan"]["rr"]
-uof_wb = {"golfzon": f"=ROUND('Stress cases'!C{pb['gzDirect']}+GZ_Team_Share*'Stress cases'!C{pb['central']},-4)",
-          "launch": f"=ROUND('Stress cases'!C{pb['launch']},-4)"}
+uof_wb = {"app": f"=ROUND(App_Team_Share*'Stress cases'!C{pb['central']}+'Stress cases'!C{pb['launch']},-4)",
+          "sims": f"=ROUND(Sim_Team_Share*'Stress cases'!C{pb['central']}+'Stress cases'!C{pb['gzDirect']},-4)"}
 uof_wb["reserve"] = f"=Round_ZAR-C{r}-C{r + 1}"
 for it in plan_uof["items"]:
     cell(Ck, f"A{r}", "The plan")
@@ -707,7 +726,7 @@ for i, it in enumerate(plan_uof["items"]):
 n_ = len(plan_uof["items"])
 cell(Rs, f"A{rr0 + n_}", "Revenue already pays the rest of the team in 2027", NOTE)
 cell(Rs, f"C{rr0 + n_}",
-     f"=ROUND((1-GZ_Team_Share)*'Stress cases'!C{pb['central']}+'Stress cases'!C{pb['ocDirect']}+('Stress cases'!C{pb['brand']}-'Stress cases'!C{pb['launch']}),-4)",
+     f"=ROUND((1-App_Team_Share-Sim_Team_Share)*'Stress cases'!C{pb['central']}+'Stress cases'!C{pb['ocDirect']}+('Stress cases'!C{pb['brand']}-'Stress cases'!C{pb['launch']}),-4)",
      LINK, R0)
 cell(Rs, f"D{rr0 + n_}", f"='Stress cases'!C{pb['rev']}", LINK, RM)
 cell(Rs, f"E{rr0 + n_}", "Running cost in 2027 (C), against 2027 revenue (D)", NOTE)

@@ -591,3 +591,17 @@ h3, h4 { text-wrap: balance; }
 .tryit p a { overflow-wrap: anywhere; }
 @media (max-width: 400px) { .tryit { gap: 14px; } .tryit .qr { width: 92px; height: 92px; padding: 6px; } }
 @media (max-width: 380px) { .phases.compact { gap: 6px; } .phases.compact .phase { padding: 12px 10px; } .phases.compact .phase h3 { font-size: 1rem; } .phases.compact .phase .k { letter-spacing: .06em; } }
+/* the app worldwide: opportunity one, with Ernie */
+.world { margin-top: 36px; display: grid; gap: 24px; padding: clamp(22px, 3vw, 32px); border-radius: 24px; background: var(--paper); border: 1px solid var(--line); }
+@media (min-width: 960px) { .world { grid-template-columns: .95fr 1.05fr; align-items: center; } }
+.world-head { display: grid; gap: 12px; align-content: start; }
+.world-head .display-md { color: var(--ink); }
+.world-head p { color: var(--muted); font-size: 15.5px; }
+.world-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+.world-stats div { padding: 14px 16px; border-radius: 14px; background: var(--white); border: 1px solid var(--line); }
+.world-stats b { display: block; font-family: var(--display); font-size: 1.9rem; line-height: 1; color: var(--green); }
+.world-stats span { display: block; margin-top: 6px; font-size: 12.5px; line-height: 1.45; color: var(--muted); }
+.world-grid { gap: 12px; }
+.world-grid .card { padding: 18px; height: 100%; }
+.world-grid .card h3 { font-size: 16px; }
+.world-grid .card p { font-size: 14px; }

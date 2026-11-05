@@ -107,19 +107,21 @@ def more(summary, body, cls="more"):
 
 
 # ------------------------------------------------------------------ the revenue chart
+SERIES = [("On simulators (Golfzon)", "golfzon", "#d6fb4b"), ("On course, South Africa", "onCourse", "#c9a94e"),
+          ("On course, worldwide", "global", "#8fbf7a"), ("Sponsorship", "sponsorship", "rgba(245,238,222,.5)")]
 def revenue_svg(compact=False):
     """Stacked revenue by channel with the EBITDA margin on the right axis. The right axis spans the
     whole margin range and shares the left axis's gridlines. compact is the phone version: drawn at
     phone size, so its type stays readable instead of shrinking with a wide chart."""
-    series = [("On simulators (Golfzon)", rev["golfzon"], "#d6fb4b"), ("On course (the app)", rev["onCourse"], "#c9a94e"),
-              ("Sponsorship", rev["sponsorship"], "rgba(245,238,222,.5)")]
+    series = [(nm, rev[k], c) for nm, k, c in SERIES]
     W, H, L, R, T, B = (360, 300, 44, 40, 18, 28) if compact else (720, 320, 56, 48, 22, 36)
     fs, fv = (10, 10.5) if compact else (11, 12)
     step = 50e6
     ymax = step * (int(max(rev["total"]) / step) + 1)
     ticks = int(ymax / step)
     margins = f["ebitdaMarginPct"]
-    lo, hi = 50 * ((min(min(margins), 0) // 50)), 50 * -(-max(max(margins), 50) // 50)
+    hi = 50 * -(-max(max(margins), 50) // 50)
+    lo = min(hi - 50 * ticks, 50 * (min(min(margins), 0) // 50))   # 50 points a gridline, so both axes share them
     ph, pw = H - T - B, W - L - R
     band = pw / len(Y)
     bw = band * (.62 if compact else .56)
@@ -159,8 +161,7 @@ def revenue_svg(compact=False):
 
 
 def revenue_chart():
-    legend = "".join(f'<span><i style="background:{c}"></i>{esc(nm)}</span>' for nm, c in
-                     (("On simulators (Golfzon)", "#d6fb4b"), ("On course (the app)", "#c9a94e"), ("Sponsorship", "rgba(245,238,222,.5)")))
+    legend = "".join(f'<span><i style="background:{c}"></i>{esc(nm)}</span>' for nm, _, c in SERIES)
     legend += '<span><i style="background:transparent;border-top:2px dashed #f5eede;height:0;border-radius:0;vertical-align:4px"></i>EBITDA margin (right)</span>'
     return legend, revenue_svg() + "\n" + revenue_svg(compact=True)
 
@@ -195,7 +196,7 @@ def hero():
     <div class="copy">
       <span class="chip live"><span class="live-dot"></span>Investor briefing · November 2026</span>
       <h1 class="display-xl">Golf's biggest shot <span class="lime">goes global.</span></h1>
-      <p class="lede"><strong>Get Lucky is the hole-in-one app: one insured swing at a life-changing prize, wherever you play.</strong> On {app['courses']} South African courses. On Golfzon's {n(gz['locations'])} simulator locations worldwide. And next, on the driving range. Presented by Ernie Els.</p>
+      <p class="lede"><strong>Get Lucky is the hole-in-one app: one insured swing at a life-changing prize, wherever you play.</strong> One app takes every entry: on course, on simulators and next on the driving range. This round takes it to every par 3 in the world with Ernie Els, and onto Golfzon's {n(gz['locations'])} simulator locations.</p>
       <div class="btns">
         <a class="btn btn-lime" href="#raise">See the raise</a>
         <a class="btn btn-outline" href="{app['url']}" target="_blank" rel="noopener">Preview the app</a>
@@ -247,22 +248,22 @@ def concept():
     <div class="head">
       <span class="kicker">The concept</span>
       <h2 class="display-lg" id="concept-h">One shot. <span class="green">Three places to play.</span></h2>
-      <p class="lede"><strong>Wherever you play, it's the same thing: one swing at a hole-in-one, for a prize Santam insures.</strong> One app: on course in South Africa, on Golfzon's simulators worldwide, and next on the driving range.</p>
+      <p class="lede"><strong>Wherever you play, it's the same thing: one swing at a hole-in-one, for a prize Santam insures.</strong> One app takes every entry: on course, in South Africa and worldwide; on Golfzon's simulators; and next on the driving range.</p>
     </div>
     <div class="channels">
       <a class="tile tile-app reveal" href="#app"><img src="assets/img/app-in-hand.webp" alt="" loading="lazy" width="900" height="1016" style="object-position:38% 0%"><span class="chip live">Built</span>
-        <span class="num">01 · The app · South Africa</span><h3>On course</h3><p>Pick a par 3 on any of {app['courses']} courses and film the swing. Hole it and Santam pays.</p>
-        {facts_(("Paid swings, year one", n(tr['paidSwings'])), ("Our revenue, 2029", rm(rev['onCourse'][k29])))}</a>
+        <span class="num">01 · The app · Worldwide</span><h3>On course</h3><p>Every par 3 in the world, starting with {app['courses']} South African courses. Film the swing; hole it and Santam pays.</p>
+        {facts_(("Paid swings, year one", n(tr['paidSwings'])), ("Our revenue, 2029", rm(rev['onCourse'][k29] + rev['global'][k29])))}</a>
       <a class="tile reveal" href="#golfzon"><img src="assets/img/golfzon-demo.webp" alt="" loading="lazy" width="1200" height="630">{gz_chip}
-        <span class="num">02 · Golfzon · Worldwide</span><h3>On simulators</h3><p>The same swing on the world's biggest simulator network. The bay measures the shot and signs it.</p>
+        <span class="num">02 · Golfzon · Worldwide</span><h3>On simulators</h3><p>Entered in the app, played on the world's biggest simulator network. The bay measures the shot and signs it.</p>
         {facts_(("Golfzon locations", n(gz['locations'])), ("Our revenue, 2029", rm(rev['golfzon'][k29])))}</a>
       <a class="tile reveal" href="#golfzon"><img src="assets/img/range-tracer.svg" alt="" loading="lazy" width="900" height="1000" style="object-position:50% 0%"><span class="chip talks" style="color:var(--cream);border-color:rgba(245,238,222,.4);background:rgba(12,22,14,.55)">Next</span>
-        <span class="num">03 · Driving ranges</span><h3>On the range</h3><p>Ranges that track every ball can carry the same swing, in the same app. Our next conversation.</p>
+        <span class="num">03 · Driving ranges</span><h3>On the range</h3><p>Ranges that track every ball can take entries through the same app. Our next conversation.</p>
         {facts_(("In our numbers", "Not yet"), ("Our revenue, 2029", "Upside"))}</a>
       <a class="tile wide reveal" href="#ernie"><img src="assets/img/ernie-open.webp" alt="" loading="lazy" width="1800" height="1200" style="object-position:30% 28%"><span class="chip">Founding Ambassador</span>
         <span class="num">Across all three</span><h3>Ernie Els</h3><p>{ernie['careerAces']} career aces, and his name behind every swing we sell: on course, on simulators and on the range. He owns {amb['equityPct']}%, so he's in it with us.</p></a>
     </div>
-    <p class="note" style="margin-top:12px">Revenue from our plan. Add {rm(rev['sponsorship'][k29])} of sponsorship and 2029 comes to {rm(rev['total'][k29])}. Nothing for the range until a partner signs.</p>
+    <p class="note" style="margin-top:12px">Revenue from our plan, on course in South Africa and worldwide. Add {rm(rev['sponsorship'][k29])} of sponsorship and 2029 comes to {rm(rev['total'][k29])}. Nothing for the range until a partner signs.</p>
   </div>
 </section>"""
 
@@ -286,9 +287,9 @@ def app_section():
 <section class="section white" id="app" aria-labelledby="app-h">
   <div class="wrap">
     <div class="head">
-      <span class="kicker">01 · On course · South Africa</span>
-      <h2 class="display-lg" id="app-h">On course. <span class="green">Built and ready.</span></h2>
-      <p class="lede"><strong>Pick a par 3, pick a stake, film the swing.</strong> Hole it and Santam pays, never another golfer. Built for {app['courses']} South African courses, it installs from the browser and runs at our golf days. {esc(app['status'])}.</p>
+      <span class="kicker">01 · The app · South Africa, then the world</span>
+      <h2 class="display-lg" id="app-h">The app. <span class="green">Built here, going worldwide.</span></h2>
+      <p class="lede"><strong>One app takes every entry: on course, on simulators and on ranges.</strong> On course, pick a par 3, pick a stake and film the swing; hole it and Santam pays, never another golfer. Built for {app['courses']} South African courses, it installs from the browser and runs at our golf days. {esc(app['status'])}.</p>
     </div>
     <ol class="track icons">{track}</ol>
     <div class="split app-split" style="margin-top:28px;align-items:stretch">
@@ -308,6 +309,23 @@ def app_section():
           <div><div class="n">{n(tr['golfDaysPerYear'])}</div><div class="l">Golf days a year, {esc(tr['partnerCourses'])} partner courses</div></div>
           <div><div class="n">{rm(pt['indwe']['sponsorship2027ZAR'], 0)}</div><div class="l">Indwe's 2027 sponsorship, approved</div></div>
         </div>
+      </div>
+    </div>
+    <div class="world reveal">
+      <div class="world-head">
+        <span class="kicker">Opportunity one · with Ernie</span>
+        <h3 class="display-md">Every par 3 in the world.</h3>
+        <p>The round pays the developers who take the app beyond South Africa, and Ernie launches it in his markets from 2028: his businesses open doors in Asia, the Middle East and the US.</p>
+        <div class="world-stats tab">
+          <div><b>{n(f['kpis']['globalSwings'][k32])}</b><span>Paid swings outside South Africa by 2032, from {n(f['kpis']['globalSwings'][I[2028]])} in 2028</span></div>
+          <div><b>{rm(rev['global'][k32])}</b><span>Our revenue from them in 2032, {rm(rev['global'][k29])} in 2029</span></div>
+        </div>
+      </div>
+      <div class="grid c2 world-grid">
+        <div class="card iconcard">{icon('pin')}<div><h3>Every par 3, mapped</h3><p>Course data for every par 3, so a golfer anywhere picks a hole and plays.</p></div></div>
+        <div class="card iconcard">{icon('card')}<div><h3>Every currency</h3><p>Local payments in each market we open.</p></div></div>
+        <div class="card iconcard">{icon('shield')}<div><h3>Every market cleared</h3><p>A legal opinion and an insurer's cover in each market before we sell there.</p></div></div>
+        <div class="card iconcard">{icon('star')}<div><h3>Launched with Ernie</h3><p>His name on the challenge, market by market, from 2028.</p></div></div>
       </div>
     </div>
     {more("Under the hood", hood)}
@@ -349,9 +367,9 @@ def golfzon_section():
   <div class="bgimg" aria-hidden="true"><img src="assets/img/golfzon-course.webp" alt="" loading="lazy" width="1377" height="687"></div>
   <div class="wrap">
     <div class="head">
-      <span class="kicker">02 · On simulators · Worldwide</span>
+      <span class="kicker">02 · On simulators · Opportunity two</span>
       <h2 class="display-lg" id="gz-h">On simulators. <span class="lime">{n(gz['locations'])} Golfzon locations.</span></h2>
-      <p class="lede"><strong>Golfzon is the world's biggest simulator network</strong>, the official simulator of the U.S. Open{", and now our partner" if GZ_SIGNED else ""}. Its bays already measure every shot. We built a working demo of the integration that turns one of those shots into an insured swing at up to ${sim_ladder[-1]['prize']:,}. Take a swing below.</p>
+      <p class="lede"><strong>Golfzon is the world's biggest simulator network</strong>, the official simulator of the U.S. Open{", and now our partner" if GZ_SIGNED else ""}. Its bays already measure every shot. We built a working demo of the integration that turns one of those shots into an insured swing at up to ${sim_ladder[-1]['prize']:,}, entered in the Get Lucky app. Golfzon first; the same integration opens the next networks. Take a swing below.</p>
     </div>
     <figure class="reveal">
       <div class="frame demo-embed" id="demo" data-w="1280" data-h="800">
@@ -452,7 +470,8 @@ def numbers_section():
             f'<td class="n{" hide-sm" if y == 2028 else ""}">{vals(I[y])}</td>' for y in (2027, 2028, 2029, 2032)) + "</tr>")
     pl = "".join([
         pl_row("On simulators: Golfzon", lambda k: mm(rev["golfzon"][k]), "sub"),
-        pl_row("On course: the app", lambda k: mm(rev["onCourse"][k]), "sub"),
+        pl_row("On course: South Africa", lambda k: mm(rev["onCourse"][k]), "sub"),
+        pl_row("On course: worldwide", lambda k: mm(rev["global"][k]), "sub"),
         pl_row("Sponsorship", lambda k: mm(rev["sponsorship"][k]), "sub"),
         pl_row("Revenue", lambda k: mm(rev["total"][k]), "total"),
         pl_row("EBITDA", lambda k: mm(f["ebitdaZAR"][k])),
@@ -460,7 +479,7 @@ def numbers_section():
         pl_row("Net profit", lambda k: mm(f["netProfitZAR"][k]), "", "after tax"),
         pl_row("Cash at year end", lambda k: mm(cash["closingZAR"][k])),
     ])
-    gz_course_cost = c["golfzonDirect"][k29] + c["onCourseDirect"][k29]
+    gz_course_cost = c["golfzonDirect"][k29] + c["onCourseDirect"][k29] + c["globalDirect"][k29]
     pl_block = f"""<div class="tablewrap" tabindex="0" role="region" aria-label="Get Lucky's forecast P&amp;L">
       <table><thead><tr><th>Get Lucky, R</th><th class="n">2027</th><th class="n hide-sm">2028</th><th class="n">2029</th><th class="n">2032</th></tr></thead><tbody>{pl}</tbody></table>
     </div>
@@ -472,7 +491,7 @@ def numbers_section():
       <div class="total"><span>2032, same method</span><span>{r0(mv['2032']['total'])}</span></div>
     </div>
     <p>The round's price looks forward: {price(rd['postMoneyZAR'])} is {price_on(2027)} our 2027 revenue, {price_on(2028)} our 2028 revenue and {price_on(2029)} our 2029 revenue. Our yardstick values each year on that year's revenue, so it starts low while we build: {r0(mv['2027']['total'])} in December 2027 and {r0(mv['2028']['total'])} in December 2028.</p>"""
-    order = ["plan", "halfAttach", "hard", "golfzonLate", "outsideKorea", "outsideKoreaTrackman", "targets"]
+    order = ["plan", "globalHalf", "halfAttach", "hard", "golfzonLate", "noGolfzon", "outsideKorea", "outsideKoreaTrackman", "targets"]
     labels = {"hard": "The hard case: half the attach and half the ticket"}
     srows = "".join(
         f'<tr{" class=\"total\"" if k == "plan" else ""}><td>{esc(labels.get(k, sens[k]["case"]))}</td><td class="n hide-sm">{rm(sens[k]["revenue"])}</td>'
@@ -500,6 +519,7 @@ def numbers_section():
     </div>"""
     assumptions = f"""<ul>
       <li><strong>Golfzon:</strong> {gz['roundsPerYear'] / 1e6:.0f} million rounds a year held flat, about 94 million of them in Korea; rounds carrying a swing rise {" → ".join(f"{v}%" for v in plan['golfzonAttachPct'])} from 2027 to 2032, at {" → ".join(f"${v:.0f}" for v in plan['golfzonTicketUSD'][:5])} a swing. We keep {split['getLucky']}%; payments 3%, risk and support $0.05 a swing, launches 12% of our share.</li>
+      <li><strong>The app worldwide:</strong> paid swings outside South Africa from 2028, {" → ".join(n(v) for v in f['kpis']['globalSwings'][1:])} by 2032, at ${f['kpis']['globalTicketUSD']:.0f} a swing. We keep 66%; launches {f['kpis']['globalMarketingPct']}% of our share, and {rm(f['kpis']['globalMarketCostZAR'], 0)} a year for legal clearance and cover.</li>
       <li><strong>The app, on course:</strong> {n(f['kpis']['onCourseSwings'][0])} paid swings in 2027 ({n(tr['paidSwings'])} in our first year) rising to {n(f['kpis']['onCourseSwings'][-1])} in 2032, at R{f['kpis']['onCourseAvgZAR'][0]} to R{f['kpis']['onCourseAvgZAR'][-1]} a swing.</li>
       <li><strong>Sponsorship grows with reach:</strong> Indwe has approved {rm(pt['indwe']['sponsorship2027ZAR'], 0)} for 2027, with the first payment on {esc(pt['indwe']['firstPayment'].replace(" 2027", ""))}, and we assume it renews; on top, about R5 for every paid swing beyond 2027's, on course and on Golfzon. {rm(rev['sponsorship'][0])} in 2027 to {rm(rev['sponsorship'][-1])} in 2032.</li>
       <li><strong>Get Lucky:</strong> central team {rm(plan['centralZAR'][0], 0)} in 2027 to {rm(plan['centralZAR'][-1], 0)} in 2032; brand 8% of product revenue plus a launch budget; tax at 27% after the 2027 loss.</li>
@@ -511,7 +531,7 @@ def numbers_section():
     <div class="head">
       <span class="kicker">05 · The numbers</span>
       <h2 class="display-lg" id="num-h">{rm(rev['total'][0])} to {rm(rev['total'][-1])}. <span class="green">Our revenue, forecast.</span></h2>
-      <p class="lede"><strong>This is Get Lucky's own revenue:</strong> our share of every swing on course and on Golfzon, and sponsorship. Asset-light and scalable through golf simulation software. We've planned on about half of what we're aiming for, and it still works.</p>
+      <p class="lede"><strong>This is Get Lucky's own revenue:</strong> our share of every swing on course, in South Africa and worldwide, and on Golfzon, and sponsorship. Asset-light and scalable through golf simulation software. We've planned on about half of what we're aiming for, and it still works.</p>
     </div>
     <div class="chartcard reveal">
       <h3>Revenue by channel, and EBITDA margin</h3>
@@ -540,10 +560,12 @@ def numbers_section():
 
 
 def risk_section():
-    late, ok, okt = sens["golfzonLate"], sens["outsideKorea"], sens["outsideKoreaTrackman"]
+    late, ok, okt, nogz = sens["golfzonLate"], sens["outsideKorea"], sens["outsideKoreaTrackman"], sens["noGolfzon"]
     qa = [
         ("globe", "Will Golfzon's bays carry this, and what if Korea says no?",
          f"Phase one runs on features Golfzon's bays already have, and the integration demo is built. Most rounds are in Korea, where paid-entry prizes still need clearing; the plan assumes 2027. On the rest of the network alone the round marks at {x(ok['roundMultiple'])} and cash would run to {ok['cashLastsTo']}; we'd know about Korea during 2027 and cut costs well before then. Trackman is the hedge: add its bays from 2028, without Korea, and the round marks at {x(okt['roundMultiple'])}, or {x(okt['roundMultiple2032'])} by 2032."),
+        ("flag", "What if Golfzon doesn't sign?",
+         f"Then the app carries the plan, on course in South Africa and worldwide. With no Golfzon at all, 2029 revenue is {rm(nogz['revenue'])}, not {rm(sens['plan']['revenue'])}, and the round marks at {x(nogz['roundMultiple'])} in 2029 and {x(nogz['roundMultiple2032'])} by 2032. With every cost held at plan, cash lasts to {nogz['cashLastsTo']}; we'd hold back the simulator team and take the integration to the next network instead."),
         ("clock", "What if Golfzon's roll-out runs late?",
          f"A year late, the round marks at {x(late['roundMultiple'])} in 2029 and {x(late['roundMultiple2032'])} by 2032, and cash lasts to {late['cashLastsTo']} if we cut nothing. Phase one needs no new Golfzon software, which is why it comes first, and a slow start would show in 2027's numbers, in time to hold the hiring back."),
         ("shield", "Will an insurer cover a simulator ace?",
@@ -565,8 +587,8 @@ def risk_section():
 </section>"""
 
 
-USE_COLOURS = {"golfzon": "var(--lime)", "launch": "var(--green-light)", "reserve": "var(--green)"}
-USE_DARK_TEXT = {"golfzon"}
+USE_COLOURS = {"app": "var(--lime)", "sims": "var(--green-light)", "reserve": "var(--green)"}
+USE_DARK_TEXT = {"app"}
 
 
 def use_of_funds_block(items):
@@ -577,7 +599,7 @@ def use_of_funds_block(items):
         + (f'{u["pct"]}%' if u["pct"] >= 10 else "") + (f'<span>{esc(u["short"])}</span>' if u["pct"] >= 15 else "") + "</div>"
         for u in items)
     note = lambda u: f"<small>{esc(u['note'])}</small>" if u.get("note") else ""   # what each line buys
-    ulist = "".join(f'<li><i style="background:{USE_COLOURS[u["key"]]};{"outline:1px solid var(--line-strong)" if u["key"] == "golfzon" else ""}"></i>'
+    ulist = "".join(f'<li><i style="background:{USE_COLOURS[u["key"]]};{"outline:1px solid var(--line-strong)" if u["key"] == "app" else ""}"></i>'
                     f'<span>{esc(u["label"])}{note(u)}</span><b>{amount(u["ZAR"])}</b></li>' for u in items)
     label = esc(", ".join(f"{u['label']} {u['pct']}%" for u in items))
     return (f'<div class="usebar tab" role="img" aria-label="Use of funds: {label}">{bar}</div>'
@@ -604,7 +626,7 @@ def deal_section():
     <div class="head">
       <span class="kicker">07 · The raise</span>
       <h2 class="display-lg" id="deal-h" style="color:var(--cream)">{price(rd['amountZAR'])} for {EQ}. <span class="lime">{esc(rd['timing'])}.</span></h2>
-      <p class="lede">Into Get Lucky: asset-light and scalable through golf simulation software. The round funds the Golfzon build and the launch with Ernie; our revenue already pays the team and the day-to-day.</p>
+      <p class="lede">Into Get Lucky: asset-light and scalable through golf simulation software. The round funds two opportunities through one app: taking it to every par 3 in the world with Ernie, and simulator integration, Golfzon first. Our revenue already pays the rest of the team and the day-to-day.</p>
     </div>
     <div class="terms">
       <div class="termcard reveal">
@@ -637,6 +659,7 @@ def deal_section():
       <li class="key"><time>Dec 2026</time><b>Fancourt</b><span>Golfzon and Ernie's team meet.</span></li>
       <li class="key"><time>{esc(rd['timing'])}</time><b>The round</b><span>{rm(rd['amountZAR'])} closes.</span></li>
       <li><time>Q2 2027</time><b>Golfzon phase one</b><span>Live on Golfzon bays.</span></li>
+      <li class="key"><time>2028</time><b>The app worldwide</b><span>First markets with Ernie.</span></li>
       <li><time>2028</time><b>Golfzon phase two</b><span>In Golfzon's app and in-game.</span></li>
       <li><time>2029</time><b>Golfzon phase three</b><span>Built into Golfzon's game.</span></li>
     </ol>
