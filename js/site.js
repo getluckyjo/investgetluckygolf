@@ -66,15 +66,17 @@
 
 /* The Golfzon demo shows its three panes from 1,180px wide. On a wide page,
    render it at 1,280 x 800 and scale it to the frame; on narrow screens let
-   it lay out natively (it switches to tabs on a phone). */
+   it lay out natively (it switches to tabs on a phone). It loads only when the
+   reader presses play: the demo scrolls its own panes into view as it runs,
+   and loaded early it would pull this page down to it. */
 (function () {
   "use strict";
   var box = document.getElementById("demo");
   if (!box) return;
-  var frame = box.querySelector("iframe");
   var W = Number(box.dataset.w), H = Number(box.dataset.h);
   function fit() {
-    var w = box.clientWidth;
+    var frame = box.querySelector("iframe"), w = box.clientWidth;
+    if (!frame) { box.style.height = Math.round(w * H / W) + "px"; return; }
     if (w >= 900) {
       var s = w / W;
       frame.style.width = W + "px"; frame.style.height = H + "px";
@@ -85,6 +87,17 @@
       box.style.height = "880px";
     }
   }
+  var start = box.querySelector(".demo-start");
+  if (start) start.addEventListener("click", function () {
+    var f = document.createElement("iframe");
+    f.src = box.dataset.src;
+    f.title = box.dataset.title;
+    f.setAttribute("allow", "fullscreen");
+    f.referrerPolicy = "no-referrer";
+    box.innerHTML = "";
+    box.appendChild(f);
+    fit();
+  });
   fit();
   window.addEventListener("resize", fit);
 })();

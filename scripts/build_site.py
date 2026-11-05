@@ -373,8 +373,11 @@ def golfzon_section():
       <p class="lede"><strong>Golfzon is the world's biggest simulator network</strong>, the official simulator of the U.S. Open{", and now our partner" if GZ_SIGNED else ""}. Its bays already measure every shot. We built a working demo of the integration that turns one of those shots into an insured swing at up to ${sim_ladder[-1]['prize']:,}, entered in the Get Lucky app. Golfzon first; the same integration opens the next networks. Take a swing below.</p>
     </div>
     <figure class="reveal">
-      <div class="frame demo-embed" id="demo" data-w="1280" data-h="800">
-        <iframe src="{gzf['demoUrl']}" title="Live demo: the Get Lucky challenge on a Golfzon bay" loading="lazy" allow="fullscreen" referrerpolicy="no-referrer"></iframe>
+      <div class="frame demo-embed" id="demo" data-w="1280" data-h="800" data-src="{gzf['demoUrl']}" data-title="Live demo: the Get Lucky challenge on a Golfzon bay">
+        <button type="button" class="demo-start" aria-label="Play the live demo: the Get Lucky challenge on a Golfzon bay">
+          <img src="assets/img/golfzon-demo.webp" alt="" width="1200" height="630" loading="lazy">
+          <span class="demo-play"><span class="demo-btn"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></svg>Take a swing on the live demo</span><span class="demo-sub">The demo we built for Golfzon</span></span>
+        </button>
       </div>
       <figcaption class="frame-cap note">The live demo we built for Golfzon: the bay, every signed message between us, and the golfer's phone. Golfzon's side is simulated. <a class="link-arrow" href="{gzf['demoUrl']}" target="_blank" rel="noopener">Open it full screen</a></figcaption>
     </figure>
