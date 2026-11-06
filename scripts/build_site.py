@@ -822,6 +822,8 @@ BANNED = [
     (r"(?i)live today|live in south africa|the app, live|integration (is )?built\b", "the app is built, not launched; the Golfzon integration is a demo"),
     (r"272 bays|172 clubs|\b272\b|200 in talks|Practice bay", "the superseded 272-bay gym plan"),
     (r"4,167", "the simulator break-even before commission"),
+    (r"(?i)ernie[^.<]{0,80}\bsigned\b|\bsigned\b[^.<]{0,40}ernie|ambassador agreement (is )?signed",
+     "Ernie signed: he is on board and signs in December (6 Nov 2026)"),
 ]
 if not GZ_SIGNED:   # until the deck goes out as the post-signing version, nothing may say Golfzon signed
     BANNED.append((r"(?i)signed with golfzon|golfzon (has )?signed|now our partner|golfzon partner", "a Golfzon signature"))

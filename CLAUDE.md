@@ -64,8 +64,9 @@ and the central team R8m (not R9m, hires a little later).
 - **Golfzon's chain pricing is confidential.** It's no longer in this repo's
   files (it went with the gym model) and must never appear on the page.
 - **Ernie Els:** 5% non-diluting equity as Founding Ambassador, topped up inside
-  the pre-money (the founder, 27 October 2026); his agreement is signed (4 Nov
-  2026). Normal shareholder rights: his 5% shares in any profit paid out and in
+  the pre-money (the founder, 27 October 2026). He is on board and signs in
+  December (the founder, 6 Nov 2026): never say his agreement is signed before it
+  is; the build bans it. Normal shareholder rights: his 5% shares in any profit paid out and in
   any sale, like every other share (the founder, 29 October 2026). No separate
   profit share on top of his shares, no fee. The page may show the 5%.
 - **No old material:** no games, no hole-in-one registry, no betting language,
