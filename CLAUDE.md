@@ -41,6 +41,11 @@ and the central team R8m (not R9m, hires a little later).
 - **Pitch the plan as it is.** No backward references to earlier versions: no "no
   interim raise", "one round", "no debt", "no note" or "trimmed" (the founder, 5 Nov
   2026). The build bans them.
+- **The development partner shows as its stake, 4.5%, never as a rand amount** (Willie, 9 Nov
+  2026): an ongoing development partner, not a once-off fee. The page carries no R2.8m and no
+  R6.2m total; use of funds shows the R3.4m cash, with the partner's 4.5% underneath. The
+  workbook still carries the amount (`DEV_EQUITY_ZAR`), because the cash flow needs it. The build
+  bans the amounts on the page.
 - **The development partner stays unnamed until agreed** (Willie is pitching it to
   Octoco). The build bans "Octoco", "inRange" and "Alphawave" on the page.
 - **No convertible note.** The R1m note was withdrawn on 4 Nov 2026; opening

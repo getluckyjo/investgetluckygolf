@@ -573,6 +573,9 @@ h3, h4 { text-wrap: balance; }
 .usefill { display: grid; gap: 14px; align-self: start; }
 .uselist small { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.45; color: var(--muted); opacity: .85; }
 .uselist span { line-height: 1.4; }
+/* the development partner: a stake, not cash, so it sits under the line, outside the bar */
+.uselist li.partner { border-top: 1px dashed var(--line-strong); padding-top: 9px; margin-top: 1px; }
+.uselist li.partner i { background: transparent; border: 1.5px dashed var(--green-light); }
 .usestats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .usestats div { padding: 14px 16px; border-radius: 14px; background: var(--paper); border: 1px solid var(--line); }
 .usestats b { display: block; font-family: var(--display); font-size: 1.6rem; line-height: 1; color: var(--green); }

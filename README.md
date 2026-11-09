@@ -1,7 +1,7 @@
 # Get Lucky Golf — investor briefing 2027
 
-The pitch for the R6.2m round (Q1 2027, exactly 10% at R55.8m pre-money, R62m
-post). One round, no interim raise.
+The pitch for the Q1 2027 round: exactly 10% at R55.8m pre-money (R62m post),
+R3.4m in cash for 5.5% and 4.5% for an ongoing development partner.
 
 The story: Get Lucky is the hole-in-one app — on course in South Africa, on
 Golfzon's 15,029 simulator locations worldwide, and next on the driving range —

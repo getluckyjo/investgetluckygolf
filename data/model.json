@@ -67,10 +67,8 @@
       "multipleBasis": "Your stake at the round's post-money, marked at the plan's value on 31 December. An unrealised mark on a private holding, not a cash return."
     },
     "useOfFunds": {
-      "_note": "Two opportunities through one app: the app worldwide (20% of 2027 central cost plus the launch budget) and simulator integration (15% of 2027 central cost plus Golfzon's running costs). Revenue pays for the rest of the team and the costs that move with it.",
-      "totalZAR": 6200000,
+      "_note": "The round's cash: the launch budget, Golfzon's running costs and the reserve. The development partner builds the app worldwide and simulator integration (the 2027 developers: 20% and 15% of central cost) for its stake. Revenue pays for the rest of the team and the costs that move with it.",
       "cashZAR": 3400000,
-      "inSharesZAR": 2800000,
       "revenue2027ZAR": 8270000.0,
       "runningCost2027ZAR": 6310000.0,
       "items": [
@@ -78,30 +76,32 @@
           "key": "app",
           "label": "The app, worldwide",
           "short": "The app",
-          "ZAR": 3600000.0,
-          "inSharesZAR": 1600000.0,
-          "note": "Developers to open every par 3 in the world, every currency and every market's cover; the launch with Ernie",
-          "pct": 58
+          "ZAR": 2000000,
+          "note": "The launch with Ernie: the public launch and the marketing behind it",
+          "pct": 59
         },
         {
           "key": "sims",
           "label": "Simulator integration",
           "short": "Simulators",
-          "ZAR": 1560000.0,
-          "inSharesZAR": 1200000.0,
-          "note": "Golfzon first, then the next networks: the integration team, the signed shot record, the insurer's ace data",
-          "pct": 25
+          "ZAR": 360000.0,
+          "note": "Golfzon first: the launch on its bays, payments, and risk and support for every swing",
+          "pct": 11
         },
         {
           "key": "reserve",
           "label": "Working capital and reserve",
           "short": "Reserve",
           "ZAR": 1040000.0,
-          "inSharesZAR": 0,
           "note": "What carries any one risk without cutting a cost",
-          "pct": 17
+          "pct": 30
         }
-      ]
+      ],
+      "partner": {
+        "label": "Development partner",
+        "pct": 4.52,
+        "note": "An ongoing partner: builds the app worldwide and simulator integration with us; paid in shares, at the same price"
+      }
     },
     "allocation": {
       "show": false,

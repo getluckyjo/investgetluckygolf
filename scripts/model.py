@@ -261,33 +261,35 @@ SIM_TEAM_SHARE = 0.15   # of 2027 central: the simulator integration team, Golfz
 
 
 def use_of_funds(p):
-    """What the round pays for: two opportunities, through one app. In 2027 revenue already pays
-    for the rest of the team and the day-to-day, so the round goes into what is new: the app
-    worldwide (its developers and the launch with Ernie) and simulator integration (its team and
-    Golfzon's running costs). The rest is the reserve."""
+    """What the round's cash pays for: two opportunities, through one app. In 2027 revenue already
+    pays for the rest of the team and the day-to-day, and the development partner builds the app
+    worldwide and simulator integration for its shares, so the cash goes into what is new: the
+    launch with Ernie, Golfzon's running costs, and the reserve. The partner's work is shown as its
+    stake, never as a rand amount (Willie, 9 Nov 2026: an ongoing partner, not a once-off fee)."""
     r = p["rows"][2027]
     app_dev, sim_dev = APP_TEAM_SHARE * r["central"], SIM_TEAM_SHARE * r["central"]
     assert abs(app_dev + sim_dev - DEV_EQUITY_ZAR) < 1, "the development partner's work is the 2027 developers' cost"
-    app = app_dev + r["brandFixed"]
-    sims = sim_dev + r["gzDirect"]
     running = (1 - APP_TEAM_SHARE - SIM_TEAM_SHARE) * r["central"] + r["ocDirect"] + (r["brand"] - r["brandFixed"])
     items = [
-        {"key": "app", "label": "The app, worldwide", "short": "The app", "ZAR": round(app, -4), "inSharesZAR": round(app_dev, -4),
-         "note": "Developers to open every par 3 in the world, every currency and every market's cover; the launch with Ernie"},
-        {"key": "sims", "label": "Simulator integration", "short": "Simulators", "ZAR": round(sims, -4), "inSharesZAR": round(sim_dev, -4),
-         "note": "Golfzon first, then the next networks: the integration team, the signed shot record, the insurer's ace data"},
+        {"key": "app", "label": "The app, worldwide", "short": "The app", "ZAR": round(r["brandFixed"], -4),
+         "note": "The launch with Ernie: the public launch and the marketing behind it"},
+        {"key": "sims", "label": "Simulator integration", "short": "Simulators", "ZAR": round(r["gzDirect"], -4),
+         "note": "Golfzon first: the launch on its bays, payments, and risk and support for every swing"},
     ]
     items.append({"key": "reserve", "label": "Working capital and reserve", "short": "Reserve",
-                  "ZAR": ROUND_TOTAL_ZAR - sum(i["ZAR"] for i in items), "inSharesZAR": 0,
+                  "ZAR": ROUND_ZAR - sum(i["ZAR"] for i in items),
                   "note": "What carries any one risk without cutting a cost"})
     for i in items:
-        i["pct"] = round(i["ZAR"] / ROUND_TOTAL_ZAR * 100)
+        i["pct"] = round(i["ZAR"] / ROUND_ZAR * 100)
     items[-1]["pct"] = 100 - sum(i["pct"] for i in items[:-1])
-    return {"_note": ("Two opportunities through one app: the app worldwide (20% of 2027 central cost plus the "
-                      "launch budget) and simulator integration (15% of 2027 central cost plus Golfzon's running "
-                      "costs). Revenue pays for the rest of the team and the costs that move with it."),
-            "totalZAR": ROUND_TOTAL_ZAR, "cashZAR": ROUND_ZAR, "inSharesZAR": DEV_EQUITY_ZAR,
-            "revenue2027ZAR": round(r["revenue"], -4), "runningCost2027ZAR": round(running, -4), "items": items}
+    post = ROUND_PRE_ZAR + ROUND_TOTAL_ZAR
+    return {"_note": ("The round's cash: the launch budget, Golfzon's running costs and the reserve. The development "
+                      "partner builds the app worldwide and simulator integration (the 2027 developers: 20% and 15% "
+                      "of central cost) for its stake. Revenue pays for the rest of the team and the costs that move with it."),
+            "cashZAR": ROUND_ZAR, "revenue2027ZAR": round(r["revenue"], -4), "runningCost2027ZAR": round(running, -4),
+            "items": items,
+            "partner": {"label": "Development partner", "pct": round(DEV_EQUITY_ZAR / post * 100, 2),
+                        "note": "An ongoing partner: builds the app worldwide and simulator integration with us; paid in shares, at the same price"}}
 
 
 def main():

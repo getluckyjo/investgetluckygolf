@@ -329,8 +329,8 @@ r += 1
 header(A, r, "VALUE, RETURNS AND INSURANCE", "I"); r += 1
 scalar("Value: multiple of each year's revenue", "Rev_Multiple", M.PLATFORM_MULTIPLE, '0.0"×"', "The multiple this plan has always used")
 scalar("Held to a sale, years (end Q1 2027 to 31 Dec 2032)", "Hold_Years", 5.75, '0.00', "Illustrative")
-scalar("The app's developers, share of 2027 central cost", "App_Team_Share", M.APP_TEAM_SHARE, PCT, "Use of funds: the app worldwide")
-scalar("Simulator integration team, share of 2027 central cost", "Sim_Team_Share", M.SIM_TEAM_SHARE, PCT, "Use of funds: simulator integration")
+scalar("The app's developers, share of 2027 central cost", "App_Team_Share", M.APP_TEAM_SHARE, PCT, "The development partner's work: the app worldwide")
+scalar("Simulator integration team, share of 2027 central cost", "Sim_Team_Share", M.SIM_TEAM_SHARE, PCT, "The development partner's work: simulator integration")
 scalar("Simulator prize, times the swing", "Prize_Multiple", M.SIM_PAYOUT, N0, "Every tier pays 1,000x")
 scalar("Broker's commission, of premium", "Broker_Commission", M.BROKER_COMMISSION, PCT, "Indwe, the Santam submission")
 scalar("Measured simulator ace rate: one in", "Ace_Measured", M.SIM_ACE_MEASURED, N0, "Golfzon, par-3 tee shots across every setting")
@@ -696,9 +696,9 @@ for i, sc in enumerate(SCEN):
         r += 1
 plan_uof = M.use_of_funds(runs["plan"])
 pb = blocks["plan"]["rr"]
-uof_wb = {"app": f"=ROUND(App_Team_Share*'Stress cases'!C{pb['central']}+'Stress cases'!C{pb['launch']},-4)",
-          "sims": f"=ROUND(Sim_Team_Share*'Stress cases'!C{pb['central']}+'Stress cases'!C{pb['gzDirect']},-4)"}
-uof_wb["reserve"] = f"=Round_ZAR+Dev_Equity_ZAR-C{r}-C{r + 1}"
+uof_wb = {"app": f"=ROUND('Stress cases'!C{pb['launch']},-4)",          # the round's cash; the partner's work is its stake
+          "sims": f"=ROUND('Stress cases'!C{pb['gzDirect']},-4)"}
+uof_wb["reserve"] = f"=Round_ZAR-C{r}-C{r + 1}"
 for it in plan_uof["items"]:
     cell(Ck, f"A{r}", "The plan")
     cell(Ck, f"B{r}", f"Use of funds: {it['label']}")
@@ -724,14 +724,18 @@ Ck.freeze_panes = "A7"
 
 # Use of funds, from the plan, on the Round sheet (the deck's numbers)
 rr0 = Rs.max_row + 2
-header(Rs, rr0, f"WHAT THE {ROUND_TXT} PAYS FOR (THE PLAN)"); rr0 += 1
+header(Rs, rr0, f"WHAT THE R{M.ROUND_ZAR / 1e6:.1f}M IN CASH PAYS FOR (THE PLAN)"); rr0 += 1
 for i, it in enumerate(plan_uof["items"]):
     cell(Rs, f"A{rr0 + i}", it["label"])
     ref = f"Checks!C{r - len(plan_uof['items']) + i}"
     cell(Rs, f"C{rr0 + i}", f"={ref}", LINK, R0)
-    cell(Rs, f"D{rr0 + i}", f"=C{rr0 + i}/(Round_ZAR+Dev_Equity_ZAR)", CALC, PCT)
+    cell(Rs, f"D{rr0 + i}", f"=C{rr0 + i}/Round_ZAR", CALC, PCT)
     cell(Rs, f"E{rr0 + i}", it["note"], NOTE)
 n_ = len(plan_uof["items"])
+cell(Rs, f"A{rr0 + n_}", plan_uof["partner"]["label"])
+cell(Rs, f"C{rr0 + n_}", "=Dev_Equity_ZAR/Post_ZAR", CALC, PCT)
+cell(Rs, f"E{rr0 + n_}", plan_uof["partner"]["note"] + " (the deck shows the stake, not the amount)", NOTE)
+n_ += 1
 cell(Rs, f"A{rr0 + n_}", "Revenue already pays the rest of the team in 2027", NOTE)
 cell(Rs, f"C{rr0 + n_}",
      f"=ROUND((1-App_Team_Share-Sim_Team_Share)*'Stress cases'!C{pb['central']}+'Stress cases'!C{pb['ocDirect']}+('Stress cases'!C{pb['brand']}-'Stress cases'!C{pb['launch']}),-4)",
